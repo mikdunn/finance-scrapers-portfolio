@@ -1,0 +1,193 @@
+{
+  "universe": "sp500",
+  "symbols_requested": [
+    "MMM",
+    "AOS",
+    "ABT",
+    "ABBV",
+    "ACN",
+    "ADBE",
+    "AMD",
+    "AES",
+    "AFL",
+    "A",
+    "APD",
+    "ABNB",
+    "AKAM",
+    "ALB",
+    "ARE",
+    "ALGN",
+    "ALLE",
+    "LNT",
+    "ALL",
+    "GOOGL",
+    "GOOG",
+    "MO",
+    "AMZN",
+    "AMCR",
+    "AEE"
+  ],
+  "period": "1y",
+  "interval": "1d",
+  "results": [
+    {
+      "symbol": "MMM",
+      "rows": 251,
+      "columns": 5,
+      "csv": "hub_sp500_spectral_test\\MMM_1y_1d.csv"
+    },
+    {
+      "symbol": "AOS",
+      "rows": 251,
+      "columns": 5,
+      "csv": "hub_sp500_spectral_test\\AOS_1y_1d.csv"
+    },
+    {
+      "symbol": "ABT",
+      "rows": 251,
+      "columns": 5,
+      "csv": "hub_sp500_spectral_test\\ABT_1y_1d.csv"
+    },
+    {
+      "symbol": "ABBV",
+      "rows": 251,
+      "columns": 5,
+      "csv": "hub_sp500_spectral_test\\ABBV_1y_1d.csv"
+    },
+    {
+      "symbol": "ACN",
+      "rows": 251,
+      "columns": 5,
+      "csv": "hub_sp500_spectral_test\\ACN_1y_1d.csv"
+    },
+    {
+      "symbol": "ADBE",
+      "rows": 251,
+      "columns": 5,
+      "csv": "hub_sp500_spectral_test\\ADBE_1y_1d.csv"
+    },
+    {
+      "symbol": "AMD",
+      "rows": 251,
+      "columns": 5,
+      "csv": "hub_sp500_spectral_test\\AMD_1y_1d.csv"
+    },
+    {
+      "symbol": "AES",
+      "rows": 251,
+      "columns": 5,
+      "csv": "hub_sp500_spectral_test\\AES_1y_1d.csv"
+    },
+    {
+      "symbol": "AFL",
+      "rows": 251,
+      "columns": 5,
+      "csv": "hub_sp500_spectral_test\\AFL_1y_1d.csv"
+    },
+    {
+      "symbol": "A",
+      "rows": 251,
+      "columns": 5,
+      "csv": "hub_sp500_spectral_test\\A_1y_1d.csv"
+    },
+    {
+      "symbol": "APD",
+      "rows": 251,
+      "columns": 5,
+      "csv": "hub_sp500_spectral_test\\APD_1y_1d.csv"
+    },
+    {
+      "symbol": "ABNB",
+      "rows": 251,
+      "columns": 5,
+      "csv": "hub_sp500_spectral_test\\ABNB_1y_1d.csv"
+    },
+    {
+      "symbol": "AKAM",
+      "rows": 251,
+      "columns": 5,
+      "csv": "hub_sp500_spectral_test\\AKAM_1y_1d.csv"
+    },
+    {
+      "symbol": "ALB",
+      "rows": 251,
+      "columns": 5,
+      "csv": "hub_sp500_spectral_test\\ALB_1y_1d.csv"
+    },
+    {
+      "symbol": "ARE",
+      "rows": 251,
+      "columns": 5,
+      "csv": "hub_sp500_spectral_test\\ARE_1y_1d.csv"
+    },
+    {
+      "symbol": "ALGN",
+      "rows": 251,
+      "columns": 5,
+      "csv": "hub_sp500_spectral_test\\ALGN_1y_1d.csv"
+    },
+    {
+      "symbol": "ALLE",
+      "rows": 251,
+      "columns": 5,
+      "csv": "hub_sp500_spectral_test\\ALLE_1y_1d.csv"
+    },
+    {
+      "symbol": "LNT",
+      "rows": 251,
+      "columns": 5,
+      "csv": "hub_sp500_spectral_test\\LNT_1y_1d.csv"
+    },
+    {
+      "symbol": "ALL",
+      "rows": 251,
+      "columns": 5,
+      "csv": "hub_sp500_spectral_test\\ALL_1y_1d.csv"
+    },
+    {
+      "symbol": "GOOGL",
+      "rows": 251,
+      "columns": 5,
+      "csv": "hub_sp500_spectral_test\\GOOGL_1y_1d.csv"
+    },
+    {
+      "symbol": "GOOG",
+      "rows": 251,
+      "columns": 5,
+      "csv": "hub_sp500_spectral_test\\GOOG_1y_1d.csv"
+    },
+    {
+      "symbol": "MO",
+      "rows": 251,
+      "columns": 5,
+      "csv": "hub_sp500_spectral_test\\MO_1y_1d.csv"
+    },
+    {
+      "symbol": "AMZN",
+      "rows": 251,
+      "columns": 5,
+      "csv": "hub_sp500_spectral_test\\AMZN_1y_1d.csv"
+    },
+    {
+      "symbol": "AMCR",
+      "rows": 251,
+      "columns": 5,
+      "csv": "hub_sp500_spectral_test\\AMCR_1y_1d.csv"
+    },
+    {
+      "symbol": "AEE",
+      "rows": 251,
+      "columns": 5,
+      "csv": "hub_sp500_spectral_test\\AEE_1y_1d.csv"
+    }
+  ],
+  "failures": [],
+  "charts": {
+    "enabled": false,
+    "charts_dir": null,
+    "summary_json": null,
+    "failures": []
+  },
+  "macro_features_csv": null,
+  "extra_features_raw_csv": null
+}

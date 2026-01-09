@@ -1,0 +1,11 @@
+{
+  "rank": 3,
+  "rows_used": 128,
+  "assets_used": 3,
+  "assets": [
+    "ETH-USD",
+    "BTC-USD",
+    "EURUSD=X"
+  ],
+  "top_modes": 3
+}

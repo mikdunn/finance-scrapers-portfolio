@@ -1,0 +1,39 @@
+{
+  "universe": null,
+  "symbols_requested": [
+    "ETH-USD",
+    "BTC-USD",
+    "EURUSD=X"
+  ],
+  "period": "6mo",
+  "interval": "1d",
+  "results": [
+    {
+      "symbol": "ETH-USD",
+      "rows": 180,
+      "columns": 5,
+      "csv": "hub_spectral_smoke\\ETH-USD_6mo_1d.csv"
+    },
+    {
+      "symbol": "BTC-USD",
+      "rows": 180,
+      "columns": 5,
+      "csv": "hub_spectral_smoke\\BTC-USD_6mo_1d.csv"
+    },
+    {
+      "symbol": "EURUSD=X",
+      "rows": 129,
+      "columns": 5,
+      "csv": "hub_spectral_smoke\\EURUSD=X_6mo_1d.csv"
+    }
+  ],
+  "failures": [],
+  "charts": {
+    "enabled": false,
+    "charts_dir": null,
+    "summary_json": null,
+    "failures": []
+  },
+  "macro_features_csv": null,
+  "extra_features_raw_csv": null
+}

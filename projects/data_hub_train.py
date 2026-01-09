@@ -25,10 +25,13 @@ import shutil
 import xml.etree.ElementTree as ET
 
 import pandas as pd
+import numpy as np
 
 from utils.market_data import OHLCVRequest, fetch_ohlcv
 from utils.macro_data import FREDSeriesRequest, WorldBankRequest, fetch_fred_many, fetch_world_bank_many
 from utils.universe import fetch_nasdaq100_symbols, fetch_sp500_symbols, load_symbols_file
+from utils.spectral import spectral_cluster_assets
+from utils.dmd import exact_dmd, eigenvalue_to_frequency
 
 
 def _arima_forecast(close: pd.Series, steps: int = 5) -> list[float]:
@@ -333,6 +336,55 @@ def _select_and_copy_charts(
     return selection_manifest
 
 
+def _align_closes(closes: dict[str, pd.Series], *, how: str = 'inner') -> pd.DataFrame:
+    """Align close series into a single DataFrame indexed by datetime.
+
+    closes: {symbol: close_series}
+    how: 'inner' (intersection) or 'outer' (union, then forward-fill)
+    """
+    if not closes:
+        return pd.DataFrame()
+
+    frames: list[pd.DataFrame] = []
+    for sym, s in closes.items():
+        if s is None:
+            continue
+        ser = pd.to_numeric(s, errors='coerce')
+        if getattr(ser, 'index', None) is None:
+            continue
+        df = pd.DataFrame({sym: ser})
+        df.index = pd.to_datetime(df.index, errors='coerce')
+        df = df.dropna(axis=0, how='any')
+        df = df[~df.index.duplicated(keep='last')].sort_index()
+        if not df.empty:
+            frames.append(df)
+
+    if not frames:
+        return pd.DataFrame()
+
+    out = frames[0]
+    for f in frames[1:]:
+        out = out.join(f, how='outer')
+
+    out = out.sort_index()
+
+    h = (how or 'inner').strip().lower()
+    if h == 'inner':
+        out = out.dropna(axis=0, how='any')
+    else:
+        out = out.ffill()
+        out = out.dropna(axis=0, how='any')
+
+    return out
+
+
+def _log_returns(close_panel: pd.DataFrame) -> pd.DataFrame:
+    if close_panel is None or close_panel.empty:
+        return pd.DataFrame()
+    x = close_panel.astype(float)
+    return (np.log(x).diff(1)).dropna(axis=0, how='any')
+
+
 def _write_symbol_charts(
     df: pd.DataFrame,
     *,
@@ -574,6 +626,16 @@ def main(argv: list[str] | None = None) -> int:
     p.add_argument("--fib-lookback", type=int, default=60, help="Fib swing lookback window (candles)")
     p.add_argument("--fib-tolerance", type=float, default=0.01, help="Relative tolerance for fib proximity (e.g. 0.01 = 1%)")
 
+    # spectral graph / DMD analysis (multi-asset)
+    p.add_argument("--spectral", action="store_true", help="Compute similarity graph + Fiedler clustering across assets")
+    p.add_argument("--spectral-k", type=int, default=8, help="kNN neighbors for the similarity graph")
+    p.add_argument("--spectral-abs", action="store_true", help="Use absolute correlation for similarity")
+    p.add_argument("--spectral-label", default='median', help="Fiedler bipartition rule: median | sign")
+    p.add_argument("--spectral-min-overlap", type=int, default=80, help="Minimum overlapping return rows required")
+
+    p.add_argument("--dmd", action="store_true", help="Run Dynamic Mode Decomposition on aligned multi-asset returns")
+    p.add_argument("--dmd-rank", type=int, default=6, help="DMD rank (SVD truncation)")
+
     # macro
     p.add_argument("--fred-series", default=None, help="Comma-separated FRED series ids (e.g., CPIAUCSL,UNRATE)")
     p.add_argument("--fred-api-key", default=None, help="FRED API key (or set FRED_API_KEY env)")
@@ -633,6 +695,9 @@ def main(argv: list[str] | None = None) -> int:
     scored_for_selection: list[dict] = []
     _news_cache: dict[str, tuple[bool, int]] = {}
 
+    # Collect closes for multi-asset analyses (spectral/DMD)
+    closes_by_symbol: dict[str, pd.Series] = {}
+
     for sym in symbols:
         try:
             df = fetch_ohlcv(OHLCVRequest(symbol=sym, period=args.period, interval=args.interval))
@@ -650,6 +715,12 @@ def main(argv: list[str] | None = None) -> int:
         csv_path = out_dir / f"{sym}_{args.period}_{args.interval}.csv"
         df_out.to_csv(csv_path)
         print(f"Wrote dataset: {csv_path}")
+
+        # Store close series for multi-asset analysis
+        try:
+            closes_by_symbol[sym] = df['Close'].copy()
+        except Exception:
+            pass
         result_entry = {
             "symbol": sym,
             "rows": int(len(df_out)),
@@ -759,6 +830,91 @@ def main(argv: list[str] | None = None) -> int:
             )
             print(f"Wrote selection manifest: {out_dir / 'selected_charts.json'}")
             print(f"Selected charts copied to: {out_dir / 'selected_charts'}")
+
+    # --- Spectral clustering / DMD (multi-asset) ---
+    if args.spectral or args.dmd:
+        panel = _align_closes(closes_by_symbol, how='inner')
+        rets = _log_returns(panel)
+
+        # Require a minimum overlap so results aren't junk.
+        if not rets.empty and rets.shape[0] >= int(args.spectral_min_overlap) and rets.shape[1] >= 3:
+            if args.spectral:
+                try:
+                    spec = spectral_cluster_assets(
+                        rets,
+                        k=int(args.spectral_k),
+                        normalized=True,
+                        corr_method='pearson',
+                        use_abs_corr=bool(args.spectral_abs),
+                        label_method=str(args.spectral_label),
+                    )
+
+                    if spec.labels is not None and spec.fiedler_vector is not None:
+                        dfc = pd.DataFrame({
+                            'symbol': spec.symbols,
+                            'cluster': spec.labels.astype(int),
+                            'fiedler': spec.fiedler_vector.astype(float),
+                        }).sort_values(['cluster', 'symbol'])
+
+                        out_csv = out_dir / 'spectral_clusters.csv'
+                        dfc.to_csv(out_csv, index=False)
+
+                        out_json = out_dir / 'spectral_graph.json'
+                        with open(out_json, 'w', encoding='utf-8') as f:
+                            json.dump({
+                                'symbols': spec.symbols,
+                                'params': {
+                                    'k': int(args.spectral_k),
+                                    'abs_corr': bool(args.spectral_abs),
+                                    'label_method': str(args.spectral_label),
+                                    'min_overlap': int(args.spectral_min_overlap),
+                                },
+                                'fiedler_value': spec.fiedler_value,
+                                'eigenvalues': [float(x) for x in (spec.eigenvalues[: min(50, spec.eigenvalues.size)]).tolist()],
+                                'rows_used': int(rets.shape[0]),
+                                'assets_used': int(rets.shape[1]),
+                            }, f, indent=2)
+
+                        print(f"Wrote spectral clusters: {out_csv}")
+                except Exception as e:
+                    print(f"Warning: spectral clustering failed: {e}")
+
+            if args.dmd:
+                try:
+                    # DMD expects (n_features, n_time)
+                    X = rets.to_numpy(dtype=float).T
+                    res = exact_dmd(X, rank=int(args.dmd_rank))
+                    growth, freq = eigenvalue_to_frequency(res.eigenvalues, dt=1.0)
+
+                    out_eigs = out_dir / 'dmd_eigs.csv'
+                    df_e = pd.DataFrame({
+                        'eig_real': np.real(res.eigenvalues),
+                        'eig_imag': np.imag(res.eigenvalues),
+                        'growth': growth,
+                        'frequency': freq,
+                        'amplitude_abs': np.abs(res.amplitudes),
+                    }).sort_values('amplitude_abs', ascending=False)
+                    df_e.to_csv(out_eigs, index=False)
+
+                    out_json = out_dir / 'dmd_summary.json'
+                    with open(out_json, 'w', encoding='utf-8') as f:
+                        json.dump({
+                            'rank': int(res.rank),
+                            'rows_used': int(rets.shape[0]),
+                            'assets_used': int(rets.shape[1]),
+                            'assets': list(rets.columns),
+                            'top_modes': int(min(10, df_e.shape[0])),
+                        }, f, indent=2)
+
+                    print(f"Wrote DMD eigs: {out_eigs}")
+                except Exception as e:
+                    print(f"Warning: DMD failed: {e}")
+        else:
+            if args.spectral or args.dmd:
+                print(
+                    "Note: skipping spectral/DMD (need at least 3 assets and enough overlapping rows). "
+                    f"Have rows={rets.shape[0] if rets is not None else 0}, assets={rets.shape[1] if rets is not None else 0}."
+                )
 
     if args.skip_train:
         # Dataset-only mode

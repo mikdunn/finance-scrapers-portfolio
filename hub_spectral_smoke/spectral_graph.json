@@ -1,0 +1,21 @@
+{
+  "symbols": [
+    "ETH-USD",
+    "BTC-USD",
+    "EURUSD=X"
+  ],
+  "params": {
+    "k": 2,
+    "abs_corr": false,
+    "label_method": "median",
+    "min_overlap": 80
+  },
+  "fiedler_value": 1.37944535942377,
+  "eigenvalues": [
+    3.044541344292967e-16,
+    1.37944535942377,
+    1.6205546405762303
+  ],
+  "rows_used": 128,
+  "assets_used": 3
+}

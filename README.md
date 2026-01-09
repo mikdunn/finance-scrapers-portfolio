@@ -52,4 +52,22 @@ python main.py --project hub --universe nasdaq100 --max-symbols 25 --period 1y -
 
 Chart artifacts are written to `<out-dir>/charts/`.
 
+### Spectral clustering (Fiedler vector) + Dynamic Mode Decomposition (DMD)
+
+The hub can also compute multi-asset structure from the set of symbols you fetch:
+
+- **Spectral graph clustering**: builds a similarity graph from aligned log-returns, computes the graph Laplacian, and uses the **Fiedler vector** (2nd-smallest eigenvector) for a simple 2-way clustering.
+- **DMD**: runs **Dynamic Mode Decomposition** on the aligned multi-asset log-returns to extract dominant modes/eigenvalues.
+
+Example:
+
+```bash
+python main.py --project hub --symbols "ETH-USD,BTC-USD,EURUSD=X" --period 6mo --interval 1d --out-dir hub_spectral --skip-train --spectral --spectral-k 2 --dmd --dmd-rank 3
+```
+
+Artifacts written into `<out-dir>/`:
+
+- `spectral_clusters.csv` and `spectral_graph.json`
+- `dmd_eigs.csv` and `dmd_summary.json`
+
 > Note: This project is for educational/analysis purposes only and is not financial advice.
