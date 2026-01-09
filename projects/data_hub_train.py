@@ -354,6 +354,7 @@ def _write_symbol_charts(
         support_resistance_from_pivots,
         trade_style_heuristic,
     )
+    from utils.fourier import dominant_cycles_fft, rolling_dominant_period
     from projects.market_analyzer import build_candlestick_figure
 
     charts_dir.mkdir(parents=True, exist_ok=True)
@@ -365,6 +366,10 @@ def _write_symbol_charts(
     style = trade_style_heuristic(df['Close'], df['High'], df['Low'], interval)
     fc = _arima_forecast(df['Close'], steps=forecast_steps)
 
+    # Fourier / dominant cycles
+    cycles = dominant_cycles_fft(df['Close'], window=min(256, len(df)), top_k=3, min_period=5.0, max_period=None)
+    fft_roll = rolling_dominant_period(df['Close'], window=min(128, len(df)), min_period=5.0, max_period=None)
+
     # Indicator-enriched OHLCV for the charting subdir (kept separate from hub dataset CSV).
     out_df = df.copy()
     out_df['RSI14'] = rsi14
@@ -372,6 +377,12 @@ def _write_symbol_charts(
     out_df['Kijun'] = ichi.kijun_sen
     out_df['SenkouA'] = ichi.senkou_span_a
     out_df['SenkouB'] = ichi.senkou_span_b
+
+    out_df['FFTPeriod'] = fft_roll
+    for ccy in cycles:
+        out_df[f'FFTPeriod{ccy.k}'] = float(ccy.period)
+        out_df[f'FFTPower{ccy.k}'] = float(ccy.power)
+        out_df[f'FFTAmp{ccy.k}'] = float(ccy.amplitude)
 
     csv_path = charts_dir / f"{symbol}_{period}_{interval}.csv"
     out_df.to_csv(csv_path)
@@ -390,6 +401,17 @@ def _write_symbol_charts(
         'resistance_levels': [float(x) for x in sr.resistances],
         'trade_style': asdict(style),
         'forecast_close_next': fc,
+        'dominant_cycles': [
+            {
+                'k': int(c.k),
+                'period': float(c.period),
+                'frequency': float(c.frequency),
+                'power': float(c.power),
+                'amplitude': float(c.amplitude),
+                'phase': float(c.phase),
+            }
+            for c in cycles
+        ],
         'artifacts': {
             'csv': str(csv_path),
             'html': str(html_path),

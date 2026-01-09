@@ -1,0 +1,63 @@
+{
+  "results": [
+    {
+      "symbol": "ETH-USD",
+      "period": "6mo",
+      "interval": "1d",
+      "last_close": 3068.66,
+      "regime": "neutral",
+      "support_levels": [
+        3350.0,
+        3423.26,
+        3677.0,
+        3825.2,
+        4065.0,
+        4213.21
+      ],
+      "resistance_levels": [
+        3075.51,
+        3448.32,
+        3658.0,
+        3859.67,
+        3939.3,
+        4252.57
+      ],
+      "trade_style": {
+        "label": "long",
+        "rationale": "lower daily volatility (ATR/Close\u22483.82%)"
+      },
+      "forecast_close_next": [],
+      "dominant_cycles": [
+        {
+          "k": 1,
+          "period": 180.0,
+          "frequency": 0.005555555555555556,
+          "power": 525357835.63073754,
+          "amplitude": 254.6742862033336,
+          "phase": -2.4358112799306477
+        },
+        {
+          "k": 2,
+          "period": 90.0,
+          "frequency": 0.011111111111111112,
+          "power": 169056649.83870116,
+          "amplitude": 144.46865174878337,
+          "phase": 0.7140211898549462
+        },
+        {
+          "k": 3,
+          "period": 20.0,
+          "frequency": 0.05,
+          "power": 39502234.71365023,
+          "amplitude": 69.83422585273388,
+          "phase": -1.1844657700870556
+        }
+      ],
+      "artifacts": {
+        "csv": "outputs_fft_smoke\\ETH-USD_6mo_1d.csv",
+        "html": "outputs_fft_smoke\\ETH-USD_6mo_1d.html"
+      }
+    }
+  ],
+  "failures": []
+}

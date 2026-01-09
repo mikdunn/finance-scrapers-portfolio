@@ -31,6 +31,7 @@ import pandas as pd
 import plotly.graph_objects as go
 
 from utils.market_data import OHLCVRequest, fetch_ohlcv
+from utils.fourier import dominant_cycles_fft, rolling_dominant_period
 from utils.technical import (
     ichimoku,
     market_regime,
@@ -121,6 +122,12 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument('--interval', default='1d', help='yfinance interval (e.g. 1m, 5m, 1h, 1d)')
     parser.add_argument('--out-dir', default='outputs', help='Output directory')
     parser.add_argument('--forecast-steps', type=int, default=5, help='ARIMA forecast horizon (steps)')
+    # Fourier / dominant cycles
+    parser.add_argument('--fft-window', type=int, default=256, help='FFT trailing window (candles) for dominant cycles')
+    parser.add_argument('--fft-top-k', type=int, default=3, help='How many dominant cycles to report')
+    parser.add_argument('--fft-min-period', type=float, default=5.0, help='Minimum cycle period to consider (candles)')
+    parser.add_argument('--fft-max-period', type=float, default=None, help='Maximum cycle period to consider (candles)')
+    parser.add_argument('--fft-rolling-window', type=int, default=128, help='Rolling FFT window for per-row dominant period feature')
     args = parser.parse_args(argv)
 
     symbols = [s.strip().upper() for s in args.symbols.split(',') if s.strip()]
@@ -146,6 +153,21 @@ def main(argv: list[str] | None = None) -> int:
 
         fc = _arima_forecast(df['Close'], steps=args.forecast_steps)
 
+        # Fourier / dominant cycles (FFT)
+        cycles = dominant_cycles_fft(
+            df['Close'],
+            window=int(args.fft_window),
+            top_k=int(args.fft_top_k),
+            min_period=float(args.fft_min_period),
+            max_period=args.fft_max_period,
+        )
+        fft_roll = rolling_dominant_period(
+            df['Close'],
+            window=int(args.fft_rolling_window),
+            min_period=float(args.fft_min_period),
+            max_period=args.fft_max_period,
+        )
+
         # Persist computed frame
         out_df = df.copy()
         out_df['RSI14'] = rsi14
@@ -153,6 +175,15 @@ def main(argv: list[str] | None = None) -> int:
         out_df['Kijun'] = ichi.kijun_sen
         out_df['SenkouA'] = ichi.senkou_span_a
         out_df['SenkouB'] = ichi.senkou_span_b
+
+        # Add FFT-derived features
+        # - Rolling dominant period (per row)
+        out_df['FFTPeriod'] = fft_roll
+        # - Top-K dominant cycles from trailing window (constant columns)
+        for ccy in cycles:
+            out_df[f'FFTPeriod{ccy.k}'] = float(ccy.period)
+            out_df[f'FFTPower{ccy.k}'] = float(ccy.power)
+            out_df[f'FFTAmp{ccy.k}'] = float(ccy.amplitude)
 
         csv_path = os.path.join(args.out_dir, f'{sym}_{args.period}_{args.interval}.csv')
         out_df.to_csv(csv_path)
@@ -171,6 +202,17 @@ def main(argv: list[str] | None = None) -> int:
             'resistance_levels': [float(x) for x in sr.resistances],
             'trade_style': asdict(style),
             'forecast_close_next': fc,
+            'dominant_cycles': [
+                {
+                    'k': int(c.k),
+                    'period': float(c.period),
+                    'frequency': float(c.frequency),
+                    'power': float(c.power),
+                    'amplitude': float(c.amplitude),
+                    'phase': float(c.phase),
+                }
+                for c in cycles
+            ],
             'artifacts': {
                 'csv': csv_path,
                 'html': html_path,
