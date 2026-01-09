@@ -1,0 +1,321 @@
+{
+  "min_conditions": 3,
+  "max_selected": 10,
+  "charts_dir": "hub_sp500_select_test\\charts",
+  "selected_dir": "hub_sp500_select_test\\selected_charts",
+  "selected": [
+    {
+      "symbol": "MMM",
+      "direction": null,
+      "conditions": {
+        "ichimoku": false,
+        "rsi": true,
+        "news": true,
+        "fibonacci": true
+      },
+      "conditions_met": 3,
+      "score": 0.75,
+      "rsi14": 53.95816603604559,
+      "news_recent_items": 8,
+      "fib_nearest": "0.382",
+      "fib_levels": {
+        "0.236": 169.00712000000001,
+        "0.382": 165.49144,
+        "0.500": 162.65,
+        "0.618": 159.80856,
+        "0.786": 155.76312000000001
+      },
+      "ichimoku_debug": {
+        "close": 165.62,
+        "tenkan": 162.79500000000002,
+        "kijun": 166.57,
+        "span_a": 167.0575,
+        "span_b": 160.6525,
+        "cloud_top": 167.0575,
+        "cloud_bottom": 160.6525
+      },
+      "artifacts": {
+        "csv": "hub_sp500_select_test\\charts\\MMM_6mo_1d.csv",
+        "html": "hub_sp500_select_test\\charts\\MMM_6mo_1d.html"
+      },
+      "selected_files": {
+        "html": "hub_sp500_select_test\\selected_charts\\MMM_6mo_1d.html",
+        "csv": "hub_sp500_select_test\\selected_charts\\MMM_6mo_1d.csv"
+      }
+    },
+    {
+      "symbol": "ABT",
+      "direction": null,
+      "conditions": {
+        "ichimoku": false,
+        "rsi": true,
+        "news": true,
+        "fibonacci": true
+      },
+      "conditions_met": 3,
+      "score": 0.75,
+      "rsi14": 49.47213322322623,
+      "news_recent_items": 19,
+      "fib_nearest": "0.500",
+      "fib_levels": {
+        "0.236": 129.3523,
+        "0.382": 127.69885000000001,
+        "0.500": 126.36250000000001,
+        "0.618": 125.02615,
+        "0.786": 123.12355000000001
+      },
+      "ichimoku_debug": {
+        "close": 125.76,
+        "tenkan": 125.9775,
+        "kijun": 125.16999999999999,
+        "span_a": 126.92625000000001,
+        "span_b": 129.79250000000002,
+        "cloud_top": 129.79250000000002,
+        "cloud_bottom": 126.92625000000001
+      },
+      "artifacts": {
+        "csv": "hub_sp500_select_test\\charts\\ABT_6mo_1d.csv",
+        "html": "hub_sp500_select_test\\charts\\ABT_6mo_1d.html"
+      },
+      "selected_files": {
+        "html": "hub_sp500_select_test\\selected_charts\\ABT_6mo_1d.html",
+        "csv": "hub_sp500_select_test\\selected_charts\\ABT_6mo_1d.csv"
+      }
+    },
+    {
+      "symbol": "AES",
+      "direction": null,
+      "conditions": {
+        "ichimoku": false,
+        "rsi": true,
+        "news": true,
+        "fibonacci": true
+      },
+      "conditions_met": 3,
+      "score": 0.75,
+      "rsi14": 54.59428798610196,
+      "news_recent_items": 27,
+      "fib_nearest": "0.382",
+      "fib_levels": {
+        "0.236": 14.59284,
+        "0.382": 14.32858,
+        "0.500": 14.115,
+        "0.618": 13.90142,
+        "0.786": 13.59734
+      },
+      "ichimoku_debug": {
+        "close": 14.405,
+        "tenkan": 14.515,
+        "kijun": 14.19,
+        "span_a": 13.821125,
+        "span_b": 14.129999999999999,
+        "cloud_top": 14.129999999999999,
+        "cloud_bottom": 13.821125
+      },
+      "artifacts": {
+        "csv": "hub_sp500_select_test\\charts\\AES_6mo_1d.csv",
+        "html": "hub_sp500_select_test\\charts\\AES_6mo_1d.html"
+      },
+      "selected_files": {
+        "html": "hub_sp500_select_test\\selected_charts\\AES_6mo_1d.html",
+        "csv": "hub_sp500_select_test\\selected_charts\\AES_6mo_1d.csv"
+      }
+    },
+    {
+      "symbol": "AFL",
+      "direction": null,
+      "conditions": {
+        "ichimoku": false,
+        "rsi": true,
+        "news": true,
+        "fibonacci": true
+      },
+      "conditions_met": 3,
+      "score": 0.75,
+      "rsi14": 46.65248373550042,
+      "news_recent_items": 15,
+      "fib_nearest": "0.618",
+      "fib_levels": {
+        "0.236": 113.37847599999999,
+        "0.382": 111.858762,
+        "0.500": 110.6305,
+        "0.618": 109.402238,
+        "0.786": 107.653526
+      },
+      "ichimoku_debug": {
+        "close": 109.7,
+        "tenkan": 110.76,
+        "kijun": 109.97,
+        "span_a": 110.50774999999999,
+        "span_b": 110.6305,
+        "cloud_top": 110.6305,
+        "cloud_bottom": 110.50774999999999
+      },
+      "artifacts": {
+        "csv": "hub_sp500_select_test\\charts\\AFL_6mo_1d.csv",
+        "html": "hub_sp500_select_test\\charts\\AFL_6mo_1d.html"
+      },
+      "selected_files": {
+        "html": "hub_sp500_select_test\\selected_charts\\AFL_6mo_1d.html",
+        "csv": "hub_sp500_select_test\\selected_charts\\AFL_6mo_1d.csv"
+      }
+    },
+    {
+      "symbol": "AKAM",
+      "direction": "long",
+      "conditions": {
+        "ichimoku": true,
+        "rsi": true,
+        "news": true,
+        "fibonacci": false
+      },
+      "conditions_met": 3,
+      "score": 0.75,
+      "rsi14": 53.65007116291419,
+      "news_recent_items": 24,
+      "fib_nearest": "0.236",
+      "fib_levels": {
+        "0.236": 87.00152,
+        "0.382": 83.90924,
+        "0.500": 81.41,
+        "0.618": 78.91076,
+        "0.786": 75.35252
+      },
+      "ichimoku_debug": {
+        "close": 88.175,
+        "tenkan": 86.825,
+        "kijun": 86.73,
+        "span_a": 84.97149999999999,
+        "span_b": 81.41,
+        "cloud_top": 84.97149999999999,
+        "cloud_bottom": 81.41
+      },
+      "artifacts": {
+        "csv": "hub_sp500_select_test\\charts\\AKAM_6mo_1d.csv",
+        "html": "hub_sp500_select_test\\charts\\AKAM_6mo_1d.html"
+      },
+      "selected_files": {
+        "html": "hub_sp500_select_test\\selected_charts\\AKAM_6mo_1d.html",
+        "csv": "hub_sp500_select_test\\selected_charts\\AKAM_6mo_1d.csv"
+      }
+    },
+    {
+      "symbol": "LNT",
+      "direction": null,
+      "conditions": {
+        "ichimoku": false,
+        "rsi": true,
+        "news": true,
+        "fibonacci": true
+      },
+      "conditions_met": 3,
+      "score": 0.75,
+      "rsi14": 47.02779048452276,
+      "news_recent_items": 8,
+      "fib_nearest": "0.786",
+      "fib_levels": {
+        "0.236": 68.36232,
+        "0.382": 67.50384,
+        "0.500": 66.81,
+        "0.618": 66.11616,
+        "0.786": 65.12832
+      },
+      "ichimoku_debug": {
+        "close": 65.26,
+        "tenkan": 64.97749999999999,
+        "kijun": 65.2775,
+        "span_a": 67.87,
+        "span_b": 66.625,
+        "cloud_top": 67.87,
+        "cloud_bottom": 66.625
+      },
+      "artifacts": {
+        "csv": "hub_sp500_select_test\\charts\\LNT_6mo_1d.csv",
+        "html": "hub_sp500_select_test\\charts\\LNT_6mo_1d.html"
+      },
+      "selected_files": {
+        "html": "hub_sp500_select_test\\selected_charts\\LNT_6mo_1d.html",
+        "csv": "hub_sp500_select_test\\selected_charts\\LNT_6mo_1d.csv"
+      }
+    },
+    {
+      "symbol": "ALL",
+      "direction": "long",
+      "conditions": {
+        "ichimoku": true,
+        "rsi": true,
+        "news": true,
+        "fibonacci": false
+      },
+      "conditions_met": 3,
+      "score": 0.75,
+      "rsi14": 61.44187766937103,
+      "news_recent_items": 40,
+      "fib_nearest": "0.236",
+      "fib_levels": {
+        "0.236": 209.32684,
+        "0.382": 205.26658,
+        "0.500": 201.985,
+        "0.618": 198.70342,
+        "0.786": 194.03134
+      },
+      "ichimoku_debug": {
+        "close": 213.65,
+        "tenkan": 208.155,
+        "kijun": 207.13,
+        "span_a": 207.05,
+        "span_b": 201.985,
+        "cloud_top": 207.05,
+        "cloud_bottom": 201.985
+      },
+      "artifacts": {
+        "csv": "hub_sp500_select_test\\charts\\ALL_6mo_1d.csv",
+        "html": "hub_sp500_select_test\\charts\\ALL_6mo_1d.html"
+      },
+      "selected_files": {
+        "html": "hub_sp500_select_test\\selected_charts\\ALL_6mo_1d.html",
+        "csv": "hub_sp500_select_test\\selected_charts\\ALL_6mo_1d.csv"
+      }
+    },
+    {
+      "symbol": "GOOGL",
+      "direction": "long",
+      "conditions": {
+        "ichimoku": true,
+        "rsi": true,
+        "news": true,
+        "fibonacci": false
+      },
+      "conditions_met": 3,
+      "score": 0.75,
+      "rsi14": 69.79630612353583,
+      "news_recent_items": 53,
+      "fib_nearest": "0.236",
+      "fib_levels": {
+        "0.236": 310.37352,
+        "0.382": 297.71824,
+        "0.500": 287.49,
+        "0.618": 277.26176,
+        "0.786": 262.69952
+      },
+      "ichimoku_debug": {
+        "close": 329.85,
+        "tenkan": 320.58,
+        "kijun": 313.475,
+        "span_a": 302.1425,
+        "span_b": 282.335,
+        "cloud_top": 302.1425,
+        "cloud_bottom": 282.335
+      },
+      "artifacts": {
+        "csv": "hub_sp500_select_test\\charts\\GOOGL_6mo_1d.csv",
+        "html": "hub_sp500_select_test\\charts\\GOOGL_6mo_1d.html"
+      },
+      "selected_files": {
+        "html": "hub_sp500_select_test\\selected_charts\\GOOGL_6mo_1d.html",
+        "csv": "hub_sp500_select_test\\selected_charts\\GOOGL_6mo_1d.csv"
+      }
+    }
+  ],
+  "not_selected_count": 12
+}

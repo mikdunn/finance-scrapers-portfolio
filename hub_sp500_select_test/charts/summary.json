@@ -1,0 +1,637 @@
+{
+  "results": [
+    {
+      "symbol": "MMM",
+      "period": "6mo",
+      "interval": "1d",
+      "last_close": 165.62,
+      "regime": "neutral",
+      "support_levels": [
+        150.43,
+        151.821,
+        158.45,
+        159.20499999999998,
+        162.29,
+        163.31
+      ],
+      "resistance_levels": [
+        159.11,
+        160.42995000000002,
+        162.1,
+        170.36,
+        172.70499999999998,
+        174.69
+      ],
+      "trade_style": {
+        "label": "long",
+        "rationale": "lower daily volatility (ATR/Close\u22481.91%)"
+      },
+      "forecast_close_next": [],
+      "artifacts": {
+        "csv": "hub_sp500_select_test\\charts\\MMM_6mo_1d.csv",
+        "html": "hub_sp500_select_test\\charts\\MMM_6mo_1d.html"
+      }
+    },
+    {
+      "symbol": "AOS",
+      "period": "6mo",
+      "interval": "1d",
+      "last_close": 70.48,
+      "regime": "neutral",
+      "support_levels": [
+        64.92,
+        66.65,
+        67.24,
+        69.53999999999999,
+        70.0,
+        71.16499999999999
+      ],
+      "resistance_levels": [
+        67.37,
+        69.5,
+        71.031,
+        73.89875,
+        75.2,
+        77.31
+      ],
+      "trade_style": {
+        "label": "long",
+        "rationale": "lower daily volatility (ATR/Close\u22482.14%)"
+      },
+      "forecast_close_next": [],
+      "artifacts": {
+        "csv": "hub_sp500_select_test\\charts\\AOS_6mo_1d.csv",
+        "html": "hub_sp500_select_test\\charts\\AOS_6mo_1d.html"
+      }
+    },
+    {
+      "symbol": "ABT",
+      "period": "6mo",
+      "interval": "1d",
+      "last_close": 125.76,
+      "regime": "neutral",
+      "support_levels": [
+        122.2675,
+        125.74,
+        127.445,
+        128.33,
+        129.08,
+        130.14
+      ],
+      "resistance_levels": [
+        129.745,
+        132.025,
+        133.81,
+        134.71,
+        137.49
+      ],
+      "trade_style": {
+        "label": "long",
+        "rationale": "lower daily volatility (ATR/Close\u22481.75%)"
+      },
+      "forecast_close_next": [],
+      "artifacts": {
+        "csv": "hub_sp500_select_test\\charts\\ABT_6mo_1d.csv",
+        "html": "hub_sp500_select_test\\charts\\ABT_6mo_1d.html"
+      }
+    },
+    {
+      "symbol": "ABBV",
+      "period": "6mo",
+      "interval": "1d",
+      "last_close": 219.4,
+      "regime": "neutral",
+      "support_levels": [
+        205.4901,
+        207.6116,
+        211.69,
+        217.67,
+        220.2301,
+        225.32
+      ],
+      "resistance_levels": [
+        212.45,
+        225.16,
+        232.015,
+        232.81,
+        239.29,
+        244.81
+      ],
+      "trade_style": {
+        "label": "long",
+        "rationale": "lower daily volatility (ATR/Close\u22482.53%)"
+      },
+      "forecast_close_next": [],
+      "artifacts": {
+        "csv": "hub_sp500_select_test\\charts\\ABBV_6mo_1d.csv",
+        "html": "hub_sp500_select_test\\charts\\ABBV_6mo_1d.html"
+      }
+    },
+    {
+      "symbol": "ACN",
+      "period": "6mo",
+      "interval": "1d",
+      "last_close": 281.55,
+      "regime": "neutral",
+      "support_levels": [
+        229.4001,
+        233.6,
+        236.67,
+        237.43,
+        258.0,
+        261.5
+      ],
+      "resistance_levels": [
+        254.17,
+        255.44,
+        260.4,
+        262.165,
+        280.91999999999996,
+        291.0
+      ],
+      "trade_style": {
+        "label": "long",
+        "rationale": "lower daily volatility (ATR/Close\u22482.61%)"
+      },
+      "forecast_close_next": [],
+      "artifacts": {
+        "csv": "hub_sp500_select_test\\charts\\ACN_6mo_1d.csv",
+        "html": "hub_sp500_select_test\\charts\\ACN_6mo_1d.html"
+      }
+    },
+    {
+      "symbol": "ADBE",
+      "period": "6mo",
+      "interval": "1d",
+      "last_close": 333.87,
+      "regime": "neutral",
+      "support_levels": [
+        323.0329,
+        327.5,
+        330.04,
+        331.5,
+        340.05,
+        341.61
+      ],
+      "resistance_levels": [
+        340.0,
+        359.6699,
+        363.205,
+        364.65,
+        370.86,
+        376.16
+      ],
+      "trade_style": {
+        "label": "long",
+        "rationale": "lower daily volatility (ATR/Close\u22482.58%)"
+      },
+      "forecast_close_next": [],
+      "artifacts": {
+        "csv": "hub_sp500_select_test\\charts\\ADBE_6mo_1d.csv",
+        "html": "hub_sp500_select_test\\charts\\ADBE_6mo_1d.html"
+      }
+    },
+    {
+      "symbol": "AMD",
+      "period": "6mo",
+      "interval": "1d",
+      "last_close": 203.9799,
+      "regime": "neutral",
+      "support_levels": [
+        149.28,
+        149.85,
+        158.025,
+        194.275,
+        197.53,
+        224.6401
+      ],
+      "resistance_levels": [
+        165.1,
+        170.99,
+        182.5,
+        186.65,
+        220.17,
+        225.98
+      ],
+      "trade_style": {
+        "label": "swing",
+        "rationale": "higher daily volatility (ATR/Close\u22484.17%)"
+      },
+      "forecast_close_next": [],
+      "artifacts": {
+        "csv": "hub_sp500_select_test\\charts\\AMD_6mo_1d.csv",
+        "html": "hub_sp500_select_test\\charts\\AMD_6mo_1d.html"
+      }
+    },
+    {
+      "symbol": "AES",
+      "period": "6mo",
+      "interval": "1d",
+      "last_close": 14.405,
+      "regime": "neutral",
+      "support_levels": [
+        13.21,
+        13.28,
+        13.36,
+        13.7,
+        13.975,
+        14.05
+      ],
+      "resistance_levels": [
+        13.2,
+        13.5,
+        13.66,
+        13.995,
+        14.2,
+        14.6
+      ],
+      "trade_style": {
+        "label": "long",
+        "rationale": "lower daily volatility (ATR/Close\u22482.55%)"
+      },
+      "forecast_close_next": [],
+      "artifacts": {
+        "csv": "hub_sp500_select_test\\charts\\AES_6mo_1d.csv",
+        "html": "hub_sp500_select_test\\charts\\AES_6mo_1d.html"
+      }
+    },
+    {
+      "symbol": "AFL",
+      "period": "6mo",
+      "interval": "1d",
+      "last_close": 109.7,
+      "regime": "neutral",
+      "support_levels": [
+        104.6569,
+        105.426,
+        106.4604,
+        106.93,
+        108.31,
+        108.88
+      ],
+      "resistance_levels": [
+        103.53,
+        109.65,
+        109.99,
+        112.0,
+        113.9,
+        115.835
+      ],
+      "trade_style": {
+        "label": "long",
+        "rationale": "lower daily volatility (ATR/Close\u22481.53%)"
+      },
+      "forecast_close_next": [],
+      "artifacts": {
+        "csv": "hub_sp500_select_test\\charts\\AFL_6mo_1d.csv",
+        "html": "hub_sp500_select_test\\charts\\AFL_6mo_1d.html"
+      }
+    },
+    {
+      "symbol": "A",
+      "period": "6mo",
+      "interval": "1d",
+      "last_close": 148.94,
+      "regime": "neutral",
+      "support_levels": [
+        120.78,
+        123.13,
+        135.405,
+        136.23,
+        140.24,
+        142.205
+      ],
+      "resistance_levels": [
+        122.75,
+        130.08,
+        131.0,
+        143.09,
+        149.5,
+        152.67
+      ],
+      "trade_style": {
+        "label": "long",
+        "rationale": "lower daily volatility (ATR/Close\u22482.16%)"
+      },
+      "forecast_close_next": [],
+      "artifacts": {
+        "csv": "hub_sp500_select_test\\charts\\A_6mo_1d.csv",
+        "html": "hub_sp500_select_test\\charts\\A_6mo_1d.html"
+      }
+    },
+    {
+      "symbol": "APD",
+      "period": "6mo",
+      "interval": "1d",
+      "last_close": 264.05,
+      "regime": "neutral",
+      "support_levels": [
+        242.3397,
+        249.2,
+        251.16,
+        265.1,
+        278.405,
+        280.76
+      ],
+      "resistance_levels": [
+        249.17,
+        257.45,
+        265.655,
+        274.83,
+        298.31,
+        300.81025
+      ],
+      "trade_style": {
+        "label": "long",
+        "rationale": "lower daily volatility (ATR/Close\u22482.26%)"
+      },
+      "forecast_close_next": [],
+      "artifacts": {
+        "csv": "hub_sp500_select_test\\charts\\APD_6mo_1d.csv",
+        "html": "hub_sp500_select_test\\charts\\APD_6mo_1d.html"
+      }
+    },
+    {
+      "symbol": "ABNB",
+      "period": "6mo",
+      "interval": "1d",
+      "last_close": 139.15,
+      "regime": "neutral",
+      "support_levels": [
+        110.81,
+        116.32,
+        117.21379999999999,
+        119.76,
+        132.34
+      ],
+      "resistance_levels": [
+        127.85,
+        130.05,
+        131.11,
+        138.52,
+        143.3
+      ],
+      "trade_style": {
+        "label": "long",
+        "rationale": "lower daily volatility (ATR/Close\u22482.17%)"
+      },
+      "forecast_close_next": [],
+      "artifacts": {
+        "csv": "hub_sp500_select_test\\charts\\ABNB_6mo_1d.csv",
+        "html": "hub_sp500_select_test\\charts\\ABNB_6mo_1d.html"
+      }
+    },
+    {
+      "symbol": "AKAM",
+      "period": "6mo",
+      "interval": "1d",
+      "last_close": 88.175,
+      "regime": "neutral",
+      "support_levels": [
+        74.56,
+        74.89,
+        76.095,
+        82.7,
+        84.54,
+        86.0
+      ],
+      "resistance_levels": [
+        76.58500000000001,
+        79.0,
+        79.43,
+        81.3,
+        90.8825,
+        92.0
+      ],
+      "trade_style": {
+        "label": "long",
+        "rationale": "lower daily volatility (ATR/Close\u22482.45%)"
+      },
+      "forecast_close_next": [],
+      "artifacts": {
+        "csv": "hub_sp500_select_test\\charts\\AKAM_6mo_1d.csv",
+        "html": "hub_sp500_select_test\\charts\\AKAM_6mo_1d.html"
+      }
+    },
+    {
+      "symbol": "ALB",
+      "period": "6mo",
+      "interval": "1d",
+      "last_close": 162.42,
+      "regime": "neutral",
+      "support_levels": [
+        75.88,
+        79.3,
+        88.01,
+        88.76,
+        117.6054,
+        140.7
+      ],
+      "resistance_levels": [
+        86.19,
+        87.45,
+        87.97,
+        99.86,
+        106.955,
+        132.9
+      ],
+      "trade_style": {
+        "label": "swing",
+        "rationale": "higher daily volatility (ATR/Close\u22484.00%)"
+      },
+      "forecast_close_next": [],
+      "artifacts": {
+        "csv": "hub_sp500_select_test\\charts\\ALB_6mo_1d.csv",
+        "html": "hub_sp500_select_test\\charts\\ALB_6mo_1d.html"
+      }
+    },
+    {
+      "symbol": "ARE",
+      "period": "6mo",
+      "interval": "1d",
+      "last_close": 53.97,
+      "regime": "neutral",
+      "support_levels": [
+        44.103,
+        48.66,
+        71.55,
+        72.83
+      ],
+      "resistance_levels": [
+        49.17,
+        54.4513,
+        78.51,
+        83.36,
+        85.37,
+        88.236
+      ],
+      "trade_style": {
+        "label": "long",
+        "rationale": "lower daily volatility (ATR/Close\u22482.98%)"
+      },
+      "forecast_close_next": [],
+      "artifacts": {
+        "csv": "hub_sp500_select_test\\charts\\ARE_6mo_1d.csv",
+        "html": "hub_sp500_select_test\\charts\\ARE_6mo_1d.html"
+      }
+    },
+    {
+      "symbol": "ALGN",
+      "period": "6mo",
+      "interval": "1d",
+      "last_close": 172.56,
+      "regime": "neutral",
+      "support_levels": [
+        127.7,
+        130.23,
+        130.865,
+        131.8972,
+        134.36,
+        154.615
+      ],
+      "resistance_levels": [
+        134.98,
+        140.37,
+        145.25,
+        150.22,
+        150.78,
+        167.02
+      ],
+      "trade_style": {
+        "label": "long",
+        "rationale": "lower daily volatility (ATR/Close\u22482.45%)"
+      },
+      "forecast_close_next": [],
+      "artifacts": {
+        "csv": "hub_sp500_select_test\\charts\\ALGN_6mo_1d.csv",
+        "html": "hub_sp500_select_test\\charts\\ALGN_6mo_1d.html"
+      }
+    },
+    {
+      "symbol": "ALLE",
+      "period": "6mo",
+      "interval": "1d",
+      "last_close": 163.87,
+      "regime": "neutral",
+      "support_levels": [
+        157.09,
+        158.73,
+        163.2025,
+        166.76999999999998,
+        172.05,
+        172.665
+      ],
+      "resistance_levels": [
+        165.005,
+        167.25,
+        169.45,
+        179.56,
+        180.51
+      ],
+      "trade_style": {
+        "label": "long",
+        "rationale": "lower daily volatility (ATR/Close\u22482.09%)"
+      },
+      "forecast_close_next": [],
+      "artifacts": {
+        "csv": "hub_sp500_select_test\\charts\\ALLE_6mo_1d.csv",
+        "html": "hub_sp500_select_test\\charts\\ALLE_6mo_1d.html"
+      }
+    },
+    {
+      "symbol": "LNT",
+      "period": "6mo",
+      "interval": "1d",
+      "last_close": 65.26,
+      "regime": "neutral",
+      "support_levels": [
+        63.76,
+        64.0,
+        64.2957,
+        64.59,
+        65.78,
+        67.1
+      ],
+      "resistance_levels": [
+        65.04,
+        66.045,
+        66.76,
+        67.11,
+        69.16,
+        69.67
+      ],
+      "trade_style": {
+        "label": "long",
+        "rationale": "lower daily volatility (ATR/Close\u22481.38%)"
+      },
+      "forecast_close_next": [],
+      "artifacts": {
+        "csv": "hub_sp500_select_test\\charts\\LNT_6mo_1d.csv",
+        "html": "hub_sp500_select_test\\charts\\LNT_6mo_1d.html"
+      }
+    },
+    {
+      "symbol": "ALL",
+      "period": "6mo",
+      "interval": "1d",
+      "last_close": 213.65,
+      "regime": "neutral",
+      "support_levels": [
+        188.08,
+        191.47,
+        194.78,
+        199.26,
+        201.18,
+        203.55
+      ],
+      "resistance_levels": [
+        198.465,
+        208.46,
+        212.76,
+        214.76,
+        215.795
+      ],
+      "trade_style": {
+        "label": "long",
+        "rationale": "lower daily volatility (ATR/Close\u22481.71%)"
+      },
+      "forecast_close_next": [],
+      "artifacts": {
+        "csv": "hub_sp500_select_test\\charts\\ALL_6mo_1d.csv",
+        "html": "hub_sp500_select_test\\charts\\ALL_6mo_1d.html"
+      }
+    },
+    {
+      "symbol": "GOOGL",
+      "period": "6mo",
+      "interval": "1d",
+      "last_close": 329.85,
+      "regime": "neutral",
+      "support_levels": [
+        196.595,
+        235.84,
+        238.61,
+        270.7,
+        296.12,
+        310.33
+      ],
+      "resistance_levels": [
+        197.95,
+        251.32,
+        256.0,
+        291.59,
+        328.83
+      ],
+      "trade_style": {
+        "label": "long",
+        "rationale": "lower daily volatility (ATR/Close\u22482.26%)"
+      },
+      "forecast_close_next": [],
+      "artifacts": {
+        "csv": "hub_sp500_select_test\\charts\\GOOGL_6mo_1d.csv",
+        "html": "hub_sp500_select_test\\charts\\GOOGL_6mo_1d.html"
+      }
+    }
+  ],
+  "failures": []
+}

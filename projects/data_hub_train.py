@@ -18,7 +18,11 @@ import argparse
 import os
 import json
 from dataclasses import dataclass
+from datetime import datetime, timedelta
 from pathlib import Path
+import re
+import shutil
+import xml.etree.ElementTree as ET
 
 import pandas as pd
 
@@ -52,6 +56,281 @@ def _arima_forecast(close: pd.Series, steps: int = 5) -> list[float]:
             return [float(x) for x in fc.values]
     except Exception:
         return [float(close.iloc[-1])] * steps
+
+
+def _is_equity_symbol(symbol: str) -> bool:
+    s = (symbol or '').strip().upper()
+    if not s:
+        return False
+    # crude heuristic: equities are simple tickers like AAPL, BRK.B, etc.
+    if any(x in s for x in ['-', '=']):
+        return False
+    return True
+
+
+def _parse_rss_dates(xml_bytes: bytes) -> list[datetime]:
+    """Parse RSS/Atom and return item timestamps as naive UTC datetimes when possible."""
+    root = ET.fromstring(xml_bytes)
+    dates: list[datetime] = []
+
+    # RSS
+    for item in root.findall('.//item'):
+        dt_txt = None
+        pub = item.find('pubDate')
+        if pub is not None and pub.text:
+            dt_txt = pub.text.strip()
+        if not dt_txt:
+            continue
+        try:
+            # Example: Tue, 09 Jan 2026 15:42:00 GMT
+            from email.utils import parsedate_to_datetime
+
+            d = parsedate_to_datetime(dt_txt)
+            if d is None:
+                continue
+            if getattr(d, 'tzinfo', None) is not None:
+                d = d.astimezone(tz=None).replace(tzinfo=None)
+            dates.append(d)
+        except Exception:
+            continue
+
+    # Atom
+    if not dates:
+        for entry in root.findall('.//{http://www.w3.org/2005/Atom}entry'):
+            upd = entry.find('{http://www.w3.org/2005/Atom}updated')
+            if upd is None or not upd.text:
+                continue
+            txt = upd.text.strip()
+            try:
+                # ISO8601; best-effort
+                # Handle Z suffix
+                txt2 = txt.replace('Z', '+00:00')
+                d = datetime.fromisoformat(txt2)
+                if getattr(d, 'tzinfo', None) is not None:
+                    d = d.astimezone(tz=None).replace(tzinfo=None)
+                dates.append(d)
+            except Exception:
+                continue
+
+    return dates
+
+
+def _news_hit(symbol: str, *, days: int = 3, min_items: int = 1, timeout: int = 15) -> tuple[bool, int]:
+    """Return (is_in_news, recent_item_count) using Google News RSS.
+
+    For speed/reliability this uses RSS only (no Selenium). This is a heuristic.
+    """
+    import requests
+
+    ticker = (symbol or '').strip().upper()
+    if not ticker:
+        return False, 0
+
+    # Google News RSS search
+    url = (
+        'https://news.google.com/rss/search?'
+        f'q={ticker}%20stock&hl=en-US&gl=US&ceid=US:en'
+    )
+
+    try:
+        r = requests.get(url, timeout=timeout, headers={
+            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 '
+                          '(KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36'
+        })
+        r.raise_for_status()
+        dates = _parse_rss_dates(r.content)
+        if dates:
+            cutoff = datetime.now() - timedelta(days=int(days))
+            recent = [d for d in dates if d >= cutoff]
+            return (len(recent) >= int(min_items)), int(len(recent))
+
+        # If dates not parseable, fall back to counting titles.
+        xml_text = r.content.decode('utf-8', errors='ignore')
+        # crude: count <item> tags
+        n_items = len(re.findall(r'<item\b', xml_text, flags=re.IGNORECASE))
+        return (n_items >= int(min_items)), int(n_items)
+    except Exception:
+        return False, 0
+
+
+def _fib_retracement_levels(swing_low: float, swing_high: float) -> dict[str, float]:
+    """Return common Fibonacci retracement levels for an up-move (low->high).
+
+    Levels are prices where an uptrend pullback might find support.
+    """
+    r = float(swing_high) - float(swing_low)
+    if r <= 0:
+        return {}
+    return {
+        '0.236': float(swing_high) - 0.236 * r,
+        '0.382': float(swing_high) - 0.382 * r,
+        '0.500': float(swing_high) - 0.500 * r,
+        '0.618': float(swing_high) - 0.618 * r,
+        '0.786': float(swing_high) - 0.786 * r,
+    }
+
+
+def _fib_check(
+    df: pd.DataFrame,
+    *,
+    direction: str,
+    lookback: int = 60,
+    tolerance: float = 0.01,
+) -> tuple[bool, dict[str, float] | None, str | None]:
+    """Check whether price is near a meaningful fib retracement level.
+
+    Returns (pass, levels, nearest_level_key).
+    """
+    if df is None or df.empty or len(df) < 5:
+        return False, None, None
+
+    n = int(lookback)
+    if n <= 5:
+        n = min(60, len(df))
+    window = df.iloc[-n:] if len(df) >= n else df
+
+    hi = float(pd.to_numeric(window['High'], errors='coerce').max())
+    lo = float(pd.to_numeric(window['Low'], errors='coerce').min())
+    if not (pd.notna(hi) and pd.notna(lo)):
+        return False, None, None
+    if hi <= lo:
+        return False, None, None
+
+    close = float(pd.to_numeric(df['Close'].iloc[-1], errors='coerce'))
+    if not pd.notna(close) or close <= 0:
+        return False, None, None
+
+    direction = (direction or '').strip().lower()
+
+    # Compute levels for uptrend pullback (low->high).
+    levels = _fib_retracement_levels(lo, hi)
+    if not levels:
+        return False, None, None
+
+    # For shorts, we still use the same numeric levels but interpret them as potential
+    # resistance on a bounce in a downtrend.
+    tol = float(tolerance)
+    nearest_k = None
+    nearest_dist = None
+    for k, lvl in levels.items():
+        dist = abs(close - float(lvl)) / close
+        if nearest_dist is None or dist < nearest_dist:
+            nearest_dist = dist
+            nearest_k = k
+
+    passes = bool(nearest_dist is not None and nearest_dist <= tol)
+    return passes, levels, nearest_k
+
+
+def _ichimoku_trade_signal(df: pd.DataFrame) -> tuple[bool, str | None, dict[str, float] | None]:
+    """Heuristic Ichimoku pass/fail + direction.
+
+    Returns (pass, direction, debug_values).
+    """
+    from utils.technical import ichimoku
+
+    if df is None or df.empty or len(df) < 80:
+        return False, None, None
+
+    ichi = ichimoku(df['High'], df['Low'], df['Close'])
+    close = float(df['Close'].iloc[-1])
+    tenkan = float(ichi.tenkan_sen.iloc[-1]) if pd.notna(ichi.tenkan_sen.iloc[-1]) else None
+    kijun = float(ichi.kijun_sen.iloc[-1]) if pd.notna(ichi.kijun_sen.iloc[-1]) else None
+    span_a = float(ichi.senkou_span_a.iloc[-1]) if pd.notna(ichi.senkou_span_a.iloc[-1]) else None
+    span_b = float(ichi.senkou_span_b.iloc[-1]) if pd.notna(ichi.senkou_span_b.iloc[-1]) else None
+
+    if tenkan is None or kijun is None or span_a is None or span_b is None:
+        return False, None, None
+
+    cloud_top = max(span_a, span_b)
+    cloud_bot = min(span_a, span_b)
+
+    long_ok = (close > cloud_top) and (tenkan > kijun) and (span_a >= span_b)
+    short_ok = (close < cloud_bot) and (tenkan < kijun) and (span_a <= span_b)
+
+    direction = 'long' if long_ok else ('short' if short_ok else None)
+    passed = bool(long_ok or short_ok)
+    return passed, direction, {
+        'close': close,
+        'tenkan': tenkan,
+        'kijun': kijun,
+        'span_a': span_a,
+        'span_b': span_b,
+        'cloud_top': cloud_top,
+        'cloud_bottom': cloud_bot,
+    }
+
+
+def _rsi_trade_ok(df: pd.DataFrame, *, direction: str | None) -> tuple[bool, float | None]:
+    from utils.technical import rsi
+
+    if df is None or df.empty or len(df) < 20:
+        return False, None
+    r = rsi(df['Close'], 14)
+    if r.dropna().empty:
+        return False, None
+    val = float(r.dropna().iloc[-1])
+    direction = (direction or '').strip().lower()
+    if direction == 'long':
+        return (50.0 <= val <= 70.0), val
+    if direction == 'short':
+        return (30.0 <= val <= 50.0), val
+    # if no direction, accept neutral-ish RSI as a weak filter
+    return (45.0 <= val <= 55.0), val
+
+
+def _select_and_copy_charts(
+    *,
+    out_dir: Path,
+    charts_dir: Path,
+    scored: list[dict],
+    min_conditions: int,
+    max_selected: int | None,
+) -> dict:
+    """Write a selection manifest and copy chosen chart files into selected_charts/."""
+    min_conditions = int(min_conditions)
+    max_selected_i = int(max_selected) if max_selected is not None else None
+
+    eligible = [x for x in scored if int(x.get('conditions_met', 0)) >= min_conditions]
+    eligible.sort(key=lambda d: (int(d.get('conditions_met', 0)), float(d.get('score', 0.0))), reverse=True)
+    if max_selected_i is not None and max_selected_i > 0:
+        eligible = eligible[:max_selected_i]
+
+    selected_dir = out_dir / 'selected_charts'
+    selected_dir.mkdir(parents=True, exist_ok=True)
+
+    copied: list[dict] = []
+    for item in eligible:
+        arts = (item.get('artifacts') or {})
+        html_src = arts.get('html')
+        csv_src = arts.get('csv')
+        if html_src:
+            try:
+                dst = selected_dir / Path(str(html_src)).name
+                shutil.copy2(html_src, dst)
+                item.setdefault('selected_files', {})['html'] = str(dst)
+            except Exception:
+                pass
+        if csv_src:
+            try:
+                dst = selected_dir / Path(str(csv_src)).name
+                shutil.copy2(csv_src, dst)
+                item.setdefault('selected_files', {})['csv'] = str(dst)
+            except Exception:
+                pass
+        copied.append(item)
+
+    selection_manifest = {
+        'min_conditions': min_conditions,
+        'max_selected': max_selected_i,
+        'charts_dir': str(charts_dir),
+        'selected_dir': str(selected_dir),
+        'selected': copied,
+        'not_selected_count': max(0, len(scored) - len(copied)),
+    }
+    with open(out_dir / 'selected_charts.json', 'w', encoding='utf-8') as f:
+        json.dump(selection_manifest, f, indent=2)
+    return selection_manifest
 
 
 def _write_symbol_charts(
@@ -259,6 +538,20 @@ def main(argv: list[str] | None = None) -> int:
         help="If >0, add a simple ARIMA forecast to chart summaries (default: 0/off)",
     )
 
+    # optional chart selection
+    p.add_argument(
+        "--select-charts",
+        action="store_true",
+        help="After generating charts, score/select symbols meeting >= --min-conditions and copy them into selected_charts/",
+    )
+    p.add_argument("--min-conditions", type=int, default=3, help="Minimum conditions (out of 4) required to select")
+    p.add_argument("--max-selected", type=int, default=50, help="Max charts to select (after filtering)")
+    p.add_argument("--news-days", type=int, default=3, help="News lookback window (days)")
+    p.add_argument("--news-min-items", type=int, default=1, help="Minimum recent RSS items to consider 'in the news'")
+    p.add_argument("--skip-news", action="store_true", help="Disable the news condition (condition #3)")
+    p.add_argument("--fib-lookback", type=int, default=60, help="Fib swing lookback window (candles)")
+    p.add_argument("--fib-tolerance", type=float, default=0.01, help="Relative tolerance for fib proximity (e.g. 0.01 = 1%)")
+
     # macro
     p.add_argument("--fred-series", default=None, help="Comma-separated FRED series ids (e.g., CPIAUCSL,UNRATE)")
     p.add_argument("--fred-api-key", default=None, help="FRED API key (or set FRED_API_KEY env)")
@@ -315,6 +608,9 @@ def main(argv: list[str] | None = None) -> int:
     chart_failures: list[dict] = []
     chart_summaries: list[dict] = []
 
+    scored_for_selection: list[dict] = []
+    _news_cache: dict[str, tuple[bool, int]] = {}
+
     for sym in symbols:
         try:
             df = fetch_ohlcv(OHLCVRequest(symbol=sym, period=args.period, interval=args.interval))
@@ -351,6 +647,51 @@ def main(argv: list[str] | None = None) -> int:
                 )
                 chart_summaries.append(chart_summary)
                 result_entry["chart"] = chart_summary.get("artifacts")
+
+                # Condition scoring for selection (requires charts to exist)
+                if args.select_charts:
+                    ichi_ok, direction, ichi_dbg = _ichimoku_trade_signal(df)
+                    rsi_ok, rsi_val = _rsi_trade_ok(df, direction=direction)
+                    fib_ok, fib_levels, fib_nearest = _fib_check(
+                        df,
+                        direction=direction or 'long',
+                        lookback=int(args.fib_lookback),
+                        tolerance=float(args.fib_tolerance),
+                    )
+
+                    news_ok = False
+                    news_count = 0
+                    if not args.skip_news and _is_equity_symbol(sym):
+                        if sym not in _news_cache:
+                            _news_cache[sym] = _news_hit(
+                                sym,
+                                days=int(args.news_days),
+                                min_items=int(args.news_min_items),
+                            )
+                        news_ok, news_count = _news_cache[sym]
+
+                    conds = {
+                        'ichimoku': bool(ichi_ok),
+                        'rsi': bool(rsi_ok),
+                        'news': bool(news_ok) if not args.skip_news else None,
+                        'fibonacci': bool(fib_ok),
+                    }
+                    conds_met = sum(1 for v in conds.values() if v is True)
+                    score = float(conds_met) / 4.0
+
+                    scored_for_selection.append({
+                        'symbol': sym,
+                        'direction': direction,
+                        'conditions': conds,
+                        'conditions_met': int(conds_met),
+                        'score': score,
+                        'rsi14': rsi_val,
+                        'news_recent_items': int(news_count),
+                        'fib_nearest': fib_nearest,
+                        'fib_levels': fib_levels,
+                        'ichimoku_debug': ichi_dbg,
+                        'artifacts': chart_summary.get('artifacts') or {},
+                    })
             except Exception as e:
                 chart_failures.append({"symbol": sym, "error": str(e)})
                 print(f"Warning: chart generation failed for {sym}: {e}")
@@ -385,6 +726,17 @@ def main(argv: list[str] | None = None) -> int:
         charts_dir.mkdir(parents=True, exist_ok=True)
         with open(charts_dir / "summary.json", "w", encoding="utf-8") as f:
             json.dump({"results": chart_summaries, "failures": chart_failures}, f, indent=2)
+
+        if args.select_charts:
+            sel = _select_and_copy_charts(
+                out_dir=out_dir,
+                charts_dir=charts_dir,
+                scored=scored_for_selection,
+                min_conditions=int(args.min_conditions),
+                max_selected=int(args.max_selected) if args.max_selected is not None else None,
+            )
+            print(f"Wrote selection manifest: {out_dir / 'selected_charts.json'}")
+            print(f"Selected charts copied to: {out_dir / 'selected_charts'}")
 
     if args.skip_train:
         # Dataset-only mode

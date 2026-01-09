@@ -1,0 +1,238 @@
+{
+  "universe": "sp500",
+  "symbols_requested": [
+    "MMM",
+    "AOS",
+    "ABT",
+    "ABBV",
+    "ACN",
+    "ADBE",
+    "AMD",
+    "AES",
+    "AFL",
+    "A",
+    "APD",
+    "ABNB",
+    "AKAM",
+    "ALB",
+    "ARE",
+    "ALGN",
+    "ALLE",
+    "LNT",
+    "ALL",
+    "GOOGL"
+  ],
+  "period": "6mo",
+  "interval": "1d",
+  "results": [
+    {
+      "symbol": "MMM",
+      "rows": 126,
+      "columns": 5,
+      "csv": "hub_sp500_select_test\\MMM_6mo_1d.csv",
+      "chart": {
+        "csv": "hub_sp500_select_test\\charts\\MMM_6mo_1d.csv",
+        "html": "hub_sp500_select_test\\charts\\MMM_6mo_1d.html"
+      }
+    },
+    {
+      "symbol": "AOS",
+      "rows": 126,
+      "columns": 5,
+      "csv": "hub_sp500_select_test\\AOS_6mo_1d.csv",
+      "chart": {
+        "csv": "hub_sp500_select_test\\charts\\AOS_6mo_1d.csv",
+        "html": "hub_sp500_select_test\\charts\\AOS_6mo_1d.html"
+      }
+    },
+    {
+      "symbol": "ABT",
+      "rows": 126,
+      "columns": 5,
+      "csv": "hub_sp500_select_test\\ABT_6mo_1d.csv",
+      "chart": {
+        "csv": "hub_sp500_select_test\\charts\\ABT_6mo_1d.csv",
+        "html": "hub_sp500_select_test\\charts\\ABT_6mo_1d.html"
+      }
+    },
+    {
+      "symbol": "ABBV",
+      "rows": 126,
+      "columns": 5,
+      "csv": "hub_sp500_select_test\\ABBV_6mo_1d.csv",
+      "chart": {
+        "csv": "hub_sp500_select_test\\charts\\ABBV_6mo_1d.csv",
+        "html": "hub_sp500_select_test\\charts\\ABBV_6mo_1d.html"
+      }
+    },
+    {
+      "symbol": "ACN",
+      "rows": 126,
+      "columns": 5,
+      "csv": "hub_sp500_select_test\\ACN_6mo_1d.csv",
+      "chart": {
+        "csv": "hub_sp500_select_test\\charts\\ACN_6mo_1d.csv",
+        "html": "hub_sp500_select_test\\charts\\ACN_6mo_1d.html"
+      }
+    },
+    {
+      "symbol": "ADBE",
+      "rows": 126,
+      "columns": 5,
+      "csv": "hub_sp500_select_test\\ADBE_6mo_1d.csv",
+      "chart": {
+        "csv": "hub_sp500_select_test\\charts\\ADBE_6mo_1d.csv",
+        "html": "hub_sp500_select_test\\charts\\ADBE_6mo_1d.html"
+      }
+    },
+    {
+      "symbol": "AMD",
+      "rows": 126,
+      "columns": 5,
+      "csv": "hub_sp500_select_test\\AMD_6mo_1d.csv",
+      "chart": {
+        "csv": "hub_sp500_select_test\\charts\\AMD_6mo_1d.csv",
+        "html": "hub_sp500_select_test\\charts\\AMD_6mo_1d.html"
+      }
+    },
+    {
+      "symbol": "AES",
+      "rows": 126,
+      "columns": 5,
+      "csv": "hub_sp500_select_test\\AES_6mo_1d.csv",
+      "chart": {
+        "csv": "hub_sp500_select_test\\charts\\AES_6mo_1d.csv",
+        "html": "hub_sp500_select_test\\charts\\AES_6mo_1d.html"
+      }
+    },
+    {
+      "symbol": "AFL",
+      "rows": 126,
+      "columns": 5,
+      "csv": "hub_sp500_select_test\\AFL_6mo_1d.csv",
+      "chart": {
+        "csv": "hub_sp500_select_test\\charts\\AFL_6mo_1d.csv",
+        "html": "hub_sp500_select_test\\charts\\AFL_6mo_1d.html"
+      }
+    },
+    {
+      "symbol": "A",
+      "rows": 126,
+      "columns": 5,
+      "csv": "hub_sp500_select_test\\A_6mo_1d.csv",
+      "chart": {
+        "csv": "hub_sp500_select_test\\charts\\A_6mo_1d.csv",
+        "html": "hub_sp500_select_test\\charts\\A_6mo_1d.html"
+      }
+    },
+    {
+      "symbol": "APD",
+      "rows": 126,
+      "columns": 5,
+      "csv": "hub_sp500_select_test\\APD_6mo_1d.csv",
+      "chart": {
+        "csv": "hub_sp500_select_test\\charts\\APD_6mo_1d.csv",
+        "html": "hub_sp500_select_test\\charts\\APD_6mo_1d.html"
+      }
+    },
+    {
+      "symbol": "ABNB",
+      "rows": 126,
+      "columns": 5,
+      "csv": "hub_sp500_select_test\\ABNB_6mo_1d.csv",
+      "chart": {
+        "csv": "hub_sp500_select_test\\charts\\ABNB_6mo_1d.csv",
+        "html": "hub_sp500_select_test\\charts\\ABNB_6mo_1d.html"
+      }
+    },
+    {
+      "symbol": "AKAM",
+      "rows": 126,
+      "columns": 5,
+      "csv": "hub_sp500_select_test\\AKAM_6mo_1d.csv",
+      "chart": {
+        "csv": "hub_sp500_select_test\\charts\\AKAM_6mo_1d.csv",
+        "html": "hub_sp500_select_test\\charts\\AKAM_6mo_1d.html"
+      }
+    },
+    {
+      "symbol": "ALB",
+      "rows": 126,
+      "columns": 5,
+      "csv": "hub_sp500_select_test\\ALB_6mo_1d.csv",
+      "chart": {
+        "csv": "hub_sp500_select_test\\charts\\ALB_6mo_1d.csv",
+        "html": "hub_sp500_select_test\\charts\\ALB_6mo_1d.html"
+      }
+    },
+    {
+      "symbol": "ARE",
+      "rows": 126,
+      "columns": 5,
+      "csv": "hub_sp500_select_test\\ARE_6mo_1d.csv",
+      "chart": {
+        "csv": "hub_sp500_select_test\\charts\\ARE_6mo_1d.csv",
+        "html": "hub_sp500_select_test\\charts\\ARE_6mo_1d.html"
+      }
+    },
+    {
+      "symbol": "ALGN",
+      "rows": 126,
+      "columns": 5,
+      "csv": "hub_sp500_select_test\\ALGN_6mo_1d.csv",
+      "chart": {
+        "csv": "hub_sp500_select_test\\charts\\ALGN_6mo_1d.csv",
+        "html": "hub_sp500_select_test\\charts\\ALGN_6mo_1d.html"
+      }
+    },
+    {
+      "symbol": "ALLE",
+      "rows": 126,
+      "columns": 5,
+      "csv": "hub_sp500_select_test\\ALLE_6mo_1d.csv",
+      "chart": {
+        "csv": "hub_sp500_select_test\\charts\\ALLE_6mo_1d.csv",
+        "html": "hub_sp500_select_test\\charts\\ALLE_6mo_1d.html"
+      }
+    },
+    {
+      "symbol": "LNT",
+      "rows": 126,
+      "columns": 5,
+      "csv": "hub_sp500_select_test\\LNT_6mo_1d.csv",
+      "chart": {
+        "csv": "hub_sp500_select_test\\charts\\LNT_6mo_1d.csv",
+        "html": "hub_sp500_select_test\\charts\\LNT_6mo_1d.html"
+      }
+    },
+    {
+      "symbol": "ALL",
+      "rows": 126,
+      "columns": 5,
+      "csv": "hub_sp500_select_test\\ALL_6mo_1d.csv",
+      "chart": {
+        "csv": "hub_sp500_select_test\\charts\\ALL_6mo_1d.csv",
+        "html": "hub_sp500_select_test\\charts\\ALL_6mo_1d.html"
+      }
+    },
+    {
+      "symbol": "GOOGL",
+      "rows": 126,
+      "columns": 5,
+      "csv": "hub_sp500_select_test\\GOOGL_6mo_1d.csv",
+      "chart": {
+        "csv": "hub_sp500_select_test\\charts\\GOOGL_6mo_1d.csv",
+        "html": "hub_sp500_select_test\\charts\\GOOGL_6mo_1d.html"
+      }
+    }
+  ],
+  "failures": [],
+  "charts": {
+    "enabled": true,
+    "charts_dir": "hub_sp500_select_test\\charts",
+    "summary_json": "hub_sp500_select_test\\charts\\summary.json",
+    "failures": []
+  },
+  "macro_features_csv": null,
+  "extra_features_raw_csv": null
+}
