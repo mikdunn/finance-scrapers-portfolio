@@ -1,0 +1,9 @@
+{
+  "results": [],
+  "failures": [
+    {
+      "symbol": "ETH-USD",
+      "error": "No OHLCV data returned for symbol 'ETH-USD' (period=6mo, interval=1d)."
+    }
+  ]
+}

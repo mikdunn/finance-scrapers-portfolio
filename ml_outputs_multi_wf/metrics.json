@@ -1,0 +1,20 @@
+{
+  "input": null,
+  "inputs": [
+    "C:\\Users\\dunnmk\\finance-scrapers-portfolio\\outputs_multi_6mo\\ETH-USD_6mo_1d.csv",
+    "C:\\Users\\dunnmk\\finance-scrapers-portfolio\\outputs_multi_6mo\\EURUSD=X_6mo_1d.csv"
+  ],
+  "feature_count": 42,
+  "mode": "walkforward",
+  "task": "classification",
+  "model": "hgb",
+  "n_folds": 5,
+  "purge": 5,
+  "test_window": 20,
+  "cv_metrics_csv": "ml_outputs_multi_wf\\cv_metrics.csv",
+  "n_assets": 2,
+  "assets": [
+    "ETH-USD",
+    "EURUSD=X"
+  ]
+}

@@ -1,0 +1,78 @@
+{
+  "results": [
+    {
+      "symbol": "ETH-USD",
+      "period": "6mo",
+      "interval": "1d",
+      "last_close": 3072.27,
+      "regime": "neutral",
+      "support_levels": [
+        3350.0,
+        3423.26,
+        3677.0,
+        3825.2,
+        4065.0,
+        4213.21
+      ],
+      "resistance_levels": [
+        3075.51,
+        3448.32,
+        3658.0,
+        3859.67,
+        3939.3,
+        4252.57
+      ],
+      "trade_style": {
+        "label": "long",
+        "rationale": "lower daily volatility (ATR/Close\u22483.81%)"
+      },
+      "forecast_close_next": [
+        3071.4312705023385,
+        3071.5724471301487,
+        3071.548683997583,
+        3071.5526838556198,
+        3071.552010591509
+      ],
+      "artifacts": {
+        "csv": "outputs_multi_6mo\\ETH-USD_6mo_1d.csv",
+        "html": "outputs_multi_6mo\\ETH-USD_6mo_1d.html"
+      }
+    },
+    {
+      "symbol": "EURUSD=X",
+      "period": "6mo",
+      "interval": "1d",
+      "last_close": 1.1636,
+      "regime": "neutral",
+      "support_levels": [
+        1.13917,
+        1.1480299999999999,
+        1.1568175,
+        1.16462,
+        1.17035
+      ],
+      "resistance_levels": [
+        1.166215,
+        1.1736,
+        1.1802275,
+        1.19185
+      ],
+      "trade_style": {
+        "label": "long",
+        "rationale": "lower daily volatility (ATR/Close\u22480.40%)"
+      },
+      "forecast_close_next": [
+        1.163714603255475,
+        1.1636195719104594,
+        1.163698373830161,
+        1.163633029679264,
+        1.1636872143751777
+      ],
+      "artifacts": {
+        "csv": "outputs_multi_6mo\\EURUSD=X_6mo_1d.csv",
+        "html": "outputs_multi_6mo\\EURUSD=X_6mo_1d.html"
+      }
+    }
+  ],
+  "failures": []
+}

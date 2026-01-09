@@ -1,0 +1,11 @@
+{
+  "input": "C:\\Users\\dunnmk\\finance-scrapers-portfolio\\outputs_eth_test\\ETH-USD_6mo_1d.csv",
+  "feature_count": 40,
+  "mode": "walkforward",
+  "task": "classification",
+  "model": "hgb",
+  "n_folds": 5,
+  "purge": 5,
+  "test_window": 20,
+  "cv_metrics_csv": "ml_outputs_eth_wf\\cv_metrics.csv"
+}

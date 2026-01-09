@@ -1,0 +1,65 @@
+{
+  "input": "C:\\Users\\dunnmk\\finance-scrapers-portfolio\\outputs_smoke_test\\BTC-USD_3mo_1d.csv",
+  "feature_count": 42,
+  "task": "classification",
+  "model": "hgb",
+  "n_train": 68,
+  "n_test": 17,
+  "accuracy": 0.35294117647058826,
+  "f1_macro": 0.17391304347826086,
+  "confusion_matrix": [
+    [
+      6,
+      0,
+      0
+    ],
+    [
+      1,
+      0,
+      0
+    ],
+    [
+      10,
+      0,
+      0
+    ]
+  ],
+  "classification_report": {
+    "-1": {
+      "precision": 0.35294117647058826,
+      "recall": 1.0,
+      "f1-score": 0.5217391304347826,
+      "support": 6.0
+    },
+    "0": {
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1-score": 0.0,
+      "support": 1.0
+    },
+    "1": {
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1-score": 0.0,
+      "support": 10.0
+    },
+    "accuracy": 0.35294117647058826,
+    "macro avg": {
+      "precision": 0.11764705882352942,
+      "recall": 0.3333333333333333,
+      "f1-score": 0.17391304347826086,
+      "support": 17.0
+    },
+    "weighted avg": {
+      "precision": 0.12456747404844291,
+      "recall": 0.35294117647058826,
+      "f1-score": 0.18414322250639384,
+      "support": 17.0
+    }
+  },
+  "labels": {
+    "-1": "sell",
+    "0": "hold",
+    "1": "buy"
+  }
+}

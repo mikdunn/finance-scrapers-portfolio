@@ -1,0 +1,43 @@
+{
+  "results": [
+    {
+      "symbol": "ETH-USD",
+      "period": "6mo",
+      "interval": "1d",
+      "last_close": 3092.68,
+      "regime": "neutral",
+      "support_levels": [
+        3350.0,
+        3423.26,
+        3677.0,
+        3825.2,
+        4065.0,
+        4213.21
+      ],
+      "resistance_levels": [
+        3075.51,
+        3448.32,
+        3658.0,
+        3859.67,
+        3939.3,
+        4252.57
+      ],
+      "trade_style": {
+        "label": "long",
+        "rationale": "lower daily volatility (ATR/Close\u22483.79%)"
+      },
+      "forecast_close_next": [
+        3092.5393086547465,
+        3092.56343125055,
+        3092.5592952489556,
+        3092.5600043977274,
+        3092.559882808804
+      ],
+      "artifacts": {
+        "csv": "outputs_eth_test\\ETH-USD_6mo_1d.csv",
+        "html": "outputs_eth_test\\ETH-USD_6mo_1d.html"
+      }
+    }
+  ],
+  "failures": []
+}

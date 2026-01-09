@@ -1,0 +1,138 @@
+{
+  "results": [
+    {
+      "symbol": "BTC-USD",
+      "period": "3mo",
+      "interval": "1d",
+      "last_close": 90744.9,
+      "regime": "neutral",
+      "support_levels": [
+        80595.2,
+        83870.8,
+        84421.4,
+        98900.0,
+        103583.2
+      ],
+      "resistance_levels": [
+        90552.6,
+        94051.6,
+        94583.7,
+        107400.0,
+        116309.8
+      ],
+      "trade_style": {
+        "label": "long",
+        "rationale": "lower daily volatility (ATR/Close\u22482.80%)"
+      },
+      "forecast_close_next": [
+        90738.81385613588,
+        90741.9793309063,
+        90740.33293036996,
+        90741.18924258935,
+        90740.74386456567
+      ],
+      "artifacts": {
+        "csv": "outputs_smoke_test\\BTC-USD_3mo_1d.csv",
+        "html": "outputs_smoke_test\\BTC-USD_3mo_1d.html"
+      }
+    },
+    {
+      "symbol": "ETH-USD",
+      "period": "3mo",
+      "interval": "1d",
+      "last_close": 3091.19,
+      "regime": "neutral",
+      "support_levels": [
+        2621.08,
+        2718.8,
+        2775.0,
+        3058.27,
+        3677.0
+      ],
+      "resistance_levels": [
+        3075.51,
+        3448.32,
+        3658.0,
+        4252.57
+      ],
+      "trade_style": {
+        "label": "long",
+        "rationale": "lower daily volatility (ATR/Close\u22483.80%)"
+      },
+      "forecast_close_next": [
+        3083.2194583336495,
+        3087.741854880608,
+        3085.17589746089,
+        3086.631793115205,
+        3085.8057341401163
+      ],
+      "artifacts": {
+        "csv": "outputs_smoke_test\\ETH-USD_3mo_1d.csv",
+        "html": "outputs_smoke_test\\ETH-USD_3mo_1d.html"
+      }
+    },
+    {
+      "symbol": "EURUSD=X",
+      "period": "3mo",
+      "interval": "1d",
+      "last_close": 1.16348,
+      "regime": "neutral",
+      "support_levels": [
+        1.1480299999999999,
+        1.15775,
+        1.17035
+      ],
+      "resistance_levels": [
+        1.166215,
+        1.180615
+      ],
+      "trade_style": {
+        "label": "long",
+        "rationale": "lower daily volatility (ATR/Close\u22480.40%)"
+      },
+      "forecast_close_next": [
+        1.1628028408978914,
+        1.1627038788875956,
+        1.1626894162901775,
+        1.1626873026839215,
+        1.162686993795326
+      ],
+      "artifacts": {
+        "csv": "outputs_smoke_test\\EURUSD=X_3mo_1d.csv",
+        "html": "outputs_smoke_test\\EURUSD=X_3mo_1d.html"
+      }
+    },
+    {
+      "symbol": "USDJPY=X",
+      "period": "3mo",
+      "interval": "1d",
+      "last_close": 157.903,
+      "regime": "neutral",
+      "support_levels": [
+        152.823,
+        154.3725
+      ],
+      "resistance_levels": [
+        154.483,
+        156.954,
+        157.8015
+      ],
+      "trade_style": {
+        "label": "long",
+        "rationale": "lower daily volatility (ATR/Close\u22480.56%)"
+      },
+      "forecast_close_next": [
+        157.83979020637094,
+        157.86462141111824,
+        157.85486677194285,
+        157.8586987642449,
+        157.8571934123053
+      ],
+      "artifacts": {
+        "csv": "outputs_smoke_test\\USDJPY=X_3mo_1d.csv",
+        "html": "outputs_smoke_test\\USDJPY=X_3mo_1d.html"
+      }
+    }
+  ],
+  "failures": []
+}

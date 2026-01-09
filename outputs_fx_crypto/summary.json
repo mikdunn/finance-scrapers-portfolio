@@ -1,0 +1,120 @@
+{
+  "results": [
+    {
+      "symbol": "BTC-USD",
+      "period": "6mo",
+      "interval": "1d",
+      "last_close": 90704.5,
+      "regime": "neutral",
+      "support_levels": [
+        84435.2,
+        98920.7,
+        103582.0,
+        107266.0,
+        108703.0,
+        112668.0
+      ],
+      "resistance_levels": [
+        90545.2,
+        94580.5,
+        107478.0,
+        116355.0,
+        117959.0,
+        124511.0
+      ],
+      "trade_style": {
+        "label": "long",
+        "rationale": "lower daily volatility (ATR/Close\u22483.61%)"
+      },
+      "forecast_close_next": [
+        90719.60354348709,
+        90715.97760986438,
+        90716.8480939761,
+        90716.63911536049,
+        90716.68928521563
+      ],
+      "artifacts": {
+        "csv": "outputs_fx_crypto\\BTC-USD_6mo_1d.csv",
+        "html": "outputs_fx_crypto\\BTC-USD_6mo_1d.html"
+      }
+    },
+    {
+      "symbol": "EURUSD=X",
+      "period": "6mo",
+      "interval": "1d",
+      "last_close": 1.16365,
+      "regime": "neutral",
+      "support_levels": [
+        1.13917,
+        1.1480299999999999,
+        1.1568175,
+        1.16462,
+        1.17035
+      ],
+      "resistance_levels": [
+        1.166215,
+        1.1736,
+        1.1802275,
+        1.19185
+      ],
+      "trade_style": {
+        "label": "long",
+        "rationale": "lower daily volatility (ATR/Close\u22480.40%)"
+      },
+      "forecast_close_next": [
+        1.163767506785675,
+        1.1636699212347228,
+        1.163750962850319,
+        1.1636836604331642,
+        1.163739552894359
+      ],
+      "artifacts": {
+        "csv": "outputs_fx_crypto\\EURUSD=X_6mo_1d.csv",
+        "html": "outputs_fx_crypto\\EURUSD=X_6mo_1d.html"
+      }
+    },
+    {
+      "symbol": "USDJPY=X",
+      "period": "6mo",
+      "interval": "1d",
+      "last_close": 157.903,
+      "regime": "neutral",
+      "support_levels": [
+        145.676,
+        146.56125,
+        149.383,
+        152.823,
+        154.3725
+      ],
+      "resistance_levels": [
+        148.6465,
+        149.132,
+        149.959,
+        150.915,
+        153.274,
+        154.483
+      ],
+      "trade_style": {
+        "label": "long",
+        "rationale": "lower daily volatility (ATR/Close\u22480.57%)"
+      },
+      "forecast_close_next": [
+        157.75009139542996,
+        157.64254161438217,
+        157.56689541097882,
+        157.51368890480472,
+        157.47626558186332
+      ],
+      "artifacts": {
+        "csv": "outputs_fx_crypto\\USDJPY=X_6mo_1d.csv",
+        "html": "outputs_fx_crypto\\USDJPY=X_6mo_1d.html"
+      }
+    }
+  ],
+  "failures": [
+    {
+      "symbol": "ETH-USD",
+      "error": "No OHLCV data returned for symbol 'ETH-USD' (period=6mo, interval=1d)."
+    }
+  ]
+}

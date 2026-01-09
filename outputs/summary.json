@@ -1,0 +1,81 @@
+{
+  "results": [
+    {
+      "symbol": "AAPL",
+      "period": "6mo",
+      "interval": "1d",
+      "last_close": 259.16,
+      "regime": "neutral",
+      "support_levels": [
+        201.5,
+        223.7804,
+        225.95,
+        244.0,
+        265.32,
+        266.95
+      ],
+      "resistance_levels": [
+        215.78,
+        235.12,
+        241.32,
+        259.24,
+        277.42475,
+        280.15
+      ],
+      "trade_style": {
+        "label": "long",
+        "rationale": "lower daily volatility (ATR/Close\u22481.69%)"
+      },
+      "forecast_close_next": [
+        259.2898740820206,
+        259.2815519375787,
+        259.28208520862887,
+        259.28205103738674,
+        259.2820532270308
+      ],
+      "artifacts": {
+        "csv": "outputs\\AAPL_6mo_1d.csv",
+        "html": "outputs\\AAPL_6mo_1d.html"
+      }
+    },
+    {
+      "symbol": "TSLA",
+      "period": "6mo",
+      "interval": "1d",
+      "last_close": 447.205,
+      "regime": "neutral",
+      "support_levels": [
+        300.41,
+        314.6,
+        325.6,
+        382.78,
+        411.45,
+        413.9
+      ],
+      "resistance_levels": [
+        338.0,
+        348.98,
+        355.39,
+        470.75,
+        474.07,
+        498.83
+      ],
+      "trade_style": {
+        "label": "long",
+        "rationale": "lower daily volatility (ATR/Close\u22483.69%)"
+      },
+      "forecast_close_next": [
+        445.14239950976236,
+        445.4057805666508,
+        445.37214846898763,
+        445.3764430754661,
+        445.37589468134007
+      ],
+      "artifacts": {
+        "csv": "outputs\\TSLA_6mo_1d.csv",
+        "html": "outputs\\TSLA_6mo_1d.html"
+      }
+    }
+  ],
+  "failures": []
+}

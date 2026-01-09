@@ -1,17 +1,39 @@
-# Finance Scrapers Portfolio 🚀
+# Finance Scrapers Portfolio
 
-Python tools for scraping stock data, sentiment analysis, and heatmaps. Live demos below.
-
-## Quick Demo
-[![Colab](https://colab.research.google.com/badge.svg)](link-to-your-notebook)
+Python tools for scraping market data and generating sentiment and visualizations.
 
 ## Projects
-| Project | Description | Screenshot |
-|---------|-------------|------------|
-| Sentiment Heatmap | Scrape news → VADER sentiment → Plotly viz | ![heatmap](screenshots/heatmap.png) |
-| Multi-Source Collector | Yahoo + others → Merged CSV | ![data](screenshots/data_sample.png) |
 
-## Setup & Run
+| Project | Description |
+|---|---|
+| Sentiment Heatmap | RSS headlines -> VADER sentiment -> Plotly heatmap |
+| Multi-Source Collector | Basic collector skeleton (outputs CSV) |
+| Market Analyzer | Candlesticks + RSI + Ichimoku + support/resistance + ARIMA forecast |
+
+## Setup
+
 ```bash
 pip install -r requirements.txt
-python main.py --project sentiment_heatmap
+```
+
+## Run
+
+### Sentiment heatmap
+
+```bash
+python main.py --project sentiment_heatmap --source rss --tickers "AAPL,TSLA,SPY"
+```
+
+### Market analyzer (crypto + forex)
+
+```bash
+python main.py --project market --symbols "BTC-USD,ETH-USD,EURUSD=X,USDJPY=X" --period 6mo --interval 1d --out-dir outputs_fx_crypto
+```
+
+### Market analyzer (stocks)
+
+```bash
+python main.py --project market --symbols "AAPL,TSLA" --period 6mo --interval 1d --out-dir outputs
+```
+
+> Note: This project is for educational/analysis purposes only and is not financial advice.
