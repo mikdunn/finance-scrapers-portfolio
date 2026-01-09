@@ -1,0 +1,37 @@
+{
+  "universe": "all",
+  "symbols_used": [
+    "ETH-USD",
+    "BTC-USD",
+    "EURUSD=X"
+  ],
+  "weights": {
+    "ETH-USD": 0.027476991752996522,
+    "BTC-USD": 0.040528711141740156,
+    "EURUSD=X": 0.9319942971052633
+  },
+  "diagnostics": {
+    "lookback": 60,
+    "cluster_budget": "inverse_vol",
+    "within_cluster": "inverse_vol",
+    "clusters": {
+      "ETH-USD": 1,
+      "BTC-USD": 1,
+      "EURUSD=X": 0
+    },
+    "cluster_weights": {
+      "0": 0.9319942971052633,
+      "1": 0.06800570289473667
+    },
+    "asset_vol": {
+      "ETH-USD": 0.03708961962010021,
+      "BTC-USD": 0.025145412812317303,
+      "EURUSD=X": 0.0022178369009187332
+    },
+    "risk_contrib_diag": {
+      "ETH-USD": 0.1635645163567104,
+      "BTC-USD": 0.16356451635252095,
+      "EURUSD=X": 0.6728708098033123
+    }
+  }
+}

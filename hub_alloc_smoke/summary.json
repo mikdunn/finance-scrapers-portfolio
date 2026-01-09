@@ -1,0 +1,57 @@
+{
+  "universe": null,
+  "symbols_requested": [
+    "ETH-USD",
+    "BTC-USD",
+    "EURUSD=X"
+  ],
+  "period": "6mo",
+  "interval": "1d",
+  "results": [
+    {
+      "symbol": "ETH-USD",
+      "rows": 180,
+      "columns": 5,
+      "csv": "hub_alloc_smoke\\ETH-USD_6mo_1d.csv"
+    },
+    {
+      "symbol": "BTC-USD",
+      "rows": 180,
+      "columns": 5,
+      "csv": "hub_alloc_smoke\\BTC-USD_6mo_1d.csv"
+    },
+    {
+      "symbol": "EURUSD=X",
+      "rows": 129,
+      "columns": 5,
+      "csv": "hub_alloc_smoke\\EURUSD=X_6mo_1d.csv"
+    }
+  ],
+  "failures": [],
+  "charts": {
+    "enabled": false,
+    "charts_dir": null,
+    "summary_json": null,
+    "selection_manifest": null,
+    "selected_symbols": [],
+    "failures": []
+  },
+  "spectral": {
+    "enabled": true,
+    "clusters_csv": "hub_alloc_smoke\\spectral_clusters.csv",
+    "graph_json": "hub_alloc_smoke\\spectral_graph.json"
+  },
+  "dmd": {
+    "enabled": false,
+    "eigs_csv": null,
+    "summary_json": null
+  },
+  "portfolio": {
+    "enabled": true,
+    "universe": "all",
+    "weights_csv": "hub_alloc_smoke\\portfolio_weights.csv",
+    "allocation_json": "hub_alloc_smoke\\portfolio_allocation.json"
+  },
+  "macro_features_csv": null,
+  "extra_features_raw_csv": null
+}

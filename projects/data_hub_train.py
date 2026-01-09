@@ -32,6 +32,7 @@ from utils.macro_data import FREDSeriesRequest, WorldBankRequest, fetch_fred_man
 from utils.universe import fetch_nasdaq100_symbols, fetch_sp500_symbols, load_symbols_file
 from utils.spectral import spectral_cluster_assets
 from utils.dmd import exact_dmd, eigenvalue_to_frequency
+from utils.portfolio import cluster_inverse_vol_allocation
 
 
 def _arima_forecast(close: pd.Series, steps: int = 5) -> list[float]:
@@ -636,6 +637,32 @@ def main(argv: list[str] | None = None) -> int:
     p.add_argument("--dmd", action="store_true", help="Run Dynamic Mode Decomposition on aligned multi-asset returns")
     p.add_argument("--dmd-rank", type=int, default=6, help="DMD rank (SVD truncation)")
 
+    # portfolio allocation (analysis-only; outputs target weights)
+    p.add_argument(
+        "--allocate-portfolio",
+        action="store_true",
+        help="Compute target portfolio weights (optionally cluster-aware) and write them into <out-dir>/",
+    )
+    p.add_argument(
+        "--alloc-universe",
+        default="all",
+        help="Which symbols to allocate over: all | selected (requires --select-charts)",
+    )
+    p.add_argument("--alloc-lookback", type=int, default=60, help="Lookback window (rows) for volatility estimates")
+    p.add_argument("--alloc-min-overlap", type=int, default=80, help="Minimum overlapping return rows required")
+    p.add_argument(
+        "--alloc-cluster-budget",
+        default="inverse_vol",
+        help="How to allocate across clusters: inverse_vol | equal",
+    )
+    p.add_argument(
+        "--alloc-within-cluster",
+        default="inverse_vol",
+        help="How to allocate within a cluster: inverse_vol | equal",
+    )
+    p.add_argument("--alloc-max-weight", type=float, default=None, help="Optional per-asset max weight cap")
+    p.add_argument("--alloc-min-weight", type=float, default=0.0, help="Optional per-asset min weight floor")
+
     # macro
     p.add_argument("--fred-series", default=None, help="Comma-separated FRED series ids (e.g., CPIAUCSL,UNRATE)")
     p.add_argument("--fred-api-key", default=None, help="FRED API key (or set FRED_API_KEY env)")
@@ -694,6 +721,9 @@ def main(argv: list[str] | None = None) -> int:
 
     scored_for_selection: list[dict] = []
     _news_cache: dict[str, tuple[bool, int]] = {}
+
+    selected_symbols: list[str] = []
+    selection_manifest_path: str | None = None
 
     # Collect closes for multi-asset analyses (spectral/DMD)
     closes_by_symbol: dict[str, pd.Series] = {}
@@ -794,26 +824,6 @@ def main(argv: list[str] | None = None) -> int:
     if failures:
         print(f"Note: {len(failures)} symbols failed. Continuing to training with the remaining.")
 
-    # Write a run manifest for provenance
-    summary_path = out_dir / "summary.json"
-    with open(summary_path, "w", encoding="utf-8") as f:
-        json.dump({
-            "universe": args.universe,
-            "symbols_requested": symbols,
-            "period": args.period,
-            "interval": args.interval,
-            "results": results,
-            "failures": failures,
-            "charts": {
-                "enabled": bool(args.generate_charts),
-                "charts_dir": str(charts_dir) if args.generate_charts else None,
-                "summary_json": str(charts_dir / "summary.json") if args.generate_charts else None,
-                "failures": chart_failures if args.generate_charts else [],
-            },
-            "macro_features_csv": str(out_dir / "macro_features.csv") if (out_dir / "macro_features.csv").exists() else None,
-            "extra_features_raw_csv": str(out_dir / "extra_features_raw.csv") if (out_dir / "extra_features_raw.csv").exists() else None,
-        }, f, indent=2)
-
     if args.generate_charts:
         # Keep a market-analyzer-like summary near the chart artifacts.
         charts_dir.mkdir(parents=True, exist_ok=True)
@@ -828,16 +838,31 @@ def main(argv: list[str] | None = None) -> int:
                 min_conditions=int(args.min_conditions),
                 max_selected=int(args.max_selected) if args.max_selected is not None else None,
             )
+            selection_manifest_path = str(out_dir / 'selected_charts.json')
+            try:
+                selected_symbols = [str(x.get('symbol')).strip().upper() for x in (sel.get('selected') or []) if x.get('symbol')]
+            except Exception:
+                selected_symbols = []
             print(f"Wrote selection manifest: {out_dir / 'selected_charts.json'}")
             print(f"Selected charts copied to: {out_dir / 'selected_charts'}")
 
-    # --- Spectral clustering / DMD (multi-asset) ---
-    if args.spectral or args.dmd:
+    # --- Multi-asset analysis: spectral clustering / DMD / portfolio allocation ---
+    spectral_clusters_csv: str | None = None
+    spectral_graph_json: str | None = None
+    dmd_eigs_csv: str | None = None
+    dmd_summary_json: str | None = None
+    portfolio_weights_csv: str | None = None
+    portfolio_allocation_json: str | None = None
+
+    spec_labels_by_symbol: dict[str, int] | None = None
+
+    if args.spectral or args.dmd or args.allocate_portfolio:
         panel = _align_closes(closes_by_symbol, how='inner')
         rets = _log_returns(panel)
 
         # Require a minimum overlap so results aren't junk.
-        if not rets.empty and rets.shape[0] >= int(args.spectral_min_overlap) and rets.shape[1] >= 3:
+        enough_for_spectral_dmd = (not rets.empty) and (rets.shape[0] >= int(args.spectral_min_overlap)) and (rets.shape[1] >= 3)
+        if enough_for_spectral_dmd:
             if args.spectral:
                 try:
                     spec = spectral_cluster_assets(
@@ -859,6 +884,8 @@ def main(argv: list[str] | None = None) -> int:
                         out_csv = out_dir / 'spectral_clusters.csv'
                         dfc.to_csv(out_csv, index=False)
 
+                        spec_labels_by_symbol = {str(r['symbol']): int(r['cluster']) for _, r in dfc.iterrows()}
+
                         out_json = out_dir / 'spectral_graph.json'
                         with open(out_json, 'w', encoding='utf-8') as f:
                             json.dump({
@@ -874,6 +901,9 @@ def main(argv: list[str] | None = None) -> int:
                                 'rows_used': int(rets.shape[0]),
                                 'assets_used': int(rets.shape[1]),
                             }, f, indent=2)
+
+                        spectral_clusters_csv = str(out_csv)
+                        spectral_graph_json = str(out_json)
 
                         print(f"Wrote spectral clusters: {out_csv}")
                 except Exception as e:
@@ -906,15 +936,121 @@ def main(argv: list[str] | None = None) -> int:
                             'top_modes': int(min(10, df_e.shape[0])),
                         }, f, indent=2)
 
+                    dmd_eigs_csv = str(out_eigs)
+                    dmd_summary_json = str(out_json)
+
                     print(f"Wrote DMD eigs: {out_eigs}")
                 except Exception as e:
                     print(f"Warning: DMD failed: {e}")
+
         else:
             if args.spectral or args.dmd:
                 print(
                     "Note: skipping spectral/DMD (need at least 3 assets and enough overlapping rows). "
                     f"Have rows={rets.shape[0] if rets is not None else 0}, assets={rets.shape[1] if rets is not None else 0}."
                 )
+
+        # Portfolio allocation can run with >= 2 assets.
+        if args.allocate_portfolio:
+            min_rows = int(args.alloc_min_overlap)
+            if not rets.empty and rets.shape[0] >= min_rows and rets.shape[1] >= 2:
+                alloc_universe = (args.alloc_universe or 'all').strip().lower()
+                if alloc_universe in {'selected', 'select', 'signals'} and selected_symbols:
+                    alloc_syms = [s for s in selected_symbols if s in set(rets.columns)]
+                else:
+                    alloc_syms = list(rets.columns)
+
+                if len(alloc_syms) >= 2:
+                    rets_alloc = rets[alloc_syms].copy()
+                    # If we have spectral cluster labels from this run, use them; else put everything in one cluster.
+                    clusters_map = None
+                    if spec_labels_by_symbol is not None:
+                        clusters_map = {s: int(spec_labels_by_symbol.get(s, 0)) for s in alloc_syms}
+
+                    alloc = cluster_inverse_vol_allocation(
+                        rets_alloc,
+                        clusters=clusters_map,
+                        lookback=int(args.alloc_lookback),
+                        cluster_budget=str(args.alloc_cluster_budget),
+                        within_cluster=str(args.alloc_within_cluster),
+                        min_weight=float(args.alloc_min_weight or 0.0),
+                        max_weight=float(args.alloc_max_weight) if args.alloc_max_weight is not None else None,
+                    )
+
+                    # Write CSV + JSON artifacts
+                    out_w = out_dir / 'portfolio_weights.csv'
+                    out_j = out_dir / 'portfolio_allocation.json'
+
+                    diag = alloc.diagnostics or {}
+                    asset_vol = diag.get('asset_vol') or {}
+                    rc = diag.get('risk_contrib_diag') or {}
+                    cl_map = diag.get('clusters') or {}
+
+                    dfw = pd.DataFrame({
+                        'symbol': alloc.weights.index,
+                        'weight': [float(alloc.weights.loc[s]) for s in alloc.weights.index],
+                        'cluster': [int(cl_map.get(s, 0)) for s in alloc.weights.index],
+                        'vol': [float(asset_vol.get(s, float('nan'))) for s in alloc.weights.index],
+                        'risk_contrib_diag': [float(rc.get(s, float('nan'))) for s in alloc.weights.index],
+                    }).sort_values(['cluster', 'weight'], ascending=[True, False])
+
+                    dfw.to_csv(out_w, index=False)
+                    with open(out_j, 'w', encoding='utf-8') as f:
+                        json.dump({
+                            'universe': alloc_universe,
+                            'symbols_used': list(alloc.weights.index),
+                            'weights': {k: float(v) for k, v in alloc.weights.to_dict().items()},
+                            'diagnostics': diag,
+                        }, f, indent=2)
+
+                    portfolio_weights_csv = str(out_w)
+                    portfolio_allocation_json = str(out_j)
+                    print(f"Wrote portfolio weights: {out_w}")
+                else:
+                    print("Note: skipping portfolio allocation (need at least 2 selected assets with enough overlap).")
+            else:
+                print(
+                    "Note: skipping portfolio allocation (need at least 2 assets and enough overlapping rows). "
+                    f"Have rows={rets.shape[0] if rets is not None else 0}, assets={rets.shape[1] if rets is not None else 0}."
+                )
+
+    # Write a run manifest for provenance (after optional analyses so it can reference all artifacts)
+    summary_path = out_dir / "summary.json"
+    with open(summary_path, "w", encoding="utf-8") as f:
+        json.dump({
+            "universe": args.universe,
+            "symbols_requested": symbols,
+            "period": args.period,
+            "interval": args.interval,
+            "results": results,
+            "failures": failures,
+            "charts": {
+                "enabled": bool(args.generate_charts),
+                "charts_dir": str(charts_dir) if args.generate_charts else None,
+                "summary_json": str(charts_dir / "summary.json") if args.generate_charts else None,
+                "selection_manifest": selection_manifest_path,
+                "selected_symbols": selected_symbols,
+                "failures": chart_failures if args.generate_charts else [],
+            },
+            "spectral": {
+                "enabled": bool(args.spectral),
+                "clusters_csv": spectral_clusters_csv,
+                "graph_json": spectral_graph_json,
+            },
+            "dmd": {
+                "enabled": bool(args.dmd),
+                "eigs_csv": dmd_eigs_csv,
+                "summary_json": dmd_summary_json,
+            },
+            "portfolio": {
+                "enabled": bool(args.allocate_portfolio),
+                "universe": (args.alloc_universe or 'all'),
+                "weights_csv": portfolio_weights_csv,
+                "allocation_json": portfolio_allocation_json,
+            },
+            "macro_features_csv": str(out_dir / "macro_features.csv") if (out_dir / "macro_features.csv").exists() else None,
+            "extra_features_raw_csv": str(out_dir / "extra_features_raw.csv") if (out_dir / "extra_features_raw.csv").exists() else None,
+        }, f, indent=2)
 
     if args.skip_train:
         # Dataset-only mode
