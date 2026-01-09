@@ -1,0 +1,40 @@
+{
+  "universe": null,
+  "symbols_requested": [
+    "AAPL",
+    "MSFT"
+  ],
+  "period": "1mo",
+  "interval": "1d",
+  "results": [
+    {
+      "symbol": "AAPL",
+      "rows": 20,
+      "columns": 5,
+      "csv": "hub_smoke_charts\\AAPL_1mo_1d.csv",
+      "chart": {
+        "csv": "hub_smoke_charts\\charts\\AAPL_1mo_1d.csv",
+        "html": "hub_smoke_charts\\charts\\AAPL_1mo_1d.html"
+      }
+    },
+    {
+      "symbol": "MSFT",
+      "rows": 20,
+      "columns": 5,
+      "csv": "hub_smoke_charts\\MSFT_1mo_1d.csv",
+      "chart": {
+        "csv": "hub_smoke_charts\\charts\\MSFT_1mo_1d.csv",
+        "html": "hub_smoke_charts\\charts\\MSFT_1mo_1d.html"
+      }
+    }
+  ],
+  "failures": [],
+  "charts": {
+    "enabled": true,
+    "charts_dir": "hub_smoke_charts\\charts",
+    "summary_json": "hub_smoke_charts\\charts\\summary.json",
+    "failures": []
+  },
+  "macro_features_csv": null,
+  "extra_features_raw_csv": null
+}

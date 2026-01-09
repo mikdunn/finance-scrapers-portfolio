@@ -111,7 +111,21 @@ def _gather_inputs(in_csv: str | None, in_dir: str | None) -> list[Path]:
     if not d.exists():
         raise FileNotFoundError(str(d))
 
-    return sorted([p for p in d.glob("*.csv") if p.name.lower() != "summary.json" and not p.name.lower().endswith("_importance.csv")])
+    # Directory inputs may contain helper artifacts (e.g., macro feature caches)
+    # that are not per-asset OHLCV datasets.
+    exclude_names = {
+        "summary.json",
+        "macro_features.csv",
+        "extra_features_raw.csv",
+    }
+    return sorted(
+        [
+            p
+            for p in d.glob("*.csv")
+            if p.name.lower() not in exclude_names
+            and not p.name.lower().endswith("_importance.csv")
+        ]
+    )
 
 
 def _time_split(n: int, test_size: float) -> tuple[np.ndarray, np.ndarray]:

@@ -1,7 +1,5 @@
 ticker,source
 AAPL,yahoo
 AAPL,investing
-TSLA,yahoo
-TSLA,investing
-SPY,yahoo
-SPY,investing
+MSFT,yahoo
+MSFT,investing

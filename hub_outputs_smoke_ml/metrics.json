@@ -1,0 +1,20 @@
+{
+  "input": null,
+  "inputs": [
+    "hub_outputs_smoke\\AAPL_6mo_1d.csv",
+    "hub_outputs_smoke\\MSFT_6mo_1d.csv"
+  ],
+  "feature_count": 35,
+  "mode": "walkforward",
+  "task": "classification",
+  "model": "hgb",
+  "n_folds": 5,
+  "purge": 5,
+  "test_window": 20,
+  "cv_metrics_csv": "hub_outputs_smoke_ml\\cv_metrics.csv",
+  "n_assets": 2,
+  "assets": [
+    "AAPL",
+    "MSFT"
+  ]
+}

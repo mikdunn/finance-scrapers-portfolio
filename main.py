@@ -6,7 +6,7 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument(
         '--project',
         default='collector',
-        help='Which project to run: collector | sentiment_heatmap | market | ml | all',
+        help='Which project to run: collector | sentiment_heatmap | market | ml | hub | all',
     )
     parser.add_argument('--tickers', default=None, help='Comma-separated tickers (overrides per-project defaults)')
     parser.add_argument('--headless', action='store_true', help='Run browser automation headless (sentiment project)')
@@ -36,7 +36,8 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument('--top-features', type=int, default=None, help='ML: top features in importance plots')
     parser.add_argument('--random-state', type=int, default=None, help='ML: random seed')
     parser.add_argument('--multi-asset', action='store_true', help='ML: combine all CSVs in --in-dir into one training set')
-    args = parser.parse_args(argv)
+    # Allow project-specific flags to pass through for projects that have their own CLI.
+    args, unknown = parser.parse_known_args(argv)
 
     project = args.project.strip().lower()
 
@@ -116,7 +117,25 @@ def main(argv: list[str] | None = None) -> int:
             ml_args += ['--multi-asset']
         if args.out_dir:
             ml_args += ['--out-dir', args.out_dir]
-        return ml_main(ml_args)
+        return ml_main(ml_args + unknown)
+
+    if project in {'hub', 'data_hub', 'data-hub', 'dataset'}:
+        from projects.data_hub_train import main as hub_main
+
+        # Forward any remaining args to the hub CLI.
+        hub_args: list[str] = []
+        # If user provided tickers/symbols at top-level, map them to hub --symbols.
+        if args.tickers and not any(x in unknown for x in ['--symbols', '--symbols-file', '--universe']):
+            hub_args += ['--symbols', args.tickers]
+        if args.symbols and not any(x in unknown for x in ['--symbols', '--symbols-file', '--universe']):
+            hub_args += ['--symbols', args.symbols]
+        if args.period and '--period' not in unknown:
+            hub_args += ['--period', args.period]
+        if args.interval and '--interval' not in unknown:
+            hub_args += ['--interval', args.interval]
+        if args.out_dir and '--out-dir' not in unknown:
+            hub_args += ['--out-dir', args.out_dir]
+        return hub_main(hub_args + unknown)
 
     if project == 'all':
         from projects.main_collector import main as collector_main

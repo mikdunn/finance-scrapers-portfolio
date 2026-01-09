@@ -142,6 +142,33 @@ def build_features(df: pd.DataFrame) -> pd.DataFrame:
         if col in df.columns:
             out[col.lower()] = pd.to_numeric(df[col], errors="coerce")
 
+    # Exogenous numeric columns (macro series, fundamentals, etc.)
+    # If the caller merges additional data sources into the raw frame, include
+    # them automatically as features.
+    exclude = {
+        "open",
+        "high",
+        "low",
+        "close",
+        "adj close",
+        "volume",
+        "dividends",
+        "stock splits",
+        "rsi14",
+        "tenkan",
+        "kijun",
+        "senkoua",
+        "senkoub",
+    }
+    for c_name in df.columns:
+        key = str(c_name).strip().lower()
+        if key in exclude:
+            continue
+        # Keep only numeric-ish columns.
+        ser = pd.to_numeric(df[c_name], errors="coerce")
+        if ser.notna().any():
+            out[f"ext_{key}"] = ser
+
     return out
 
 

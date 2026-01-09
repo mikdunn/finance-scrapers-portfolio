@@ -31,6 +31,18 @@ def _period_to_start_ts(period: str, now: pd.Timestamp) -> pd.Timestamp | None:
         return None
     if p == 'ytd':
         return pd.Timestamp(year=now.year, month=1, day=1)
+    # Day / week style periods (yfinance supports 1d/5d, etc.)
+    if p.endswith('d') and p[:-1].isdigit():
+        n = int(p[:-1])
+        return now - pd.Timedelta(days=n)
+    if p in {'1w', '1wk', '1week'}:
+        return now - pd.Timedelta(days=7)
+    if p.endswith('wk') and p[:-2].isdigit():
+        n = int(p[:-2])
+        return now - pd.Timedelta(days=7 * n)
+    if p.endswith('w') and p[:-1].isdigit():
+        n = int(p[:-1])
+        return now - pd.Timedelta(days=7 * n)
     if p.endswith('mo'):
         n = int(p[:-2])
         return now - pd.Timedelta(days=30 * n)

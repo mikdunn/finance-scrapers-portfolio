@@ -1,0 +1,362 @@
+{
+  "universe": "nasdaq100",
+  "symbols_requested": [
+    "ADBE",
+    "AMD",
+    "ABNB",
+    "ALNY",
+    "GOOGL",
+    "GOOG",
+    "AMZN",
+    "AEP",
+    "AMGN",
+    "ADI",
+    "AAPL",
+    "AMAT",
+    "APP",
+    "ARM",
+    "ASML",
+    "AZN",
+    "TEAM",
+    "ADSK",
+    "ADP",
+    "AXON",
+    "BKR",
+    "BKNG",
+    "AVGO",
+    "CDNS",
+    "CHTR",
+    "CTAS",
+    "CSCO",
+    "CCEP",
+    "CTSH",
+    "CMCSA",
+    "CEG",
+    "CPRT",
+    "CSGP",
+    "COST",
+    "CRWD",
+    "CSX",
+    "DDOG",
+    "DXCM",
+    "FANG",
+    "DASH",
+    "EA",
+    "EXC",
+    "FAST",
+    "FER",
+    "FTNT",
+    "GEHC",
+    "GILD",
+    "HON",
+    "IDXX",
+    "INSM"
+  ],
+  "period": "1y",
+  "interval": "1d",
+  "results": [
+    {
+      "symbol": "ADBE",
+      "rows": 251,
+      "columns": 6,
+      "csv": "hub_nasdaq100_1y_1d\\ADBE_1y_1d.csv"
+    },
+    {
+      "symbol": "AMD",
+      "rows": 251,
+      "columns": 6,
+      "csv": "hub_nasdaq100_1y_1d\\AMD_1y_1d.csv"
+    },
+    {
+      "symbol": "ABNB",
+      "rows": 251,
+      "columns": 6,
+      "csv": "hub_nasdaq100_1y_1d\\ABNB_1y_1d.csv"
+    },
+    {
+      "symbol": "ALNY",
+      "rows": 251,
+      "columns": 6,
+      "csv": "hub_nasdaq100_1y_1d\\ALNY_1y_1d.csv"
+    },
+    {
+      "symbol": "GOOGL",
+      "rows": 251,
+      "columns": 6,
+      "csv": "hub_nasdaq100_1y_1d\\GOOGL_1y_1d.csv"
+    },
+    {
+      "symbol": "GOOG",
+      "rows": 251,
+      "columns": 6,
+      "csv": "hub_nasdaq100_1y_1d\\GOOG_1y_1d.csv"
+    },
+    {
+      "symbol": "AMZN",
+      "rows": 251,
+      "columns": 6,
+      "csv": "hub_nasdaq100_1y_1d\\AMZN_1y_1d.csv"
+    },
+    {
+      "symbol": "AEP",
+      "rows": 251,
+      "columns": 6,
+      "csv": "hub_nasdaq100_1y_1d\\AEP_1y_1d.csv"
+    },
+    {
+      "symbol": "AMGN",
+      "rows": 251,
+      "columns": 6,
+      "csv": "hub_nasdaq100_1y_1d\\AMGN_1y_1d.csv"
+    },
+    {
+      "symbol": "ADI",
+      "rows": 251,
+      "columns": 6,
+      "csv": "hub_nasdaq100_1y_1d\\ADI_1y_1d.csv"
+    },
+    {
+      "symbol": "AAPL",
+      "rows": 251,
+      "columns": 6,
+      "csv": "hub_nasdaq100_1y_1d\\AAPL_1y_1d.csv"
+    },
+    {
+      "symbol": "AMAT",
+      "rows": 251,
+      "columns": 6,
+      "csv": "hub_nasdaq100_1y_1d\\AMAT_1y_1d.csv"
+    },
+    {
+      "symbol": "APP",
+      "rows": 251,
+      "columns": 6,
+      "csv": "hub_nasdaq100_1y_1d\\APP_1y_1d.csv"
+    },
+    {
+      "symbol": "ARM",
+      "rows": 251,
+      "columns": 6,
+      "csv": "hub_nasdaq100_1y_1d\\ARM_1y_1d.csv"
+    },
+    {
+      "symbol": "ASML",
+      "rows": 251,
+      "columns": 6,
+      "csv": "hub_nasdaq100_1y_1d\\ASML_1y_1d.csv"
+    },
+    {
+      "symbol": "AZN",
+      "rows": 251,
+      "columns": 6,
+      "csv": "hub_nasdaq100_1y_1d\\AZN_1y_1d.csv"
+    },
+    {
+      "symbol": "TEAM",
+      "rows": 251,
+      "columns": 6,
+      "csv": "hub_nasdaq100_1y_1d\\TEAM_1y_1d.csv"
+    },
+    {
+      "symbol": "ADSK",
+      "rows": 251,
+      "columns": 6,
+      "csv": "hub_nasdaq100_1y_1d\\ADSK_1y_1d.csv"
+    },
+    {
+      "symbol": "ADP",
+      "rows": 251,
+      "columns": 6,
+      "csv": "hub_nasdaq100_1y_1d\\ADP_1y_1d.csv"
+    },
+    {
+      "symbol": "AXON",
+      "rows": 251,
+      "columns": 6,
+      "csv": "hub_nasdaq100_1y_1d\\AXON_1y_1d.csv"
+    },
+    {
+      "symbol": "BKR",
+      "rows": 251,
+      "columns": 6,
+      "csv": "hub_nasdaq100_1y_1d\\BKR_1y_1d.csv"
+    },
+    {
+      "symbol": "BKNG",
+      "rows": 251,
+      "columns": 6,
+      "csv": "hub_nasdaq100_1y_1d\\BKNG_1y_1d.csv"
+    },
+    {
+      "symbol": "AVGO",
+      "rows": 251,
+      "columns": 6,
+      "csv": "hub_nasdaq100_1y_1d\\AVGO_1y_1d.csv"
+    },
+    {
+      "symbol": "CDNS",
+      "rows": 251,
+      "columns": 6,
+      "csv": "hub_nasdaq100_1y_1d\\CDNS_1y_1d.csv"
+    },
+    {
+      "symbol": "CHTR",
+      "rows": 251,
+      "columns": 6,
+      "csv": "hub_nasdaq100_1y_1d\\CHTR_1y_1d.csv"
+    },
+    {
+      "symbol": "CTAS",
+      "rows": 251,
+      "columns": 6,
+      "csv": "hub_nasdaq100_1y_1d\\CTAS_1y_1d.csv"
+    },
+    {
+      "symbol": "CSCO",
+      "rows": 251,
+      "columns": 6,
+      "csv": "hub_nasdaq100_1y_1d\\CSCO_1y_1d.csv"
+    },
+    {
+      "symbol": "CCEP",
+      "rows": 251,
+      "columns": 6,
+      "csv": "hub_nasdaq100_1y_1d\\CCEP_1y_1d.csv"
+    },
+    {
+      "symbol": "CTSH",
+      "rows": 251,
+      "columns": 6,
+      "csv": "hub_nasdaq100_1y_1d\\CTSH_1y_1d.csv"
+    },
+    {
+      "symbol": "CMCSA",
+      "rows": 251,
+      "columns": 6,
+      "csv": "hub_nasdaq100_1y_1d\\CMCSA_1y_1d.csv"
+    },
+    {
+      "symbol": "CEG",
+      "rows": 251,
+      "columns": 6,
+      "csv": "hub_nasdaq100_1y_1d\\CEG_1y_1d.csv"
+    },
+    {
+      "symbol": "CPRT",
+      "rows": 251,
+      "columns": 6,
+      "csv": "hub_nasdaq100_1y_1d\\CPRT_1y_1d.csv"
+    },
+    {
+      "symbol": "CSGP",
+      "rows": 251,
+      "columns": 6,
+      "csv": "hub_nasdaq100_1y_1d\\CSGP_1y_1d.csv"
+    },
+    {
+      "symbol": "COST",
+      "rows": 251,
+      "columns": 6,
+      "csv": "hub_nasdaq100_1y_1d\\COST_1y_1d.csv"
+    },
+    {
+      "symbol": "CRWD",
+      "rows": 251,
+      "columns": 6,
+      "csv": "hub_nasdaq100_1y_1d\\CRWD_1y_1d.csv"
+    },
+    {
+      "symbol": "CSX",
+      "rows": 251,
+      "columns": 6,
+      "csv": "hub_nasdaq100_1y_1d\\CSX_1y_1d.csv"
+    },
+    {
+      "symbol": "DDOG",
+      "rows": 251,
+      "columns": 6,
+      "csv": "hub_nasdaq100_1y_1d\\DDOG_1y_1d.csv"
+    },
+    {
+      "symbol": "DXCM",
+      "rows": 251,
+      "columns": 6,
+      "csv": "hub_nasdaq100_1y_1d\\DXCM_1y_1d.csv"
+    },
+    {
+      "symbol": "FANG",
+      "rows": 251,
+      "columns": 6,
+      "csv": "hub_nasdaq100_1y_1d\\FANG_1y_1d.csv"
+    },
+    {
+      "symbol": "DASH",
+      "rows": 251,
+      "columns": 6,
+      "csv": "hub_nasdaq100_1y_1d\\DASH_1y_1d.csv"
+    },
+    {
+      "symbol": "EA",
+      "rows": 251,
+      "columns": 6,
+      "csv": "hub_nasdaq100_1y_1d\\EA_1y_1d.csv"
+    },
+    {
+      "symbol": "EXC",
+      "rows": 251,
+      "columns": 6,
+      "csv": "hub_nasdaq100_1y_1d\\EXC_1y_1d.csv"
+    },
+    {
+      "symbol": "FAST",
+      "rows": 251,
+      "columns": 6,
+      "csv": "hub_nasdaq100_1y_1d\\FAST_1y_1d.csv"
+    },
+    {
+      "symbol": "FER",
+      "rows": 251,
+      "columns": 6,
+      "csv": "hub_nasdaq100_1y_1d\\FER_1y_1d.csv"
+    },
+    {
+      "symbol": "FTNT",
+      "rows": 251,
+      "columns": 6,
+      "csv": "hub_nasdaq100_1y_1d\\FTNT_1y_1d.csv"
+    },
+    {
+      "symbol": "GEHC",
+      "rows": 251,
+      "columns": 6,
+      "csv": "hub_nasdaq100_1y_1d\\GEHC_1y_1d.csv"
+    },
+    {
+      "symbol": "GILD",
+      "rows": 251,
+      "columns": 6,
+      "csv": "hub_nasdaq100_1y_1d\\GILD_1y_1d.csv"
+    },
+    {
+      "symbol": "HON",
+      "rows": 251,
+      "columns": 6,
+      "csv": "hub_nasdaq100_1y_1d\\HON_1y_1d.csv"
+    },
+    {
+      "symbol": "IDXX",
+      "rows": 251,
+      "columns": 6,
+      "csv": "hub_nasdaq100_1y_1d\\IDXX_1y_1d.csv"
+    },
+    {
+      "symbol": "INSM",
+      "rows": 251,
+      "columns": 6,
+      "csv": "hub_nasdaq100_1y_1d\\INSM_1y_1d.csv"
+    }
+  ],
+  "failures": [],
+  "macro_features_csv": "hub_nasdaq100_1y_1d\\macro_features.csv",
+  "extra_features_raw_csv": null
+}

@@ -1,0 +1,47 @@
+{
+  "results": [
+    {
+      "symbol": "AAPL",
+      "period": "1mo",
+      "interval": "1d",
+      "last_close": 259.84,
+      "regime": "neutral",
+      "support_levels": [
+        266.95
+      ],
+      "resistance_levels": [
+        277.84
+      ],
+      "trade_style": {
+        "label": "long",
+        "rationale": "lower daily volatility (ATR/Close\u22481.77%)"
+      },
+      "forecast_close_next": [],
+      "artifacts": {
+        "csv": "hub_smoke_charts\\charts\\AAPL_1mo_1d.csv",
+        "html": "hub_smoke_charts\\charts\\AAPL_1mo_1d.html"
+      }
+    },
+    {
+      "symbol": "MSFT",
+      "period": "1mo",
+      "interval": "1d",
+      "last_close": 478.705,
+      "regime": "neutral",
+      "support_levels": [],
+      "resistance_levels": [
+        489.6
+      ],
+      "trade_style": {
+        "label": "long",
+        "rationale": "lower daily volatility (ATR/Close\u22481.65%)"
+      },
+      "forecast_close_next": [],
+      "artifacts": {
+        "csv": "hub_smoke_charts\\charts\\MSFT_1mo_1d.csv",
+        "html": "hub_smoke_charts\\charts\\MSFT_1mo_1d.html"
+      }
+    }
+  ],
+  "failures": []
+}
