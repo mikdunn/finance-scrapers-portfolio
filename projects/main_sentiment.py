@@ -1,3 +1,7 @@
+import pandas as pd
+from utils.scrapers import fetch_dynamic
+from utils.sentiment import score_text
+
 tickers = ['AAPL', 'TSLA', 'SPY']  # Your list
 news_data = []
 
