@@ -10,47 +10,7 @@
     "AMD",
     "AES",
     "AFL",
-    "A",
-    "APD",
-    "ABNB",
-    "AKAM",
-    "ALB",
-    "ARE",
-    "ALGN",
-    "ALLE",
-    "LNT",
-    "ALL",
-    "GOOGL",
-    "GOOG",
-    "MO",
-    "AMZN",
-    "AMCR",
-    "AEE",
-    "AEP",
-    "AXP",
-    "AIG",
-    "AMT",
-    "AWK",
-    "AMP",
-    "AME",
-    "AMGN",
-    "APH",
-    "ADI",
-    "AON",
-    "APA",
-    "APO",
-    "AAPL",
-    "AMAT",
-    "APP",
-    "APTV",
-    "ACGL",
-    "ADM",
-    "ARES",
-    "ANET",
-    "AJG",
-    "AIZ",
-    "T",
-    "ATO"
+    "A"
   ],
   "period": "1y",
   "interval": "1d",
@@ -58,304 +18,111 @@
     {
       "symbol": "MMM",
       "rows": 251,
-      "columns": 6,
-      "csv": "hub_sp500_1y_1d\\MMM_1y_1d.csv"
+      "columns": 5,
+      "csv": "hub_sp500_1y_1d\\MMM_1y_1d.csv",
+      "chart": {
+        "csv": "hub_sp500_1y_1d\\charts\\MMM_1y_1d.csv",
+        "html": "hub_sp500_1y_1d\\charts\\MMM_1y_1d.html"
+      }
     },
     {
       "symbol": "AOS",
       "rows": 251,
-      "columns": 6,
-      "csv": "hub_sp500_1y_1d\\AOS_1y_1d.csv"
+      "columns": 5,
+      "csv": "hub_sp500_1y_1d\\AOS_1y_1d.csv",
+      "chart": {
+        "csv": "hub_sp500_1y_1d\\charts\\AOS_1y_1d.csv",
+        "html": "hub_sp500_1y_1d\\charts\\AOS_1y_1d.html"
+      }
     },
     {
       "symbol": "ABT",
       "rows": 251,
-      "columns": 6,
-      "csv": "hub_sp500_1y_1d\\ABT_1y_1d.csv"
+      "columns": 5,
+      "csv": "hub_sp500_1y_1d\\ABT_1y_1d.csv",
+      "chart": {
+        "csv": "hub_sp500_1y_1d\\charts\\ABT_1y_1d.csv",
+        "html": "hub_sp500_1y_1d\\charts\\ABT_1y_1d.html"
+      }
     },
     {
       "symbol": "ABBV",
       "rows": 251,
-      "columns": 6,
-      "csv": "hub_sp500_1y_1d\\ABBV_1y_1d.csv"
+      "columns": 5,
+      "csv": "hub_sp500_1y_1d\\ABBV_1y_1d.csv",
+      "chart": {
+        "csv": "hub_sp500_1y_1d\\charts\\ABBV_1y_1d.csv",
+        "html": "hub_sp500_1y_1d\\charts\\ABBV_1y_1d.html"
+      }
     },
     {
       "symbol": "ACN",
       "rows": 251,
-      "columns": 6,
-      "csv": "hub_sp500_1y_1d\\ACN_1y_1d.csv"
+      "columns": 5,
+      "csv": "hub_sp500_1y_1d\\ACN_1y_1d.csv",
+      "chart": {
+        "csv": "hub_sp500_1y_1d\\charts\\ACN_1y_1d.csv",
+        "html": "hub_sp500_1y_1d\\charts\\ACN_1y_1d.html"
+      }
     },
     {
       "symbol": "ADBE",
       "rows": 251,
-      "columns": 6,
-      "csv": "hub_sp500_1y_1d\\ADBE_1y_1d.csv"
+      "columns": 5,
+      "csv": "hub_sp500_1y_1d\\ADBE_1y_1d.csv",
+      "chart": {
+        "csv": "hub_sp500_1y_1d\\charts\\ADBE_1y_1d.csv",
+        "html": "hub_sp500_1y_1d\\charts\\ADBE_1y_1d.html"
+      }
     },
     {
       "symbol": "AMD",
       "rows": 251,
-      "columns": 6,
-      "csv": "hub_sp500_1y_1d\\AMD_1y_1d.csv"
+      "columns": 5,
+      "csv": "hub_sp500_1y_1d\\AMD_1y_1d.csv",
+      "chart": {
+        "csv": "hub_sp500_1y_1d\\charts\\AMD_1y_1d.csv",
+        "html": "hub_sp500_1y_1d\\charts\\AMD_1y_1d.html"
+      }
     },
     {
       "symbol": "AES",
       "rows": 251,
-      "columns": 6,
-      "csv": "hub_sp500_1y_1d\\AES_1y_1d.csv"
+      "columns": 5,
+      "csv": "hub_sp500_1y_1d\\AES_1y_1d.csv",
+      "chart": {
+        "csv": "hub_sp500_1y_1d\\charts\\AES_1y_1d.csv",
+        "html": "hub_sp500_1y_1d\\charts\\AES_1y_1d.html"
+      }
     },
     {
       "symbol": "AFL",
       "rows": 251,
-      "columns": 6,
-      "csv": "hub_sp500_1y_1d\\AFL_1y_1d.csv"
+      "columns": 5,
+      "csv": "hub_sp500_1y_1d\\AFL_1y_1d.csv",
+      "chart": {
+        "csv": "hub_sp500_1y_1d\\charts\\AFL_1y_1d.csv",
+        "html": "hub_sp500_1y_1d\\charts\\AFL_1y_1d.html"
+      }
     },
     {
       "symbol": "A",
       "rows": 251,
-      "columns": 6,
-      "csv": "hub_sp500_1y_1d\\A_1y_1d.csv"
-    },
-    {
-      "symbol": "APD",
-      "rows": 251,
-      "columns": 6,
-      "csv": "hub_sp500_1y_1d\\APD_1y_1d.csv"
-    },
-    {
-      "symbol": "ABNB",
-      "rows": 251,
-      "columns": 6,
-      "csv": "hub_sp500_1y_1d\\ABNB_1y_1d.csv"
-    },
-    {
-      "symbol": "AKAM",
-      "rows": 251,
-      "columns": 6,
-      "csv": "hub_sp500_1y_1d\\AKAM_1y_1d.csv"
-    },
-    {
-      "symbol": "ALB",
-      "rows": 251,
-      "columns": 6,
-      "csv": "hub_sp500_1y_1d\\ALB_1y_1d.csv"
-    },
-    {
-      "symbol": "ARE",
-      "rows": 251,
-      "columns": 6,
-      "csv": "hub_sp500_1y_1d\\ARE_1y_1d.csv"
-    },
-    {
-      "symbol": "ALLE",
-      "rows": 251,
-      "columns": 6,
-      "csv": "hub_sp500_1y_1d\\ALLE_1y_1d.csv"
-    },
-    {
-      "symbol": "LNT",
-      "rows": 251,
-      "columns": 6,
-      "csv": "hub_sp500_1y_1d\\LNT_1y_1d.csv"
-    },
-    {
-      "symbol": "ALL",
-      "rows": 251,
-      "columns": 6,
-      "csv": "hub_sp500_1y_1d\\ALL_1y_1d.csv"
-    },
-    {
-      "symbol": "GOOGL",
-      "rows": 251,
-      "columns": 6,
-      "csv": "hub_sp500_1y_1d\\GOOGL_1y_1d.csv"
-    },
-    {
-      "symbol": "GOOG",
-      "rows": 251,
-      "columns": 6,
-      "csv": "hub_sp500_1y_1d\\GOOG_1y_1d.csv"
-    },
-    {
-      "symbol": "MO",
-      "rows": 251,
-      "columns": 6,
-      "csv": "hub_sp500_1y_1d\\MO_1y_1d.csv"
-    },
-    {
-      "symbol": "AMZN",
-      "rows": 251,
-      "columns": 6,
-      "csv": "hub_sp500_1y_1d\\AMZN_1y_1d.csv"
-    },
-    {
-      "symbol": "AMCR",
-      "rows": 251,
-      "columns": 6,
-      "csv": "hub_sp500_1y_1d\\AMCR_1y_1d.csv"
-    },
-    {
-      "symbol": "AEE",
-      "rows": 251,
-      "columns": 6,
-      "csv": "hub_sp500_1y_1d\\AEE_1y_1d.csv"
-    },
-    {
-      "symbol": "AEP",
-      "rows": 251,
-      "columns": 6,
-      "csv": "hub_sp500_1y_1d\\AEP_1y_1d.csv"
-    },
-    {
-      "symbol": "AXP",
-      "rows": 251,
-      "columns": 6,
-      "csv": "hub_sp500_1y_1d\\AXP_1y_1d.csv"
-    },
-    {
-      "symbol": "AIG",
-      "rows": 251,
-      "columns": 6,
-      "csv": "hub_sp500_1y_1d\\AIG_1y_1d.csv"
-    },
-    {
-      "symbol": "AMT",
-      "rows": 251,
-      "columns": 6,
-      "csv": "hub_sp500_1y_1d\\AMT_1y_1d.csv"
-    },
-    {
-      "symbol": "AWK",
-      "rows": 251,
-      "columns": 6,
-      "csv": "hub_sp500_1y_1d\\AWK_1y_1d.csv"
-    },
-    {
-      "symbol": "AMP",
-      "rows": 251,
-      "columns": 6,
-      "csv": "hub_sp500_1y_1d\\AMP_1y_1d.csv"
-    },
-    {
-      "symbol": "AME",
-      "rows": 251,
-      "columns": 6,
-      "csv": "hub_sp500_1y_1d\\AME_1y_1d.csv"
-    },
-    {
-      "symbol": "AMGN",
-      "rows": 251,
-      "columns": 6,
-      "csv": "hub_sp500_1y_1d\\AMGN_1y_1d.csv"
-    },
-    {
-      "symbol": "APH",
-      "rows": 251,
-      "columns": 6,
-      "csv": "hub_sp500_1y_1d\\APH_1y_1d.csv"
-    },
-    {
-      "symbol": "ADI",
-      "rows": 251,
-      "columns": 6,
-      "csv": "hub_sp500_1y_1d\\ADI_1y_1d.csv"
-    },
-    {
-      "symbol": "AON",
-      "rows": 251,
-      "columns": 6,
-      "csv": "hub_sp500_1y_1d\\AON_1y_1d.csv"
-    },
-    {
-      "symbol": "APA",
-      "rows": 251,
-      "columns": 6,
-      "csv": "hub_sp500_1y_1d\\APA_1y_1d.csv"
-    },
-    {
-      "symbol": "APO",
-      "rows": 251,
-      "columns": 6,
-      "csv": "hub_sp500_1y_1d\\APO_1y_1d.csv"
-    },
-    {
-      "symbol": "AAPL",
-      "rows": 251,
-      "columns": 6,
-      "csv": "hub_sp500_1y_1d\\AAPL_1y_1d.csv"
-    },
-    {
-      "symbol": "AMAT",
-      "rows": 251,
-      "columns": 6,
-      "csv": "hub_sp500_1y_1d\\AMAT_1y_1d.csv"
-    },
-    {
-      "symbol": "APP",
-      "rows": 251,
-      "columns": 6,
-      "csv": "hub_sp500_1y_1d\\APP_1y_1d.csv"
-    },
-    {
-      "symbol": "APTV",
-      "rows": 251,
-      "columns": 6,
-      "csv": "hub_sp500_1y_1d\\APTV_1y_1d.csv"
-    },
-    {
-      "symbol": "ACGL",
-      "rows": 251,
-      "columns": 6,
-      "csv": "hub_sp500_1y_1d\\ACGL_1y_1d.csv"
-    },
-    {
-      "symbol": "ADM",
-      "rows": 251,
-      "columns": 6,
-      "csv": "hub_sp500_1y_1d\\ADM_1y_1d.csv"
-    },
-    {
-      "symbol": "ARES",
-      "rows": 251,
-      "columns": 6,
-      "csv": "hub_sp500_1y_1d\\ARES_1y_1d.csv"
-    },
-    {
-      "symbol": "ANET",
-      "rows": 251,
-      "columns": 6,
-      "csv": "hub_sp500_1y_1d\\ANET_1y_1d.csv"
-    },
-    {
-      "symbol": "AJG",
-      "rows": 251,
-      "columns": 6,
-      "csv": "hub_sp500_1y_1d\\AJG_1y_1d.csv"
-    },
-    {
-      "symbol": "AIZ",
-      "rows": 251,
-      "columns": 6,
-      "csv": "hub_sp500_1y_1d\\AIZ_1y_1d.csv"
-    },
-    {
-      "symbol": "T",
-      "rows": 251,
-      "columns": 6,
-      "csv": "hub_sp500_1y_1d\\T_1y_1d.csv"
-    },
-    {
-      "symbol": "ATO",
-      "rows": 251,
-      "columns": 6,
-      "csv": "hub_sp500_1y_1d\\ATO_1y_1d.csv"
+      "columns": 5,
+      "csv": "hub_sp500_1y_1d\\A_1y_1d.csv",
+      "chart": {
+        "csv": "hub_sp500_1y_1d\\charts\\A_1y_1d.csv",
+        "html": "hub_sp500_1y_1d\\charts\\A_1y_1d.html"
+      }
     }
   ],
-  "failures": [
-    {
-      "symbol": "ALGN",
-      "error": "HTTPSConnectionPool(host='stooq.com', port=443): Max retries exceeded with url: /q/d/l/?s=algn.us&i=d (Caused by ConnectTimeoutError(<HTTPSConnection(host='stooq.com', port=443) at 0x270ef1b6810>, 'Connection to stooq.com timed out. (connect timeout=15)'))"
-    }
-  ],
+  "failures": [],
+  "charts": {
+    "enabled": true,
+    "charts_dir": "hub_sp500_1y_1d\\charts",
+    "summary_json": "hub_sp500_1y_1d\\charts\\summary.json",
+    "failures": []
+  },
   "macro_features_csv": "hub_sp500_1y_1d\\macro_features.csv",
   "extra_features_raw_csv": null
 }
