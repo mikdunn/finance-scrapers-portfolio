@@ -1,0 +1,12 @@
+{
+	"folders": [
+		{
+			"path": "../../dj-loop-pipeline"
+		},
+		{
+			"name": "finance-scrapers-portfolio",
+			"path": ".."
+		}
+	],
+	"settings": {}
+}

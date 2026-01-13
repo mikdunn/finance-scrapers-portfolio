@@ -1,0 +1,23 @@
+{
+  "files.exclude": {
+    "**/__pycache__": true,
+    "**/.pytest_cache": true,
+    "**/.mypy_cache": true,
+    "**/.ruff_cache": true,
+    "**/.venv": true,
+    "**/.selenium": true,
+    "hub_*": true,
+    "hub_outputs*": true,
+    "outputs*": true,
+    "ml_outputs*": true
+  },
+  "search.exclude": {
+    "**/__pycache__": true,
+    "**/.venv": true,
+    "**/.selenium": true,
+    "hub_*": true,
+    "hub_outputs*": true,
+    "outputs*": true,
+    "ml_outputs*": true
+  }
+}

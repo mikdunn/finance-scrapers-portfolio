@@ -36,6 +36,8 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument('--top-features', type=int, default=None, help='ML: top features in importance plots')
     parser.add_argument('--random-state', type=int, default=None, help='ML: random seed')
     parser.add_argument('--multi-asset', action='store_true', help='ML: combine all CSVs in --in-dir into one training set')
+    # Systemic risk / microstructure monitoring
+    parser.add_argument('--in-dir', default=None, help='Systemic: hub output directory (contains per-symbol CSVs)')
     # Allow project-specific flags to pass through for projects that have their own CLI.
     args, unknown = parser.parse_known_args(argv)
 
@@ -136,6 +138,20 @@ def main(argv: list[str] | None = None) -> int:
         if args.out_dir and '--out-dir' not in unknown:
             hub_args += ['--out-dir', args.out_dir]
         return hub_main(hub_args + unknown)
+
+    if project in {'systemic', 'systemic_risk', 'risk', 'microstructure'}:
+        from projects.systemic_risk import main as systemic_main
+
+        sys_args: list[str] = []
+        if args.in_dir:
+            sys_args += ['--in-dir', args.in_dir]
+        elif args.out_dir:
+            # Convenience: if user passes --out-dir at top-level and it points to a hub directory,
+            # treat it as the input directory.
+            sys_args += ['--in-dir', args.out_dir]
+
+        # Forward remaining args to the systemic CLI.
+        return systemic_main(sys_args + unknown)
 
     if project == 'all':
         from projects.main_collector import main as collector_main

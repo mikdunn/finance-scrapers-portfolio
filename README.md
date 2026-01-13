@@ -242,6 +242,44 @@ Artifacts:
 - `portfolio_weights.csv`
 - `portfolio_allocation.json`
 
+### Systemic-risk monitoring (tensor + networks + ARIMA)
+
+This adds a practical version of:
+
+- Build a **time × asset × feature** tensor (defaults: `returns`, `rv` (realized vol), and optional `depth`) and run **CP/Tucker** decomposition to uncover latent factors.
+- Embed assets in **2D** using **t-SNE** or **Laplacian Eigenmaps** (spectral embedding) to visualize regimes/clusters.
+- Build rolling asset–asset correlation **networks**, compute **centrality/PageRank**, and fit **ARIMA** on an aggregate stress index to forecast stress build-up.
+
+Run it standalone on an existing hub output directory:
+
+```bash
+python main.py --project systemic --in-dir hub_sp500_1y_1d
+```
+
+Or run it as part of the hub pipeline:
+
+```bash
+python main.py --project hub --universe sp500 --max-symbols 50 --period 1y --interval 1d \
+	--out-dir hub_sp500_1y_1d --skip-train \
+	--assets-subdir assets --shard-assets \
+	--systemic-risk --tensor-method cp --tensor-rank 4 --embed tsne \
+	--corr-window 60 --corr-k 8 --centrality pagerank --arima-steps 5
+```
+
+Artifacts (under `<hub_out_dir>/systemic_risk/` by default):
+
+- `tensor_summary.json`
+- `tensor_time_factors.csv`, `tensor_asset_factors.csv`
+- `asset_embedding.csv` (+ `asset_embedding.html` when Plotly works)
+- `centrality_timeseries.csv`
+- `systemic_index.csv`
+- `systemic_index_arima_forecast.json`
+
+Note on **order-book depth**:
+
+- If your datasets include a column containing `depth` (or you pass `--depth-col <name>`), it will be used.
+- If not present, the pipeline will still run (depth becomes missing and is filled safely during tensor building).
+
 ## From analysis to execution: what a broker needs to place a trade
 
 This repo intentionally stops at **decision + intent**. To actually trade, your broker (or broker API) needs a well-formed **order ticket**.

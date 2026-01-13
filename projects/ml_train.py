@@ -118,14 +118,42 @@ def _gather_inputs(in_csv: str | None, in_dir: str | None) -> list[Path]:
         "macro_features.csv",
         "extra_features_raw.csv",
     }
-    return sorted(
-        [
-            p
-            for p in d.glob("*.csv")
-            if p.name.lower() not in exclude_names
-            and not p.name.lower().endswith("_importance.csv")
-        ]
-    )
+
+    def _is_dataset_csv(p: Path) -> bool:
+        n = p.name.lower()
+        if n in exclude_names:
+            return False
+        if n.endswith("_importance.csv"):
+            return False
+        return n.endswith(".csv")
+
+    def _list_csvs_shallow(root: Path) -> list[Path]:
+        """List CSVs from a directory, plus one sharding level.
+
+        This intentionally avoids a deep rglob(). Some output folders can be
+        huge (charts, per-run artifacts), and a recursive walk can dominate
+        runtime on Windows.
+        """
+        out: list[Path] = []
+        out.extend([p for p in root.glob("*.csv") if _is_dataset_csv(p)])
+        # Common sharded layout: root/<prefix>/*.csv
+        try:
+            for child in root.iterdir():
+                if child.is_dir():
+                    out.extend([p for p in child.glob("*.csv") if _is_dataset_csv(p)])
+        except FileNotFoundError:
+            pass
+        return out
+
+    # Prefer a dedicated assets subfolder if present.
+    candidates: list[Path] = []
+    assets = d / "assets"
+    if assets.exists() and assets.is_dir():
+        candidates = _list_csvs_shallow(assets)
+    if not candidates:
+        candidates = _list_csvs_shallow(d)
+
+    return sorted(candidates)
 
 
 def _time_split(n: int, test_size: float) -> tuple[np.ndarray, np.ndarray]:

@@ -595,6 +595,46 @@ def main(argv: list[str] | None = None) -> int:
     p.add_argument("--interval", default="1d", help="Price interval (e.g., 1d, 1h)")
     p.add_argument("--out-dir", default="hub_outputs", help="Where to write per-symbol CSVs")
 
+    # output layout
+    p.add_argument(
+        "--assets-subdir",
+        default=None,
+        help=(
+            "Optional subfolder under --out-dir for per-symbol datasets (e.g., 'assets'). "
+            "Using a dedicated folder keeps output directories smaller and speeds up directory scans on Windows."
+        ),
+    )
+    p.add_argument(
+        "--shard-assets",
+        action="store_true",
+        help=(
+            "When writing datasets into --assets-subdir, shard files into subfolders by first character of symbol. "
+            "This avoids single directories with thousands of files (slow on Windows)."
+        ),
+    )
+
+    # systemic-risk / microstructure monitoring
+    p.add_argument(
+        "--systemic-risk",
+        action="store_true",
+        help=(
+            "After building datasets, run a systemic-risk pipeline: time×asset×feature tensor (CP/Tucker), "
+            "2D embedding (t-SNE/Laplacian), rolling correlation networks + centrality, and ARIMA forecast of a stress index."
+        ),
+    )
+    p.add_argument("--risk-out-dir", default=None, help="Override systemic-risk output folder (default: <out-dir>/systemic_risk)")
+    p.add_argument("--tensor-method", default="cp", help="Systemic: tensor decomposition method (cp | tucker)")
+    p.add_argument("--tensor-rank", type=int, default=4, help="Systemic: CP rank")
+    p.add_argument("--tucker-ranks", default="4,4,3", help="Systemic: Tucker ranks (time,asset,feature) as i,j,k")
+    p.add_argument("--tensor-features", default="returns,rv,depth", help="Systemic: comma-separated features for the tensor")
+    p.add_argument("--rv-window", type=int, default=20, help="Systemic: realized volatility lookback window")
+    p.add_argument("--depth-col", default=None, help="Systemic: optional column name for order-book depth")
+    p.add_argument("--embed", default="tsne", help="Systemic: embedding method (tsne | laplacian)")
+    p.add_argument("--corr-window", type=int, default=60, help="Systemic: rolling correlation window")
+    p.add_argument("--corr-k", type=int, default=8, help="Systemic: kNN edges per node")
+    p.add_argument("--centrality", default="pagerank", help="Systemic: pagerank | eigenvector | betweenness")
+    p.add_argument("--arima-steps", type=int, default=5, help="Systemic: ARIMA forecast horizon")
+
     # optional chart/indicator artifacts (market-analyzer style)
     p.add_argument(
         "--generate-charts",
@@ -697,6 +737,11 @@ def main(argv: list[str] | None = None) -> int:
     out_dir = Path(args.out_dir)
     out_dir.mkdir(parents=True, exist_ok=True)
 
+    assets_dir: Path | None = None
+    if args.assets_subdir:
+        assets_dir = out_dir / str(args.assets_subdir)
+        assets_dir.mkdir(parents=True, exist_ok=True)
+
     charts_dir = Path(args.charts_dir) if args.charts_dir else (out_dir / "charts")
 
     macro = _build_macro_frames(args)
@@ -742,7 +787,19 @@ def main(argv: list[str] | None = None) -> int:
         if args.extra_csv and not extra.empty:
             df_out = _merge_on_date(df_out, extra)
 
-        csv_path = out_dir / f"{sym}_{args.period}_{args.interval}.csv"
+        csv_name = f"{sym}_{args.period}_{args.interval}.csv"
+        if assets_dir is None:
+            csv_path = out_dir / csv_name
+        else:
+            if args.shard_assets:
+                # Shard by first visible character to keep each directory small.
+                # Symbols like 'ETH-USD' -> 'E', 'EURUSD=X' -> 'E', '^GSPC' -> '^'.
+                shard = (sym or "_")[:1]
+                shard_dir = assets_dir / shard
+                shard_dir.mkdir(parents=True, exist_ok=True)
+                csv_path = shard_dir / csv_name
+            else:
+                csv_path = assets_dir / csv_name
         df_out.to_csv(csv_path)
         print(f"Wrote dataset: {csv_path}")
 
@@ -853,6 +910,9 @@ def main(argv: list[str] | None = None) -> int:
     dmd_summary_json: str | None = None
     portfolio_weights_csv: str | None = None
     portfolio_allocation_json: str | None = None
+
+    systemic_out_dir: str | None = None
+    systemic_artifacts: dict | None = None
 
     spec_labels_by_symbol: dict[str, int] | None = None
 
@@ -1014,6 +1074,41 @@ def main(argv: list[str] | None = None) -> int:
                     f"Have rows={rets.shape[0] if rets is not None else 0}, assets={rets.shape[1] if rets is not None else 0}."
                 )
 
+    # --- Systemic-risk monitoring (tensor + networks + ARIMA) ---
+    if args.systemic_risk:
+        try:
+            from utils.systemic_risk import run_systemic_risk
+
+            tucker_ranks = tuple(int(x.strip()) for x in str(args.tucker_ranks).split(',') if x.strip())
+            if len(tucker_ranks) != 3:
+                raise ValueError("--tucker-ranks must be 3 integers like 4,4,3")
+
+            feats = [x.strip() for x in str(args.tensor_features).split(',') if x.strip()]
+
+            res = run_systemic_risk(
+                hub_dir=out_dir,
+                out_dir=args.risk_out_dir,
+                assets_subdir=str(args.assets_subdir) if args.assets_subdir else None,
+                tensor_method=str(args.tensor_method),
+                tensor_rank=int(args.tensor_rank),
+                tucker_ranks=tucker_ranks,  # type: ignore[arg-type]
+                embed_method=str(args.embed),
+                features=feats,
+                vol_window=int(args.rv_window),
+                depth_col=args.depth_col,
+                corr_window=int(args.corr_window),
+                corr_k=int(args.corr_k),
+                centrality=str(args.centrality),
+                arima_steps=int(args.arima_steps),
+                random_state=int(args.random_state),
+            )
+
+            systemic_out_dir = str(res.get('out_dir')) if res else None
+            systemic_artifacts = (res.get('artifacts') if isinstance(res, dict) else None)  # type: ignore[assignment]
+            print(f"Wrote systemic-risk artifacts: {systemic_out_dir}")
+        except Exception as e:
+            print(f"Warning: systemic-risk monitoring failed: {e}")
+
     # Write a run manifest for provenance (after optional analyses so it can reference all artifacts)
     summary_path = out_dir / "summary.json"
     with open(summary_path, "w", encoding="utf-8") as f:
@@ -1047,6 +1142,11 @@ def main(argv: list[str] | None = None) -> int:
                 "universe": (args.alloc_universe or 'all'),
                 "weights_csv": portfolio_weights_csv,
                 "allocation_json": portfolio_allocation_json,
+            },
+            "systemic_risk": {
+                "enabled": bool(args.systemic_risk),
+                "out_dir": systemic_out_dir,
+                "artifacts": systemic_artifacts or {},
             },
             "macro_features_csv": str(out_dir / "macro_features.csv") if (out_dir / "macro_features.csv").exists() else None,
             "extra_features_raw_csv": str(out_dir / "extra_features_raw.csv") if (out_dir / "extra_features_raw.csv").exists() else None,

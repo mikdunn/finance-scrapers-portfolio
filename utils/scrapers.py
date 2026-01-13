@@ -76,9 +76,14 @@ def fetch_dynamic_edge(url, *, headless: bool = True):
             raw_path = Path(EdgeChromiumDriverManager().install())
             driver_path = raw_path
             if driver_path.suffix.lower() != '.exe':
-                candidates = list(raw_path.parent.rglob('msedgedriver.exe'))
-                if candidates:
-                    driver_path = candidates[0]
+                # webdriver-manager sometimes returns a non-exe marker file.
+                # Avoid an expensive recursive scan; check a small set of likely locations.
+                candidates = [
+                    raw_path.parent / 'msedgedriver.exe',
+                    raw_path.parent / 'msedgedriver' / 'msedgedriver.exe',
+                    raw_path.parent.parent / 'msedgedriver.exe',
+                ]
+                driver_path = next((p for p in candidates if p.exists()), driver_path)
 
             service = EdgeService(str(driver_path))
             driver = webdriver.Edge(service=service, options=edge_options)
@@ -142,9 +147,13 @@ def fetch_dynamic(url, *, headless: bool = True, browser: str = 'edge'):
             driver_path = raw_path
             # webdriver-manager may return a notice file (not an exe) with newer driver zips.
             if driver_path.suffix.lower() != '.exe':
-                candidates = list(raw_path.parent.rglob('chromedriver.exe'))
-                if candidates:
-                    driver_path = candidates[0]
+                # Avoid a recursive scan; check a few likely locations.
+                candidates = [
+                    raw_path.parent / 'chromedriver.exe',
+                    raw_path.parent / 'chromedriver' / 'chromedriver.exe',
+                    raw_path.parent.parent / 'chromedriver.exe',
+                ]
+                driver_path = next((p for p in candidates if p.exists()), driver_path)
 
             service = Service(str(driver_path))
             try:
