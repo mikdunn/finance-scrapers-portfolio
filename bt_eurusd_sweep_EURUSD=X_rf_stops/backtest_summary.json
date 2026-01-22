@@ -1,0 +1,51 @@
+{
+  "asset": "EURUSD=X",
+  "input": "smoke_market_fx_1mo_1d\\EURUSD=X_1mo_1d.csv",
+  "variant": "rf_stops",
+  "model": "rf",
+  "mode": "long_short",
+  "task": "classification",
+  "signal_source": "predict",
+  "proba_enter": 0.55,
+  "cost_bps": 5.0,
+  "slippage_bps": 0.0,
+  "execution_delay": 1,
+  "vol_target": null,
+  "stop_loss": 0.01,
+  "take_profit": 0.02,
+  "trailing_atr_mult": null,
+  "uses_hmm": false,
+  "uses_fft": false,
+  "uses_dmd": false,
+  "uses_neural_net": false,
+  "metrics": {
+    "start": "2025-12-17 00:00:00",
+    "end": "2026-01-07 00:00:00",
+    "n_bars": 15,
+    "total_return": 0.0015862060242926024,
+    "cagr": 0.02795027706062303,
+    "max_drawdown": -0.0019068820368913775,
+    "ann_factor": 260.89285714285717,
+    "sharpe": 1.9729777612629118,
+    "avg_bar_return": 0.00010604557815336524,
+    "vol_bar": 0.0008681633913577642,
+    "turnover_sum": 9.0,
+    "n_position_changes": 5
+  },
+  "trade_metrics": {
+    "n_trades": 4,
+    "n_wins": 4,
+    "n_losses": 0,
+    "n_breakeven": 0,
+    "win_rate": 1.0,
+    "win_loss_ratio": Infinity,
+    "avg_win": 0.0017493914272979638,
+    "avg_loss": NaN,
+    "profit_factor": Infinity,
+    "expectancy": 0.0017493914272979638,
+    "median_trade_return": 0.0017830407953753902,
+    "exit_reason_counts": {
+      "signal": 4
+    }
+  }
+}

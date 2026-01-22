@@ -1,0 +1,39 @@
+{
+  "mode": "long_short",
+  "task": "classification",
+  "signal_source": "predict",
+  "price": "close",
+  "stop_loss": null,
+  "take_profit": null,
+  "trailing_stop": null,
+  "trailing_atr_mult": null,
+  "atr_window": 14,
+  "stop_priority": "conservative",
+  "cost_bps": 5.0,
+  "slippage_bps": 0.0,
+  "execution_delay": 1,
+  "vol_target": null,
+  "vol_lookback": 20,
+  "max_leverage": 3.0,
+  "model": "smoke_ml_multi_alloc_smoke\\model.joblib",
+  "inputs": [
+    "outputs_alloc_5y_1d\\BTC-USD_5y_1d.csv",
+    "outputs_alloc_5y_1d\\ETH-USD_5y_1d.csv",
+    "outputs_alloc_5y_1d\\EURUSD=X_5y_1d.csv"
+  ],
+  "expects_asset_dummies": true,
+  "portfolio_weighting": "equal",
+  "weight_lookback": 60,
+  "portfolio_metrics": {
+    "start": "2021-01-25 00:00:00",
+    "end": "2026-01-21 00:00:00",
+    "n_bars": 1503,
+    "total_return": 0.9685495266515336,
+    "cagr": 0.14542456904485768,
+    "max_drawdown": -0.3390489085112325,
+    "ann_factor": 301.3011800219539,
+    "sharpe": 0.7698856421971921,
+    "avg_bar_return": 0.000519328387534945,
+    "vol_bar": 0.011708904356377076
+  }
+}

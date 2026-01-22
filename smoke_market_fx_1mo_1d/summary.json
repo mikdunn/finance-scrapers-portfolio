@@ -1,0 +1,32 @@
+{
+  "results": [
+    {
+      "symbol": "EURUSD=X",
+      "period": "1mo",
+      "interval": "1d",
+      "last_close": 1.16088,
+      "regime": "neutral",
+      "support_levels": [],
+      "resistance_levels": [
+        1.18081
+      ],
+      "trade_style": {
+        "label": "long",
+        "rationale": "lower daily volatility (ATR/Close\u22480.41%)"
+      },
+      "forecast_close_next": [
+        1.16088,
+        1.16088,
+        1.16088,
+        1.16088,
+        1.16088
+      ],
+      "dominant_cycles": [],
+      "artifacts": {
+        "csv": "smoke_market_fx_1mo_1d\\EURUSD=X_1mo_1d.csv",
+        "html": "smoke_market_fx_1mo_1d\\EURUSD=X_1mo_1d.html"
+      }
+    }
+  ],
+  "failures": []
+}

@@ -1,0 +1,23 @@
+{
+  "mode": "long_short",
+  "task": "classification",
+  "cost_bps": 5.0,
+  "slippage_bps": 0.0,
+  "execution_delay": 1,
+  "model": "smoke_ml_btc_6mo\\model.joblib",
+  "input": "hub_alloc_smoke\\BTC-USD_6mo_1d.csv",
+  "asset": "BTC-USD",
+  "metrics": {
+    "start": "2025-07-14 00:00:00",
+    "end": "2026-01-09 00:00:00",
+    "n_bars": 180,
+    "total_return": 1.150749155190816,
+    "cagr": 3.7714495505365973,
+    "max_drawdown": -0.14528066849407895,
+    "sharpe": 4.71337355121953,
+    "avg_bar_return": 0.004423451426604021,
+    "vol_bar": 0.01793595536723796,
+    "turnover_sum": 71.0,
+    "n_position_changes": 45
+  }
+}

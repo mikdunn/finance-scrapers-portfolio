@@ -1,0 +1,35 @@
+{
+  "mode": "long_short",
+  "task": "classification",
+  "signal_source": "predict",
+  "price": "close",
+  "stop_loss": 0.04,
+  "take_profit": 0.08,
+  "stop_priority": "conservative",
+  "cost_bps": 5.0,
+  "slippage_bps": 0.0,
+  "execution_delay": 1,
+  "vol_target": null,
+  "vol_lookback": 20,
+  "max_leverage": 3.0,
+  "model": "smoke_ml_multi_alloc_smoke\\model.joblib",
+  "inputs": [
+    "hub_alloc_smoke\\BTC-USD_6mo_1d.csv",
+    "hub_alloc_smoke\\ETH-USD_6mo_1d.csv",
+    "hub_alloc_smoke\\EURUSD=X_6mo_1d.csv"
+  ],
+  "expects_asset_dummies": true,
+  "portfolio_weighting": "inverse_vol",
+  "weight_lookback": 30,
+  "portfolio_metrics": {
+    "start": "2025-07-14 00:00:00",
+    "end": "2026-01-08 00:00:00",
+    "n_bars": 179,
+    "total_return": 1.6145490111446783,
+    "cagr": 6.185949122964785,
+    "max_drawdown": -0.08240004817675306,
+    "sharpe": 5.760268558637895,
+    "avg_bar_return": 0.005551669930173835,
+    "vol_bar": 0.0184194228537813
+  }
+}

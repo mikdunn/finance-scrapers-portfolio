@@ -1,0 +1,12 @@
+{
+  "input": "hub_alloc_smoke\\EURUSD=X_6mo_1d.csv",
+  "inputs": null,
+  "feature_count": 30,
+  "mode": "walkforward",
+  "task": "classification",
+  "model": "hgb",
+  "n_folds": 4,
+  "purge": 5,
+  "test_window": 15,
+  "cv_metrics_csv": "smoke_ml_eurusd_6mo\\cv_metrics.csv"
+}

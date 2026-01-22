@@ -1,0 +1,35 @@
+{
+  "results": [
+    {
+      "symbol": "BTC-USD",
+      "period": "1mo",
+      "interval": "1d",
+      "last_close": 95607.6,
+      "regime": "neutral",
+      "support_levels": [
+        89225.0
+      ],
+      "resistance_levels": [
+        90552.6,
+        94783.9
+      ],
+      "trade_style": {
+        "label": "long",
+        "rationale": "lower daily volatility (ATR/Close\u22482.85%)"
+      },
+      "forecast_close_next": [
+        95607.6,
+        95607.6,
+        95607.6,
+        95607.6,
+        95607.6
+      ],
+      "dominant_cycles": [],
+      "artifacts": {
+        "csv": "smoke_market_crypto_1mo_1d\\BTC-USD_1mo_1d.csv",
+        "html": "smoke_market_crypto_1mo_1d\\BTC-USD_1mo_1d.html"
+      }
+    }
+  ],
+  "failures": []
+}

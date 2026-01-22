@@ -1,0 +1,62 @@
+{
+  "universe": "sp500",
+  "symbols_requested": [
+    "MMM",
+    "AOS",
+    "ABT"
+  ],
+  "period": "1mo",
+  "interval": "1d",
+  "results": [
+    {
+      "symbol": "MMM",
+      "rows": 20,
+      "columns": 5,
+      "csv": "smoke_hub_sp500_1mo_1d\\MMM_1mo_1d.csv"
+    },
+    {
+      "symbol": "AOS",
+      "rows": 20,
+      "columns": 5,
+      "csv": "smoke_hub_sp500_1mo_1d\\AOS_1mo_1d.csv"
+    },
+    {
+      "symbol": "ABT",
+      "rows": 20,
+      "columns": 5,
+      "csv": "smoke_hub_sp500_1mo_1d\\ABT_1mo_1d.csv"
+    }
+  ],
+  "failures": [],
+  "charts": {
+    "enabled": false,
+    "charts_dir": null,
+    "summary_json": null,
+    "selection_manifest": null,
+    "selected_symbols": [],
+    "failures": []
+  },
+  "spectral": {
+    "enabled": false,
+    "clusters_csv": null,
+    "graph_json": null
+  },
+  "dmd": {
+    "enabled": false,
+    "eigs_csv": null,
+    "summary_json": null
+  },
+  "portfolio": {
+    "enabled": false,
+    "universe": "all",
+    "weights_csv": null,
+    "allocation_json": null
+  },
+  "systemic_risk": {
+    "enabled": false,
+    "out_dir": null,
+    "artifacts": {}
+  },
+  "macro_features_csv": null,
+  "extra_features_raw_csv": null
+}

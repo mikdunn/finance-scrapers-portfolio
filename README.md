@@ -33,10 +33,65 @@ Outputs are written to the folder you pass (HTML charts, CSVs, plus a `summary.j
 - `projects/`
 	- `market_analyzer.py`: per-symbol chart + indicators + forecast + FFT cycles
 	- `ml_train.py`: supervised model training + walk-forward CV + feature importance
+	- `strategy_backtest.py`: strategy simulator that consumes ML model predictions and computes equity curves + costs
 	- `data_hub_train.py`: multi-symbol dataset builder + optional charts + selection + spectral/DMD + allocation
 	- `main_sentiment.py`: RSS sentiment heatmap (VADER)
 	- `main_collector.py`: basic multi-source scraping skeleton
 - `utils/`: data fetchers + indicators + spectral/DMD/FFT + portfolio allocation
+
+## Entrypoint flow chart (`main.py`)
+
+The repo uses `main.py` as a single “router” CLI. It parses a common set of flags, then dispatches into a project-specific `projects/<name>.py` `main(...)`.
+
+```mermaid
+flowchart TD
+		A([Start]) --> B[Parse CLI args via argparse\nparse_known_args(argv) -> args, unknown]
+		B --> C[Normalize project\nproject = args.project.strip().lower()]
+
+		C --> D{Which --project?}
+
+		D -->|collector\ncollect\nmulti_source| E[Build collector_args\noptional: --tickers]
+		E --> E2[Call projects.main_collector: main(collector_args)]
+		E2 --> Z([Exit code])
+
+		D -->|sentiment_heatmap\nsentiment\nheatmap| F[Build sentiment_args\noptional: --tickers --headless --source --browser]
+		F --> F2[Call projects.main_sentiment: main(sentiment_args)]
+		F2 --> Z
+
+		D -->|market\nanalyzer\ncharts| G[Build market_args\n--symbols (or map --tickers -> --symbols)\n--period --interval --out-dir --forecast-steps]
+		G --> G2[Call projects.market_analyzer: main(market_args)]
+		G2 --> Z
+
+		D -->|ml\ntrain\nml_train| H[Build ml_args from shared flags\nForward extra flags: unknown]
+		H --> H2[Call projects.ml_train: main(ml_args + unknown)]
+		H2 --> Z
+
+		D -->|hub\ndata_hub| I[Build hub_args (map tickers/symbols -> --symbols if not already in unknown)\nForward extra flags: unknown]
+		I --> I2[Call projects.data_hub_train: main(hub_args + unknown)]
+		I2 --> Z
+
+		D -->|systemic\nrisk| J[Build sys_args\n--in-dir (or map --out-dir -> --in-dir)\nForward extra flags: unknown]
+		J --> J2[Call projects.systemic_risk: main(sys_args + unknown)]
+		J2 --> Z
+
+		D -->|backtest\nstrategy\nsim| K[Build bt_args\nForward ML-style flags explicitly: --model --task --threshold\nPlus: --in-csv --in-dir --out-dir\nForward extra flags: unknown]
+		K --> K2[Call projects.strategy_backtest: main(bt_args + unknown)]
+		K2 --> Z
+
+		D -->|all| L[Run collector then sentiment\nrc1 = collector_main(...)\nrc2 = sentiment_main(...)\nreturn rc1 or rc2]
+		L --> Z
+
+		D -->|unknown value| X[Raise SystemExit with allowed projects]
+		X --> Z
+```
+
+Notes:
+
+- `parse_known_args()` is important: it lets `main.py` accept a shared “top-level” CLI, while still forwarding project-specific flags (`unknown`) to the underlying project CLI.
+- `--tickers` is a convenience alias:
+	- collector + sentiment use it directly
+	- market maps it to `--symbols` if `--symbols` wasn’t provided
+	- hub maps it to `--symbols` only if you didn’t already pass hub-native selector flags (like `--universe`)
 
 ## Configuration (API keys)
 
@@ -108,6 +163,67 @@ ML artifacts:
 - `metrics.json`
 - `feature_importance.csv` and `feature_importance.html` (when applicable)
 - `cv_metrics.csv` and `cv_plot.html` (walk-forward)
+
+### 3b) Strategy backtest / simulator (equity curve + costs)
+
+This consumes a trained `model.joblib` plus OHLCV CSV(s), generates model signals,
+and simulates an equity curve using a simple position model with transaction costs.
+
+Single-asset backtest:
+
+```bash
+python main.py --project backtest --model ml_outputs_aapl/model.joblib --in-csv outputs_stocks/AAPL_6mo_1d.csv \
+	--mode long_short --price close --cost-bps 5 --slippage-bps 0 --delay 1 --out-dir backtest_aapl
+```
+
+Probability-based entry (classification models with `predict_proba`):
+
+```bash
+python main.py --project backtest --model ml_outputs_aapl/model.joblib --in-csv outputs_stocks/AAPL_6mo_1d.csv \
+	--signal-source proba --proba-enter 0.55 --mode long_only --cost-bps 5 --delay 1 --out-dir backtest_aapl_proba
+```
+
+Volatility targeting (scales position size; `--max-leverage` caps it):
+
+```bash
+python main.py --project backtest --model ml_outputs_aapl/model.joblib --in-csv outputs_stocks/AAPL_6mo_1d.csv \
+	--vol-target 0.20 --vol-lookback 20 --max-leverage 2.0 --cost-bps 5 --delay 1 --out-dir backtest_aapl_vol
+```
+
+Stop-loss / take-profit (uses OHLC bars and executes using next-bar open accounting):
+
+```bash
+python main.py --project backtest --model ml_outputs_aapl/model.joblib --in-csv outputs_stocks/AAPL_6mo_1d.csv \
+	--stop-loss 0.03 --take-profit 0.06 --stop-priority conservative --cost-bps 5 --delay 1 --out-dir backtest_aapl_stops
+```
+
+Trailing stop (percent; uses prior-bar watermark conservatively):
+
+```bash
+python main.py --project backtest --model ml_outputs_aapl/model.joblib --in-csv outputs_stocks/AAPL_6mo_1d.csv \
+	--trailing-stop 0.03 --stop-priority conservative --cost-bps 5 --delay 1 --out-dir backtest_aapl_trailing
+```
+
+Trailing stop (ATR-based):
+
+```bash
+python main.py --project backtest --model ml_outputs_aapl/model.joblib --in-csv outputs_stocks/AAPL_6mo_1d.csv \
+	--trailing-atr-mult 3.0 --atr-window 14 --stop-priority conservative --cost-bps 5 --delay 1 --out-dir backtest_aapl_trailing_atr
+```
+
+Multi-asset portfolio backtest (equal-weight across available assets each bar):
+
+```bash
+python main.py --project backtest --model ml_outputs_multi/model.joblib --in-dir outputs_stocks \
+	--mode long_short --portfolio-weighting equal --cost-bps 5 --delay 1 --out-dir backtest_multi
+```
+
+Inverse-vol portfolio weighting:
+
+```bash
+python main.py --project backtest --model ml_outputs_multi/model.joblib --in-dir outputs_stocks \
+	--portfolio-weighting inverse_vol --weight-lookback 60 --cost-bps 5 --delay 1 --out-dir backtest_multi_invvol
+```
 
 ### 4) Data hub (multi-symbol datasets + optional charts + advanced analysis)
 

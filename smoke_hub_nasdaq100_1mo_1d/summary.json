@@ -1,0 +1,62 @@
+{
+  "universe": "nasdaq100",
+  "symbols_requested": [
+    "ADBE",
+    "AMD",
+    "ABNB"
+  ],
+  "period": "1mo",
+  "interval": "1d",
+  "results": [
+    {
+      "symbol": "ADBE",
+      "rows": 20,
+      "columns": 5,
+      "csv": "smoke_hub_nasdaq100_1mo_1d\\ADBE_1mo_1d.csv"
+    },
+    {
+      "symbol": "AMD",
+      "rows": 20,
+      "columns": 5,
+      "csv": "smoke_hub_nasdaq100_1mo_1d\\AMD_1mo_1d.csv"
+    },
+    {
+      "symbol": "ABNB",
+      "rows": 20,
+      "columns": 5,
+      "csv": "smoke_hub_nasdaq100_1mo_1d\\ABNB_1mo_1d.csv"
+    }
+  ],
+  "failures": [],
+  "charts": {
+    "enabled": false,
+    "charts_dir": null,
+    "summary_json": null,
+    "selection_manifest": null,
+    "selected_symbols": [],
+    "failures": []
+  },
+  "spectral": {
+    "enabled": false,
+    "clusters_csv": null,
+    "graph_json": null
+  },
+  "dmd": {
+    "enabled": false,
+    "eigs_csv": null,
+    "summary_json": null
+  },
+  "portfolio": {
+    "enabled": false,
+    "universe": "all",
+    "weights_csv": null,
+    "allocation_json": null
+  },
+  "systemic_risk": {
+    "enabled": false,
+    "out_dir": null,
+    "artifacts": {}
+  },
+  "macro_features_csv": null,
+  "extra_features_raw_csv": null
+}

@@ -1,0 +1,12 @@
+{
+  "input": "hub_alloc_smoke\\BTC-USD_6mo_1d.csv",
+  "inputs": null,
+  "feature_count": 35,
+  "mode": "walkforward",
+  "task": "classification",
+  "model": "hgb",
+  "n_folds": 4,
+  "purge": 5,
+  "test_window": 15,
+  "cv_metrics_csv": "smoke_ml_btc_6mo\\cv_metrics.csv"
+}

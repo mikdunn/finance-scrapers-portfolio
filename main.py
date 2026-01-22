@@ -2,11 +2,11 @@ import argparse
 
 
 def main(argv: list[str] | None = None) -> int:
-    parser = argparse.ArgumentParser(description='Finance scrapers portfolio runner')
+    parser = argparse.ArgumentParser(description='Finance scrapers portfolio runner', allow_abbrev=False)
     parser.add_argument(
         '--project',
         default='collector',
-        help='Which project to run: collector | sentiment_heatmap | market | ml | hub | all',
+        help='Which project to run: collector | sentiment_heatmap | market | ml | hub | backtest | systemic | sweep | report | all',
     )
     parser.add_argument('--tickers', default=None, help='Comma-separated tickers (overrides per-project defaults)')
     parser.add_argument('--headless', action='store_true', help='Run browser automation headless (sentiment project)')
@@ -22,7 +22,11 @@ def main(argv: list[str] | None = None) -> int:
 
     # ML training args (projects/ml_train.py)
     parser.add_argument('--in-csv', default=None, help='ML: input CSV path (from market analyzer)')
-    parser.add_argument('--in-dir', default=None, help='ML: input directory of analyzer CSVs')
+    parser.add_argument(
+        '--in-dir',
+        default=None,
+        help='Input directory of analyzer/hub CSVs (used by ML via --project ml and by systemic via --project systemic)',
+    )
     parser.add_argument('--model', default=None, help='ML: model type (rf | hgb | xgb)')
     parser.add_argument('--task', default=None, help='ML: task (classification | regression)')
     parser.add_argument('--horizon', type=int, default=None, help='ML: label horizon in candles')
@@ -37,7 +41,6 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument('--random-state', type=int, default=None, help='ML: random seed')
     parser.add_argument('--multi-asset', action='store_true', help='ML: combine all CSVs in --in-dir into one training set')
     # Systemic risk / microstructure monitoring
-    parser.add_argument('--in-dir', default=None, help='Systemic: hub output directory (contains per-symbol CSVs)')
     # Allow project-specific flags to pass through for projects that have their own CLI.
     args, unknown = parser.parse_known_args(argv)
 
@@ -153,6 +156,59 @@ def main(argv: list[str] | None = None) -> int:
         # Forward remaining args to the systemic CLI.
         return systemic_main(sys_args + unknown)
 
+    if project in {'backtest', 'strategy', 'sim', 'simulator'}:
+        from projects.strategy_backtest import main as backtest_main
+
+        bt_args: list[str] = []
+        # NOTE: main.py defines --model/--task/--threshold for the ML project.
+        # When running --project backtest, argparse will still consume these.
+        # Forward them explicitly so the backtest CLI receives them.
+        if args.model:
+            bt_args += ['--model', args.model]
+        if args.task:
+            bt_args += ['--task', args.task]
+        if args.threshold is not None:
+            bt_args += ['--threshold', str(args.threshold)]
+        if args.in_csv:
+            bt_args += ['--in-csv', args.in_csv]
+        if args.in_dir:
+            bt_args += ['--in-dir', args.in_dir]
+        if args.out_dir:
+            bt_args += ['--out-dir', args.out_dir]
+
+        # Forward remaining args (including required --model)
+        return backtest_main(bt_args + unknown)
+
+    if project in {'sweep', 'strategy_sweep', 'sweeper', 'experiments'}:
+        from projects.strategy_sweep import main as sweep_main
+
+        sweep_args: list[str] = []
+
+        if args.in_csv:
+            sweep_args += ['--in-csv', args.in_csv]
+        if args.horizon is not None:
+            sweep_args += ['--horizon', str(args.horizon)]
+        if args.threshold is not None and '--label-threshold' not in unknown:
+            # Map the top-level ML flag name (--threshold) to sweep's label threshold.
+            sweep_args += ['--label-threshold', str(args.threshold)]
+        if args.out_dir and '--out-dir' not in unknown:
+            sweep_args += ['--out-dir', str(args.out_dir)]
+
+        return sweep_main(sweep_args + unknown)
+
+    if project in {'report', 'backtest_report', 'compare', 'comparison'}:
+        from projects.backtest_report import main as report_main
+
+        rep_args: list[str] = []
+
+        # main.py defines --out-dir for other projects; forward it here as a convenience
+        # when the user passes it at the top level.
+        if args.out_dir and '--out-dir' not in unknown:
+            rep_args += ['--out-dir', args.out_dir]
+
+        # Forward remaining args to the report CLI.
+        return report_main(rep_args + unknown)
+
     if project == 'all':
         from projects.main_collector import main as collector_main
         from projects.main_sentiment import main as sentiment_main
@@ -173,7 +229,9 @@ def main(argv: list[str] | None = None) -> int:
         rc2 = sentiment_main(sentiment_args)
         return rc1 or rc2
 
-    raise SystemExit(f"Unknown --project '{args.project}'. Try: collector | sentiment_heatmap | market | ml | all")
+    raise SystemExit(
+        f"Unknown --project '{args.project}'. Try: collector | sentiment_heatmap | market | ml | hub | backtest | systemic | sweep | report | all"
+    )
 
 
 if __name__ == '__main__':

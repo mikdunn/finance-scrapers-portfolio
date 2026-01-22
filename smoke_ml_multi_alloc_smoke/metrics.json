@@ -1,0 +1,22 @@
+{
+  "input": null,
+  "inputs": [
+    "hub_alloc_smoke\\BTC-USD_6mo_1d.csv",
+    "hub_alloc_smoke\\ETH-USD_6mo_1d.csv",
+    "hub_alloc_smoke\\EURUSD=X_6mo_1d.csv"
+  ],
+  "feature_count": 38,
+  "mode": "walkforward",
+  "task": "classification",
+  "model": "hgb",
+  "n_folds": 4,
+  "purge": 5,
+  "test_window": 15,
+  "cv_metrics_csv": "smoke_ml_multi_alloc_smoke\\cv_metrics.csv",
+  "n_assets": 3,
+  "assets": [
+    "BTC-USD",
+    "ETH-USD",
+    "EURUSD=X"
+  ]
+}

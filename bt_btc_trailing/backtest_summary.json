@@ -1,0 +1,32 @@
+{
+  "mode": "long_short",
+  "task": "classification",
+  "signal_source": "predict",
+  "price": "close",
+  "stop_loss": null,
+  "take_profit": null,
+  "trailing_stop": 0.05,
+  "stop_priority": "conservative",
+  "cost_bps": 5.0,
+  "slippage_bps": 0.0,
+  "execution_delay": 1,
+  "vol_target": null,
+  "vol_lookback": 20,
+  "max_leverage": 3.0,
+  "model": "ml_outputs_btc\\model.joblib",
+  "input": "outputs_fx_crypto\\BTC-USD_6mo_1d.csv",
+  "asset": "BTC-USD",
+  "metrics": {
+    "start": "2025-07-14 00:00:00",
+    "end": "2026-01-08 00:00:00",
+    "n_bars": 128,
+    "total_return": 0.4604734629482894,
+    "cagr": 1.1753816783733004,
+    "max_drawdown": -0.09563553517167434,
+    "sharpe": 2.8879735226058263,
+    "avg_bar_return": 0.0031847383182183327,
+    "vol_bar": 0.021075391861138718,
+    "turnover_sum": 57.0,
+    "n_position_changes": 30
+  }
+}

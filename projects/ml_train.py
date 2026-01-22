@@ -117,6 +117,10 @@ def _gather_inputs(in_csv: str | None, in_dir: str | None) -> list[Path]:
         "summary.json",
         "macro_features.csv",
         "extra_features_raw.csv",
+        # Hub/analysis artifacts that are not OHLCV datasets
+        "portfolio_weights.csv",
+        "spectral_clusters.csv",
+        "dmd_eigs.csv",
     }
 
     def _is_dataset_csv(p: Path) -> bool:

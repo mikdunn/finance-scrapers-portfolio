@@ -1,0 +1,25 @@
+{
+  "mode": "long_short",
+  "task": "classification",
+  "cost_bps": 5.0,
+  "slippage_bps": 0.0,
+  "execution_delay": 1,
+  "model": "smoke_ml_multi_alloc_smoke\\model.joblib",
+  "inputs": [
+    "hub_alloc_smoke\\BTC-USD_6mo_1d.csv",
+    "hub_alloc_smoke\\ETH-USD_6mo_1d.csv",
+    "hub_alloc_smoke\\EURUSD=X_6mo_1d.csv"
+  ],
+  "expects_asset_dummies": true,
+  "portfolio_metrics": {
+    "start": "2025-07-14 00:00:00",
+    "end": "2026-01-09 00:00:00",
+    "n_bars": 180,
+    "total_return": 1.353796370994774,
+    "cagr": 4.7358192388697065,
+    "max_drawdown": -0.12232265268195253,
+    "sharpe": 5.89660418018364,
+    "avg_bar_return": 0.004892038828612868,
+    "vol_bar": 0.015855612803671558
+  }
+}

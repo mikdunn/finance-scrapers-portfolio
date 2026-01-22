@@ -1,0 +1,53 @@
+{
+  "asset": "EURUSD=X",
+  "input": "outputs_eurusd_5y_1d\\EURUSD=X_5y_1d.csv",
+  "variant": "mlp_stops",
+  "model": "mlp",
+  "mode": "long_short",
+  "task": "classification",
+  "signal_source": "predict",
+  "proba_enter": 0.55,
+  "cost_bps": 5.0,
+  "slippage_bps": 0.0,
+  "execution_delay": 1,
+  "vol_target": null,
+  "stop_loss": 0.01,
+  "take_profit": 0.02,
+  "trailing_atr_mult": null,
+  "uses_hmm": false,
+  "uses_fft": false,
+  "uses_dmd": false,
+  "uses_neural_net": true,
+  "metrics": {
+    "start": "2021-01-25 00:00:00",
+    "end": "2026-01-13 00:00:00",
+    "n_bars": 1286,
+    "total_return": -0.015579900240092481,
+    "cagr": -0.0031567234699675373,
+    "max_drawdown": -0.06711821113520955,
+    "ann_factor": 258.93687982359427,
+    "sharpe": -0.057579027935990165,
+    "avg_bar_return": -9.030058774936823e-06,
+    "vol_bar": 0.0025236156010790714,
+    "turnover_sum": 99.0,
+    "n_position_changes": 82
+  },
+  "trade_metrics": {
+    "n_trades": 49,
+    "n_wins": 17,
+    "n_losses": 32,
+    "n_breakeven": 0,
+    "win_rate": 0.3469387755102041,
+    "win_loss_ratio": 0.53125,
+    "avg_win": 0.017585340641028548,
+    "avg_loss": -0.00840456049128463,
+    "profit_factor": 1.1115646350852153,
+    "expectancy": 0.0006123439831913712,
+    "median_trade_return": -0.009900990099009799,
+    "exit_reason_counts": {
+      "stop_loss": 25,
+      "take_profit": 14,
+      "signal": 10
+    }
+  }
+}
