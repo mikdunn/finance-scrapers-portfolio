@@ -84,12 +84,18 @@ pip install lxml beautifulsoup4
 Solution: Install packages one at a time or increase swap:
 
 ```bash
-# Create swap file (requires root on some devices)
-fallocate -l 1G /data/local/tmp/swapfile
-chmod 600 /data/local/tmp/swapfile
-mkswap /data/local/tmp/swapfile
-swapon /data/local/tmp/swapfile
+# Create swap file in Termux home directory (more reliable)
+cd $HOME
+fallocate -l 1G swapfile
+chmod 600 swapfile
+mkswap swapfile
+swapon swapfile
+
+# Alternatively, try /data/local/tmp (may require root on some devices)
+# fallocate -l 1G /data/local/tmp/swapfile
 ```
+
+Note: Swap file creation may not work on all devices. If you get permission errors, just install packages one at a time instead.
 
 **Issue: `selenium` and browser automation**
 
@@ -129,6 +135,8 @@ Pydroid 3 is a user-friendly Python IDE for Android with built-in pip support.
 1. **Install Pydroid 3**
    
    Download from [Google Play Store](https://play.google.com/store/apps/details?id=ru.iiec.pydroid3)
+   
+   Note: Unlike Termux, Pydroid 3 on Play Store is actively maintained. However, it's a commercial app with some features requiring payment.
 
 2. **Install Pip Packages**
    
@@ -260,7 +268,13 @@ pip install requests beautifulsoup4 pandas plotly yfinance
 Run this minimal test to verify everything works:
 
 ```bash
-python -c "import pandas, numpy, sklearn, plotly; print('All core packages imported successfully!')"
+python -c "import pandas, numpy, plotly; print('All core packages imported successfully!')"
+```
+
+Test scikit-learn separately (the package name is `scikit-learn` but imports as `sklearn`):
+
+```bash
+python -c "import sklearn; print('scikit-learn imported successfully!')"
 ```
 
 Run a quick market analysis:
