@@ -6,7 +6,7 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument(
         '--project',
         default='collector',
-        help='Which project to run: collector | sentiment_heatmap | market | ml | hub | backtest | systemic | sweep | report | all',
+        help='Which project to run: collector | sentiment_heatmap | market | ml | hub | backtest | systemic | sweep | report | master_brain | all',
     )
     parser.add_argument('--tickers', default=None, help='Comma-separated tickers (overrides per-project defaults)')
     parser.add_argument('--headless', action='store_true', help='Run browser automation headless (sentiment project)')
@@ -209,6 +209,19 @@ def main(argv: list[str] | None = None) -> int:
         # Forward remaining args to the report CLI.
         return report_main(rep_args + unknown)
 
+    if project in {'master_brain', 'master-brain', 'master', 'governance'}:
+        from projects.master_brain import main as master_brain_main
+
+        mb_args: list[str] = []
+
+        if args.in_dir and '--in-root' not in unknown:
+            mb_args += ['--in-root', args.in_dir]
+        elif args.out_dir and '--in-root' not in unknown:
+            # Convenience fallback when users pass top-level --out-dir accidentally.
+            mb_args += ['--in-root', args.out_dir]
+
+        return master_brain_main(mb_args + unknown)
+
     if project == 'all':
         from projects.main_collector import main as collector_main
         from projects.main_sentiment import main as sentiment_main
@@ -230,7 +243,7 @@ def main(argv: list[str] | None = None) -> int:
         return rc1 or rc2
 
     raise SystemExit(
-        f"Unknown --project '{args.project}'. Try: collector | sentiment_heatmap | market | ml | hub | backtest | systemic | sweep | report | all"
+        f"Unknown --project '{args.project}'. Try: collector | sentiment_heatmap | market | ml | hub | backtest | systemic | sweep | report | master_brain | all"
     )
 
 

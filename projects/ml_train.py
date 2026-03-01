@@ -344,6 +344,129 @@ def _classification_metrics(y_true: np.ndarray, y_pred: np.ndarray) -> dict:
     }
 
 
+def _predict_proba_canonical(pipe, X: pd.DataFrame) -> np.ndarray | None:
+    """Return predict_proba in canonical class order [-1, 0, 1] when available."""
+    try:
+        if not hasattr(pipe, "predict_proba"):
+            return None
+        proba = np.asarray(pipe.predict_proba(X), dtype=float)
+    except Exception:
+        return None
+
+    if proba.ndim != 2 or proba.shape[0] == 0 or proba.shape[1] < 2:
+        return None
+
+    model = getattr(pipe, "named_steps", {}).get("model")
+    classes = getattr(model, "classes_", None)
+
+    # If classes are unavailable but shape looks 3-class, assume canonical order.
+    if classes is None:
+        if proba.shape[1] == 3:
+            return proba
+        return None
+
+    try:
+        cls = [int(c) for c in np.asarray(classes).tolist()]
+    except Exception:
+        return None
+
+    # Map model class labels to canonical labels.
+    mapped: dict[int, int] = {}
+    if set(cls).issubset({-1, 0, 1}):
+        for i, c in enumerate(cls):
+            mapped[c] = i
+    elif set(cls).issubset({0, 1, 2}) and proba.shape[1] == 3:
+        # XGB convention: 0->sell(-1), 1->hold(0), 2->buy(1)
+        remap = {0: -1, 1: 0, 2: 1}
+        for i, c in enumerate(cls):
+            mapped[remap[c]] = i
+    else:
+        return None
+
+    if not all(k in mapped for k in (-1, 0, 1)):
+        return None
+
+    out = np.column_stack([
+        proba[:, mapped[-1]],
+        proba[:, mapped[0]],
+        proba[:, mapped[1]],
+    ])
+
+    # Numerical safety: renormalize to sum to 1.
+    rs = out.sum(axis=1, keepdims=True)
+    rs = np.where(rs <= 0, 1.0, rs)
+    out = out / rs
+    return out
+
+
+def _classification_calibration_metrics(y_true: np.ndarray, proba_canonical: np.ndarray, *, n_bins: int = 10) -> dict:
+    """Calibration diagnostics for 3-class labels in canonical order [-1,0,1]."""
+    from sklearn.metrics import brier_score_loss, log_loss
+
+    y = pd.Series(y_true).astype(int)
+    y_idx = y.replace({-1: 0, 0: 1, 1: 2}).to_numpy(dtype=int)
+
+    p = np.asarray(proba_canonical, dtype=float)
+    if p.ndim != 2 or p.shape[1] != 3 or p.shape[0] != len(y_idx):
+        return {}
+
+    # Multiclass log loss
+    try:
+        ll = float(log_loss(y_idx, p, labels=[0, 1, 2]))
+    except Exception:
+        ll = float("nan")
+
+    # One-vs-rest Brier (macro average)
+    briers: list[float] = []
+    for k in (0, 1, 2):
+        yk = (y_idx == k).astype(int)
+        try:
+            b = float(brier_score_loss(yk, p[:, k]))
+            briers.append(b)
+        except Exception:
+            continue
+    brier_macro = float(np.mean(briers)) if briers else float("nan")
+
+    # Expected Calibration Error (ECE) on top-class confidence
+    conf = p.max(axis=1)
+    pred = p.argmax(axis=1)
+    acc = (pred == y_idx).astype(float)
+
+    bins = np.linspace(0.0, 1.0, int(max(2, n_bins)) + 1)
+    ece = 0.0
+    n = len(conf)
+    if n > 0:
+        for i in range(len(bins) - 1):
+            lo = bins[i]
+            hi = bins[i + 1]
+            if i < len(bins) - 2:
+                m = (conf >= lo) & (conf < hi)
+            else:
+                m = (conf >= lo) & (conf <= hi)
+            cnt = int(m.sum())
+            if cnt == 0:
+                continue
+            ece += abs(float(acc[m].mean()) - float(conf[m].mean())) * (cnt / n)
+
+    # Directional buy/sell probability calibration sanity checks.
+    buy_prob_mean = float(p[:, 2].mean())
+    sell_prob_mean = float(p[:, 0].mean())
+    buy_freq = float((y_idx == 2).mean())
+    sell_freq = float((y_idx == 0).mean())
+
+    return {
+        "cal_log_loss": ll,
+        "cal_brier_multi": brier_macro,
+        "cal_ece": float(ece),
+        "cal_buy_prob_mean": buy_prob_mean,
+        "cal_buy_freq": buy_freq,
+        "cal_sell_prob_mean": sell_prob_mean,
+        "cal_sell_freq": sell_freq,
+        "cal_buy_gap": float(abs(buy_prob_mean - buy_freq)),
+        "cal_sell_gap": float(abs(sell_prob_mean - sell_freq)),
+    }
+
+
 def _regression_metrics(y_true: np.ndarray, y_pred: np.ndarray) -> dict:
     from sklearn.metrics import mean_absolute_error, mean_squared_error, r2_score
 
@@ -495,12 +618,17 @@ def train_supervised(
     else:
         y_test_eval = y_test.to_numpy(dtype=int)
 
+    cls_metrics = _classification_metrics(y_test_eval, pred.astype(int))
+    proba_can = _predict_proba_canonical(pipe, X_test)
+    if proba_can is not None:
+        cls_metrics.update(_classification_calibration_metrics(np.asarray(y_test_eval, dtype=int), proba_can))
+
     metrics = {
         "task": "classification",
         "model": model_name,
         "n_train": int(len(X_train)),
         "n_test": int(len(X_test)),
-        **_classification_metrics(y_test_eval, pred.astype(int)),
+        **cls_metrics,
     }
 
     importance_df = _get_feature_importance(pipe, X_test, y_test, task=task, method="model", random_state=random_state)
@@ -606,6 +734,11 @@ def train_supervised_multi(
     else:
         y_test_eval = y_test_eval.to_numpy(dtype=int)
 
+    cls_metrics = _classification_metrics(y_test_eval, pred.astype(int))
+    proba_can = _predict_proba_canonical(pipe, X_test)
+    if proba_can is not None:
+        cls_metrics.update(_classification_calibration_metrics(np.asarray(y_test_eval, dtype=int), proba_can))
+
     metrics = {
         "task": "classification",
         "model": model_name,
@@ -613,7 +746,7 @@ def train_supervised_multi(
         "n_test": int(len(X_test)),
         "n_assets": int(len(datasets)),
         "assets": [a for a, _, _ in datasets],
-        **_classification_metrics(y_test_eval, pred.astype(int)),
+        **cls_metrics,
     }
 
     importance_df = _get_feature_importance(pipe, X_test, y_test_c, task=task, method="model", random_state=random_state)
@@ -699,6 +832,10 @@ def walkforward_cv(
             pred = np.asarray(pred)
             if model_name in {"xgb", "xgboost"}:
                 pred = pd.Series(pred).replace({0: -1, 1: 0, 2: 1}).to_numpy(dtype=int)
+            cls_metrics = _classification_metrics(y_test.to_numpy(dtype=int), pred.astype(int))
+            proba_can = _predict_proba_canonical(pipe, X_test)
+            if proba_can is not None:
+                cls_metrics.update(_classification_calibration_metrics(y_test.to_numpy(dtype=int), proba_can))
             m = {
                 "fold": fold,
                 "train_end": str(X_train.index[-1]),
@@ -706,7 +843,7 @@ def walkforward_cv(
                 "test_end": str(X_test.index[-1]),
                 "n_train": int(len(X_train)),
                 "n_test": int(len(X_test)),
-                **_classification_metrics(y_test.to_numpy(dtype=int), pred.astype(int)),
+                **cls_metrics,
             }
             fold_metrics.append(m)
             imp_df = _get_feature_importance(
@@ -860,6 +997,11 @@ def walkforward_cv_multi(
             if model_name in {"xgb", "xgboost"}:
                 pred = pd.Series(pred).replace({0: -1, 1: 0, 2: 1}).to_numpy(dtype=int)
 
+            cls_metrics = _classification_metrics(yte.to_numpy(dtype=int), pred.astype(int))
+            proba_can = _predict_proba_canonical(pipe, X_test)
+            if proba_can is not None:
+                cls_metrics.update(_classification_calibration_metrics(yte.to_numpy(dtype=int), proba_can))
+
             m = {
                 "fold": fold,
                 "n_train": int(len(X_train)),
@@ -871,7 +1013,7 @@ def walkforward_cv_multi(
                 "test_start_max": max(fold_test_starts),
                 "test_end_min": min(fold_test_ends),
                 "test_end_max": max(fold_test_ends),
-                **_classification_metrics(yte.to_numpy(dtype=int), pred.astype(int)),
+                **cls_metrics,
             }
             fold_metrics.append(m)
             imp_df = _get_feature_importance(

@@ -29,11 +29,12 @@ Outputs are written to the folder you pass (HTML charts, CSVs, plus a `summary.j
 
 ## Repository layout
 
-- `main.py`: unified CLI router (`--project market|ml|hub|sentiment_heatmap|collector`)
+- `main.py`: unified CLI router (`--project market|ml|hub|backtest|report|systemic|master_brain|sentiment_heatmap|collector`)
 - `projects/`
 	- `market_analyzer.py`: per-symbol chart + indicators + forecast + FFT cycles
 	- `ml_train.py`: supervised model training + walk-forward CV + feature importance
 	- `strategy_backtest.py`: strategy simulator that consumes ML model predictions and computes equity curves + costs
+	- `master_brain.py`: governance pass (finance/ML principle checks + folder cleanup planning)
 	- `data_hub_train.py`: multi-symbol dataset builder + optional charts + selection + spectral/DMD + allocation
 	- `main_sentiment.py`: RSS sentiment heatmap (VADER)
 	- `main_collector.py`: basic multi-source scraping skeleton
@@ -77,6 +78,10 @@ flowchart TD
 		D -->|backtest\nstrategy\nsim| K[Build bt_args\nForward ML-style flags explicitly: --model --task --threshold\nPlus: --in-csv --in-dir --out-dir\nForward extra flags: unknown]
 		K --> K2[Call projects.strategy_backtest: main(bt_args + unknown)]
 		K2 --> Z
+
+		D -->|master_brain\nmaster\ngovernance| M[Build mb_args\noptional: map --in-dir/--out-dir to --in-root\nForward extra flags: unknown]
+		M --> M2[Call projects.master_brain: main(mb_args + unknown)]
+		M2 --> Z
 
 		D -->|all| L[Run collector then sentiment\nrc1 = collector_main(...)\nrc2 = sentiment_main(...)\nreturn rc1 or rc2]
 		L --> Z
@@ -357,6 +362,53 @@ Artifacts:
 
 - `portfolio_weights.csv`
 - `portfolio_allocation.json`
+
+### 5) Master brain (governance + cleanup planning)
+
+This command centralizes three things:
+
+- **Finance logic checks** on backtests (Sharpe, drawdown, trade count, profit factor)
+- **ML reliability checks** (walk-forward stability + calibration metrics when available)
+- **Folder organization plan** to move run artifacts into a clean taxonomy under `artifacts/`
+
+Phase 2 adds:
+
+- **Cost stress testing** across a bps grid (turnover-aware)
+- **Promotion gate** (`promote | candidate | reject`) that combines finance quality, stress resilience, and ML quality
+
+Dry-run planning (safe default):
+
+```bash
+python main.py --project master_brain --in-root . --out-dir master_brain
+```
+
+Apply folder cleanup moves (optional):
+
+```bash
+python main.py --project master_brain --in-root . --out-dir master_brain --apply-cleanup --max-moves 150
+```
+
+Phase 2 governance run (example):
+
+```bash
+python main.py --project master_brain --in-root . --out-dir master_brain \
+  --stress-bps-grid "10,20,35" --gate-stress-bps 20 \
+  --min-reliability-score 0.60 --min-ml-quality-score 0.55
+```
+
+Outputs:
+
+- `master_brain/finance_principles_report.csv`
+- `master_brain/ml_principles_report.csv`
+- `master_brain/promotion_gate_report.csv`
+- `master_brain/master_brain_dashboard.html`
+- `master_brain/top_promotion_memo.md`
+- `master_brain/folder_cleanup_plan.csv`
+- `master_brain/master_brain_summary.json`
+- `master_brain/master_brain_summary.md`
+
+The `top_promotion_memo.md` includes a one-page deployment checklist covering risk limits,
+kill-switch thresholds, retrain cadence, and monitoring KPIs.
 
 ### Systemic-risk monitoring (tensor + networks + ARIMA)
 
