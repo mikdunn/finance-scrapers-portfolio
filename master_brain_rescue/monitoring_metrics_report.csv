@@ -1,0 +1,14 @@
+metric,value
+runs_total,300.0
+runs_promote,0.0
+runs_candidate,1.0
+runs_reject,299.0
+promotion_score_median,0.125125
+reliability_score_median,0.22749999999999998
+ml_quality_score_median,0.0
+sharpe_median,0.13989247850432404
+max_drawdown_median,-0.0627298489803304
+profit_factor_median,1.1133388350314608
+stress_total_return_median_bps20,0.0
+stress_sharpe_median_bps20,-0.23758856074645082
+cal_ece_median,

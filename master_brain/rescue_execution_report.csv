@@ -1,0 +1,45 @@
+in_csv,variants,return_code,stdout_tail,stderr_tail,cmd
+C:\Users\dunnm\source\repos\finance-scrapers-portfolio\artifacts\smoke\smoke_market_fx_1mo_1d\EURUSD=X_1mo_1d.csv,"hgb_baseline,hgb_stops,mlp_baseline,mlp_stops",0,"Warning: small dataset after labeling (n=16). Reducing split minimums.
+Wrote 4 runs under prefix: bt_rescue_EURUSD=X_*
+Note: hmmlearn not available (HMM variants will produce no trades). Install: pip install hmmlearn
+","ver_sma_50' 'sma_100'
+ 'close_over_sma_100' 'sma_200' 'close_over_sma_200' 'ema_12'
+ 'close_over_ema_12' 'ema_26' 'close_over_ema_26' 'macd' 'macd_signal'
+ 'macd_hist' 'bb_lower' 'bb_mid' 'bb_upper' 'bb_width' 'bb_pos' 'volume'
+ 'volume_sma_20' 'volume_over_sma_20' 'rsi14' 'kijun' 'senkoua' 'senkoub']. At least one non-missing value is needed for imputation with strategy='median'.
+  warnings.warn(
+C:\Users\dunnm\AppData\Roaming\Python\Python313\site-packages\sklearn\impute\_base.py:598: UserWarning: Skipping features without any observed values: ['volatility_10' 'volatility_20' 'sma_10' 'close_over_sma_10' 'sma_20'
+ 'close_over_sma_20' 'sma_50' 'close_over_sma_50' 'sma_100'
+ 'close_over_sma_100' 'sma_200' 'close_over_sma_200' 'ema_12'
+ 'close_over_ema_12' 'ema_26' 'close_over_ema_26' 'macd' 'macd_signal'
+ 'macd_hist' 'bb_lower' 'bb_mid' 'bb_upper' 'bb_width' 'bb_pos' 'volume'
+ 'volume_sma_20' 'volume_over_sma_20' 'rsi14' 'kijun' 'senkoua' 'senkoub']. At least one non-missing value is needed for imputation with strategy='median'.
+  warnings.warn(
+C:\Users\dunnm\AppData\Roaming\Python\Python313\site-packages\sklearn\impute\_base.py:598: UserWarning:
+
+Skipping features without any observed values: ['volatility_10' 'volatility_20' 'sma_10' 'close_over_sma_10' 'sma_20'
+ 'close_over_sma_20' 'sma_50' 'close_over_sma_50' 'sma_100'
+ 'close_over_sma_100' 'sma_200' 'close_over_sma_200' 'ema_12'
+ 'close_over_ema_12' 'ema_26' 'close_over_ema_26' 'macd' 'macd_signal'
+ 'macd_hist' 'bb_lower' 'bb_mid' 'bb_upper' 'bb_width' 'bb_pos' 'volume'
+ 'volume_sma_20' 'volume_over_sma_20' 'rsi14' 'kijun' 'senkoua' 'senkoub']. At least one non-missing value is needed for imputation with strategy='median'.
+
+C:\Users\dunnm\AppData\Roaming\Python\Python313\site-packages\sklearn\impute\_base.py:598: UserWarning:
+
+Skipping features without any observed values: ['volatility_10' 'volatility_20' 'sma_10' 'close_over_sma_10' 'sma_20'
+ 'close_over_sma_20' 'sma_50' 'close_over_sma_50' 'sma_100'
+ 'close_over_sma_100' 'sma_200' 'close_over_sma_200' 'ema_12'
+ 'close_over_ema_12' 'ema_26' 'close_over_ema_26' 'macd' 'macd_signal'
+ 'macd_hist' 'bb_lower' 'bb_mid' 'bb_upper' 'bb_width' 'bb_pos' 'volume'
+ 'volume_sma_20' 'volume_over_sma_20' 'rsi14' 'kijun' 'senkoua' 'senkoub']. At least one non-missing value is needed for imputation with strategy='median'.
+
+C:\Users\dunnm\AppData\Roaming\Python\Python313\site-packages\sklearn\impute\_base.py:598: UserWarning:
+
+Skipping features without any observed values: ['volatility_10' 'volatility_20' 'sma_10' 'close_over_sma_10' 'sma_20'
+ 'close_over_sma_20' 'sma_50' 'close_over_sma_50' 'sma_100'
+ 'close_over_sma_100' 'sma_200' 'close_over_sma_200' 'ema_12'
+ 'close_over_ema_12' 'ema_26' 'close_over_ema_26' 'macd' 'macd_signal'
+ 'macd_hist' 'bb_lower' 'bb_mid' 'bb_upper' 'bb_width' 'bb_pos' 'volume'
+ 'volume_sma_20' 'volume_over_sma_20' 'rsi14' 'kijun' 'senkoua' 'senkoub']. At least one non-missing value is needed for imputation with strategy='median'.
+
+","'c:\Users\dunnm\anaconda3\python.exe' -m projects.strategy_sweep --in-csv 'C:\Users\dunnm\source\repos\finance-scrapers-portfolio\artifacts\smoke\smoke_market_fx_1mo_1d\EURUSD=X_1mo_1d.csv' --out-dir 'C:\Users\dunnm\source\repos\finance-scrapers-portfolio\artifacts\backtests' --out-prefix bt_rescue --cores hgb,mlp --only-variants hgb_baseline,hgb_stops,mlp_baseline,mlp_stops"

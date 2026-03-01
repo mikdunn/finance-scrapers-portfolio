@@ -1,0 +1,42 @@
+{
+  "root": "C:\\Users\\dunnm\\source\\repos\\finance-scrapers-portfolio",
+  "policy": {
+    "min_trades": 30,
+    "min_sharpe": 0.5,
+    "max_drawdown_abs": 0.35,
+    "min_profit_factor": 1.05,
+    "min_cv_folds": 4,
+    "min_reliability_score": 0.6,
+    "min_ml_quality_score": 0.55,
+    "stress_bps_grid": [
+      10.0,
+      20.0,
+      35.0
+    ],
+    "gate_stress_bps": 20.0,
+    "workers": 20,
+    "apply_cleanup": true,
+    "cleanup_mode": "move",
+    "cleanup_dry_run": false
+  },
+  "counts": {
+    "backtests_scored": 296,
+    "ml_runs_scored": 6,
+    "promoted_runs": 0,
+    "cleanup_moves_planned": 0,
+    "cleanup_actions_executed": 0,
+    "cleanup_errors": 0,
+    "cleanup_remaining": 0
+  },
+  "top_promoted": [],
+  "outputs": {
+    "finance_principles_report_csv": "C:\\Users\\dunnm\\source\\repos\\finance-scrapers-portfolio\\master_brain\\finance_principles_report.csv",
+    "ml_principles_report_csv": "C:\\Users\\dunnm\\source\\repos\\finance-scrapers-portfolio\\master_brain\\ml_principles_report.csv",
+    "promotion_gate_report_csv": "C:\\Users\\dunnm\\source\\repos\\finance-scrapers-portfolio\\master_brain\\promotion_gate_report.csv",
+    "monitoring_metrics_report_csv": "C:\\Users\\dunnm\\source\\repos\\finance-scrapers-portfolio\\master_brain\\monitoring_metrics_report.csv",
+    "folder_cleanup_plan_csv": "C:\\Users\\dunnm\\source\\repos\\finance-scrapers-portfolio\\master_brain\\folder_cleanup_plan.csv",
+    "folder_cleanup_execution_report_csv": "C:\\Users\\dunnm\\source\\repos\\finance-scrapers-portfolio\\master_brain\\folder_cleanup_execution_report.csv",
+    "folder_cleanup_remaining_plan_csv": "C:\\Users\\dunnm\\source\\repos\\finance-scrapers-portfolio\\master_brain\\folder_cleanup_remaining_plan.csv",
+    "quality_metrics_report_csv": "C:\\Users\\dunnm\\source\\repos\\finance-scrapers-portfolio\\master_brain\\quality_metrics_report.csv"
+  }
+}

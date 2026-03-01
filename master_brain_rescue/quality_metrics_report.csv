@@ -1,0 +1,17 @@
+metric,value
+backtests_scored,300.0
+ml_runs_scored,6.0
+gated_runs,300.0
+reliability_non_null_rate,1.0
+reliability_mean,0.27430044998661846
+principles_clean_rate,0.41
+ml_quality_non_null_rate,1.0
+ml_quality_mean,0.47269407577521033
+cv_present_rate,0.8333333333333334
+promotion_score_non_null_rate,1.0
+promotion_score_mean,0.16239757903937954
+pass_finance_rate,0.016666666666666666
+pass_stress_rate,0.12333333333333334
+pass_ml_rate,0.0
+stress_total_return_bps20_mean,-0.09528082210765239
+stress_sharpe_bps20_mean,-0.7917702779929725
