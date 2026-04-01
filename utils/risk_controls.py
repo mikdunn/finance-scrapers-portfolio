@@ -59,7 +59,10 @@ class RiskState:
     # Health status
     in_de_risk_mode: bool = False
     stale_data_detected: bool = False
-
+    # Position tracking for PnL calculation (Phase 3d)
+    position_entry_prices: dict[str, float] = field(default_factory=dict)  # {symbol: avg_entry_price}
+    position_entry_qty: dict[str, float] = field(default_factory=dict)  # {symbol: qty_at_entry}
+    last_position: dict[str, float] = field(default_factory=dict)  # {symbol: last_position_qty} for detecting exits
     def daily_loss_pct(self) -> float:
         if self.start_equity <= 0:
             return 0.0
@@ -196,4 +199,91 @@ def record_slippage(risk_state: RiskState, slippage_bps: float) -> None:
     risk_state.recent_slippages.append(float(slippage_bps))
     if len(risk_state.recent_slippages) > 50:
         risk_state.recent_slippages = risk_state.recent_slippages[-50:]
+
+
+def detect_and_record_trade_close(
+    risk_state: RiskState,
+    symbol: str,
+    current_position: float,
+    current_price: float,
+    ts: Optional[str] = None,
+) -> tuple[bool, Optional[float]]:
+    """Detect and record trade closures when position changes direction or closes.
+    
+    Phase 3d: When a position closes (transitions through zero), calculate PnL and record.
+    
+    Args:
+        risk_state: Risk state to update
+        symbol: Trading symbol
+        current_position: Current net position qty
+        current_price: Current market price
+        ts: Timestamp (ISO string), defaults to now
+    
+    Returns:
+        (was_closed: bool, pnl_pct: Optional[float])
+        - was_closed: True if a position closed in this update
+        - pnl_pct: Realized PnL percentage if closed, else None
+    """
+    if ts is None:
+        ts = datetime.now(timezone.utc).isoformat()
+    
+    symbol_str = str(symbol)
+    prev_position = float(risk_state.last_position.get(symbol_str, 0.0))
+    entry_price = float(risk_state.position_entry_prices.get(symbol_str, 0.0))
+    
+    # Initialize on first call
+    if symbol_str not in risk_state.last_position:
+        risk_state.last_position[symbol_str] = 0.0
+    
+    # Update position tracking
+    risk_state.last_position[symbol_str] = float(current_position)
+    
+    # Check if position transitioned to zero or changed sign (closed)
+    prev_sign = 1.0 if prev_position > 0 else (-1.0 if prev_position < 0 else 0.0)
+    curr_sign = 1.0 if current_position > 0 else (-1.0 if current_position < 0 else 0.0)
+    
+    was_closed = False
+    pnl_pct = None
+    
+    # Detect closure: position was open and now is zero, or direction changed
+    if prev_position != 0.0 and (float(current_position) == 0.0 or prev_sign != curr_sign):
+        was_closed = True
+        
+        # Calculate PnL: (exit_price - entry_price) / entry_price
+        if entry_price > 0:
+            if prev_position > 0:
+                # Was long, now flat/short: (sell_price - buy_price) / buy_price
+                pnl_pct = (float(current_price) - entry_price) / entry_price
+            else:
+                # Was short, now flat/long: (short_price - cover_price) / short_price
+                pnl_pct = (entry_price - float(current_price)) / entry_price
+            
+            # Record the trade result
+            record_trade_result(risk_state, pnl_pct, ts=ts)
+        
+        # Reset entry price tracking
+        risk_state.position_entry_prices[symbol_str] = 0.0
+        risk_state.position_entry_qty[symbol_str] = 0.0
+    
+    # Update entry price when position increases (new entry)
+    elif float(current_position) != 0.0 and abs(float(current_position)) > abs(prev_position):
+        # Position increased (adding to existing or new position)
+        if symbol_str not in risk_state.position_entry_prices or risk_state.position_entry_prices[symbol_str] == 0.0:
+            # New position
+            risk_state.position_entry_prices[symbol_str] = float(current_price)
+            risk_state.position_entry_qty[symbol_str] = abs(float(current_position))
+        else:
+            # Average in
+            prev_qty = float(risk_state.position_entry_qty.get(symbol_str, 0.0))
+            prev_price = float(risk_state.position_entry_prices.get(symbol_str, 0.0))
+            new_qty = abs(float(current_position))
+            delta_qty = new_qty - prev_qty
+            
+            if delta_qty > 0 and prev_price > 0:
+                # Average the entry price
+                avg_price = (prev_price * prev_qty + float(current_price) * delta_qty) / new_qty
+                risk_state.position_entry_prices[symbol_str] = avg_price
+                risk_state.position_entry_qty[symbol_str] = new_qty
+    
+    return was_closed, pnl_pct
 

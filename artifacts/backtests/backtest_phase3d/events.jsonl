@@ -1,0 +1,17 @@
+{"kind": "test_start", "ts": "2026-04-01T18:21:02.736951+00:00", "payload": {"test": "phase3d_trade_result_recording", "timestamp": "2026-04-01T18:21:02.736937+00:00"}}
+{"kind": "trade_test_step", "ts": "2026-04-01T18:21:02.737188+00:00", "payload": {"symbol": "EURUSD", "position": 100.0, "price": 1.08, "was_closed": false, "pnl_pct": null, "pnl_bps": null}}
+{"kind": "trade_test_step", "ts": "2026-04-01T18:21:02.737325+00:00", "payload": {"symbol": "EURUSD", "position": 100.0, "price": 1.085, "was_closed": false, "pnl_pct": null, "pnl_bps": null}}
+{"kind": "trade_test_step", "ts": "2026-04-01T18:21:02.737443+00:00", "payload": {"symbol": "EURUSD", "position": 0.0, "price": 1.09, "was_closed": true, "pnl_pct": 0.009259259259259267, "pnl_bps": 92.59259259259268}}
+{"kind": "trade_test_step", "ts": "2026-04-01T18:21:02.737557+00:00", "payload": {"symbol": "AAPL", "position": 50.0, "price": 150.0, "was_closed": false, "pnl_pct": null, "pnl_bps": null}}
+{"kind": "trade_test_step", "ts": "2026-04-01T18:21:02.737661+00:00", "payload": {"symbol": "AAPL", "position": 50.0, "price": 149.0, "was_closed": false, "pnl_pct": null, "pnl_bps": null}}
+{"kind": "test_start", "ts": "2026-04-01T18:21:13.166076+00:00", "payload": {"test": "phase3d_trade_result_recording", "timestamp": "2026-04-01T18:21:13.166064+00:00"}}
+{"kind": "trade_test_step", "ts": "2026-04-01T18:21:13.166222+00:00", "payload": {"symbol": "EURUSD", "position": 100.0, "price": 1.08, "was_closed": false, "pnl_pct": null, "pnl_bps": null}}
+{"kind": "trade_test_step", "ts": "2026-04-01T18:21:13.166343+00:00", "payload": {"symbol": "EURUSD", "position": 100.0, "price": 1.085, "was_closed": false, "pnl_pct": null, "pnl_bps": null}}
+{"kind": "trade_test_step", "ts": "2026-04-01T18:21:13.166456+00:00", "payload": {"symbol": "EURUSD", "position": 0.0, "price": 1.09, "was_closed": true, "pnl_pct": 0.009259259259259267, "pnl_bps": 92.59259259259268}}
+{"kind": "trade_test_step", "ts": "2026-04-01T18:21:13.166565+00:00", "payload": {"symbol": "AAPL", "position": -50.0, "price": 150.0, "was_closed": false, "pnl_pct": null, "pnl_bps": null}}
+{"kind": "trade_test_step", "ts": "2026-04-01T18:21:13.166667+00:00", "payload": {"symbol": "AAPL", "position": -50.0, "price": 149.0, "was_closed": false, "pnl_pct": null, "pnl_bps": null}}
+{"kind": "trade_test_step", "ts": "2026-04-01T18:21:13.166776+00:00", "payload": {"symbol": "AAPL", "position": 0.0, "price": 148.0, "was_closed": true, "pnl_pct": 0.013333333333333334, "pnl_bps": 133.33333333333334}}
+{"kind": "trade_test_step", "ts": "2026-04-01T18:21:13.166879+00:00", "payload": {"symbol": "TSLA", "position": -100.0, "price": 250.0, "was_closed": false, "pnl_pct": null, "pnl_bps": null}}
+{"kind": "trade_test_step", "ts": "2026-04-01T18:21:13.166995+00:00", "payload": {"symbol": "TSLA", "position": -100.0, "price": 249.0, "was_closed": false, "pnl_pct": null, "pnl_bps": null}}
+{"kind": "trade_test_step", "ts": "2026-04-01T18:21:13.167105+00:00", "payload": {"symbol": "TSLA", "position": 0.0, "price": 248.0, "was_closed": true, "pnl_pct": 0.008, "pnl_bps": 80.0}}
+{"kind": "test_complete", "ts": "2026-04-01T18:21:13.167440+00:00", "payload": {"test": "phase3d_trade_result_recording", "trades_recorded": 3, "total_pnl": 0.030592592592592602, "final_equity": 1.030897777777778, "status": "PASS"}}

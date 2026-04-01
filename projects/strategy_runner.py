@@ -33,7 +33,7 @@ from utils.oms import OMS, OrderState
 from utils.risk_controls import (
     RiskConfig, RiskState, 
     check_global_kill_switch, check_pretrade, check_in_trade, check_rejection_burst,
-    record_rejection, record_trade_result
+    record_rejection, record_trade_result, detect_and_record_trade_close
 )
 from utils.runtime_state import RunState, load_runtime_state, save_runtime_state
 
@@ -419,6 +419,21 @@ def main(argv: list[str] | None = None) -> int:
                 current_position = float(oms.net_position(args.symbol))
                 risk_state.gross_notional = abs(current_position * px)
                 journal.append("position_update", {"symbol": args.symbol, "position": current_position, "gross_notional": risk_state.gross_notional})
+                
+                # Phase 3d: Detect and record trade closures
+                was_closed, pnl_pct = detect_and_record_trade_close(
+                    risk_state=risk_state,
+                    symbol=args.symbol,
+                    current_position=current_position,
+                    current_price=px,
+                )
+                if was_closed and pnl_pct is not None:
+                    journal.append("trade_closed", {
+                        "symbol": args.symbol,
+                        "pnl_pct": float(pnl_pct),
+                        "pnl_bps": float(pnl_pct * 10000.0),
+                        "closed_at": px,
+                    })
 
             expected_qty = float(oms.net_position(args.symbol))
             broker_qty = float(gateway.get_position_qty(args.symbol))

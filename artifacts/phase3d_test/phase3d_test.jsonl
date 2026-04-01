@@ -1,0 +1,6 @@
+{"kind": "position_update", "ts": "2026-04-01T18:20:40.603901+00:00", "payload": {"iteration": 1, "symbol": "AAPL", "position": 100.0}}
+{"kind": "position_update", "ts": "2026-04-01T18:20:40.604214+00:00", "payload": {"iteration": 2, "symbol": "AAPL", "position": 100.0}}
+{"kind": "trade_closed", "ts": "2026-04-01T18:20:40.604422+00:00", "payload": {"iteration": 3, "symbol": "AAPL", "pnl_pct": 0.04, "pnl_bps": 400.0}}
+{"kind": "position_update", "ts": "2026-04-01T18:20:40.604622+00:00", "payload": {"iteration": 4, "symbol": "AAPL", "position": -50.0}}
+{"kind": "position_update", "ts": "2026-04-01T18:20:40.604797+00:00", "payload": {"iteration": 5, "symbol": "AAPL", "position": -50.0}}
+{"kind": "trade_closed", "ts": "2026-04-01T18:20:40.605223+00:00", "payload": {"iteration": 6, "symbol": "AAPL", "pnl_pct": 0.038461538461538464, "pnl_bps": 384.61538461538464}}
