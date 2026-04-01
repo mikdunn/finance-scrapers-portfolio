@@ -38,6 +38,7 @@ from utils.risk_controls import (
     check_rolling_drawdown_enforcement, check_volatility_spike
 )
 from utils.runtime_state import RunState, load_runtime_state, save_runtime_state
+from utils.terminal_dashboard import TerminalDashboard
 
 
 def _expected_feature_names(pipe) -> list[str] | None:
@@ -205,6 +206,8 @@ def main(argv: list[str] | None = None) -> int:
     p.add_argument("--state-file", default="artifacts/live/runtime_state.json", help="Runtime state file")
     p.add_argument("--events-file", default="artifacts/live/events.jsonl", help="Event journal JSONL file")
     p.add_argument("--metrics-file", default="artifacts/live/runner_metrics.json", help="Runner metrics output")
+    p.add_argument("--dashboard-enabled", action="store_true", help="Enable terminal dashboard refresh every iteration")
+    p.add_argument("--dashboard-file", default="artifacts/live/dashboard.html", help="Save dashboard HTML snapshot")
 
     p.add_argument("--start-state", default="RUNNING", help="RUNNING | PAUSED | RISK_LOCK | HALTED")
     p.add_argument("--max-notional-per-trade", type=float, default=2000.0)
@@ -242,6 +245,10 @@ def main(argv: list[str] | None = None) -> int:
         volatility=float(getattr(args, "volatility_regime", 1.0))
     )
     oms = OMS()
+    
+    # Phase 4: Terminal dashboard initialization
+    dashboard = TerminalDashboard() if getattr(args, "dashboard_enabled", False) else None
+    
     risk_cfg = RiskConfig(
         max_notional_per_trade=float(args.max_notional_per_trade),
         max_gross_notional=float(args.max_gross_notional),
@@ -518,6 +525,37 @@ def main(argv: list[str] | None = None) -> int:
                 "loop_ms": loop_ms,
             },
         )
+        
+        # Phase 4: Render terminal dashboard if enabled
+        if dashboard is not None:
+            dashboard_output = dashboard.render(
+                symbol=args.symbol,
+                oms=oms,
+                risk_state=risk_state,
+                risk_cfg=risk_cfg,
+                run_state=state.state,
+                current_price=last_px,
+                signal=signal if 'signal' in locals() else None,
+            )
+            print("\033[H\033[J")  # Clear screen (ANSI codes)
+            print(dashboard_output)
+            
+            # Save HTML snapshot at end of session
+            if getattr(args, "dashboard_file", None):
+                try:
+                    Path(getattr(args, "dashboard_file")).parent.mkdir(parents=True, exist_ok=True)
+                    dashboard.save_to_html(
+                        output_file=getattr(args, "dashboard_file"),
+                        symbol=args.symbol,
+                        oms=oms,
+                        risk_state=risk_state,
+                        risk_cfg=risk_cfg,
+                        run_state=state.state,
+                        current_price=last_px,
+                        signal=signal if 'signal' in locals() else None,
+                    )
+                except Exception as e:
+                    journal.append("dashboard_write_error", {"error": str(e)})
 
         time.sleep(max(0.2, float(args.poll_seconds)))
 
