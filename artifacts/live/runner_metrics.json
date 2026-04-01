@@ -1,0 +1,11 @@
+{
+  "symbol": "BTC-USD",
+  "mode": "dry_run",
+  "iterations": 1,
+  "submitted_order_intents": 0,
+  "final_position": 0.0,
+  "final_state": {
+    "state": "RISK_LOCK",
+    "reason": "max_notional_per_trade"
+  }
+}

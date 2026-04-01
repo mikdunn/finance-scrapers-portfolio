@@ -1,0 +1,32 @@
+{
+  "events_file": "artifacts/live_phase2_conservative/events.jsonl",
+  "n_events": 9,
+  "counts": {
+    "runner_start": 1,
+    "data_health": 1,
+    "order_intent": 1,
+    "order_submit": 1,
+    "position_update": 1,
+    "reconcile": 1,
+    "signal": 1,
+    "loop_timing": 1,
+    "runner_stop": 1
+  },
+  "errors": 0,
+  "transitions": [],
+  "latency_ms": {
+    "loop_p50": 982.9054159999941,
+    "loop_p95": 982.9054159999941,
+    "fetch_p95": 895.7477599997219,
+    "signal_p95": 68.91146999987541,
+    "order_p95": 0.03540600027918117
+  },
+  "latest_data_age_s": 24.768123,
+  "thresholds": {
+    "max_error_events": 0,
+    "max_loop_p95_ms": 2000.0,
+    "max_stale_seconds": 999999.0
+  },
+  "breaches": [],
+  "ok": true
+}

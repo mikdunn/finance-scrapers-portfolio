@@ -1,0 +1,4 @@
+{
+  "state": "RISK_LOCK",
+  "reason": "max_notional_per_trade"
+}

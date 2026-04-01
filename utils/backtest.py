@@ -31,6 +31,46 @@ class BacktestConfig:
     vol_target: float | None = None
     vol_lookback: int = 20
     max_leverage: float = 3.0
+    # If set, force-close a trade after this many held bars.
+    max_holding_bars: int | None = None
+    # Number of bars to stay flat after an exit (signal/stop/max_hold).
+    cooldown_bars: int = 0
+    # For dynamic slippage model (Phase 2 enhancement)
+    microstructure_aware: bool = False
+    base_spread_bps: float = 0.5
+    volatility_scaling: float = 1.0
+
+
+def _compute_dynamic_slippage(
+    qty: float,
+    px: float,
+    vol_bps: float,
+    base_spread_bps: float = 0.5,
+    volatility_scaling: float = 1.0,
+) -> float:
+    """Compute dynamic slippage based on microstructure factors.
+    
+    Args:
+        qty: Order quantity
+        px: Current price
+        vol_bps: Realized volatility in basis points
+        base_spread_bps: Base bid-ask spread (default 0.5 bps)
+        volatility_scaling: Scaling factor for volatility (1.0 = linear)
+    
+    Returns:
+        Slippage in basis points (additional cost vs static model)
+    """
+    # Base spread cost (half spread for entry)
+    spread_cost = base_spread_bps / 2.0
+    
+    # Volatility impact: higher volatility = wider spreads
+    vol_impact = (vol_bps / 100.0) * volatility_scaling * 0.1  # 10% of vol
+    
+    # Size impact: larger orders have higher impact (simplified linear model)
+    # Assume notional impact scales with order size relative to typical liquidity
+    size_impact = min(10.0, abs(qty * px) / 10000.0)  # Notional impact proxy
+    
+    return float(spread_cost + vol_impact + size_impact)
 
 
 def simulate_ohlc(
@@ -143,6 +183,11 @@ def simulate_ohlc(
     entry_price: float | None = None
     high_water: float | None = None
     low_water: float | None = None
+    bars_in_trade = 0
+    cooldown_left = 0
+    max_hold = int(cfg.max_holding_bars) if cfg.max_holding_bars is not None else None
+    if max_hold is not None and max_hold <= 0:
+        max_hold = None
 
     rows: list[dict] = []
     trades: list[dict] = []
@@ -156,8 +201,35 @@ def simulate_ohlc(
         hi = float(df["High"].iloc[i])
         lo = float(df["Low"].iloc[i])
 
+        # Time-based risk control: flatten position after max hold time.
+        if pos != 0.0 and max_hold is not None and bars_in_trade >= max_hold:
+            if entry_time is not None and entry_price is not None:
+                side = "long" if pos > 0 else "short"
+                tr = (p0 / float(entry_price) - 1.0) if pos > 0 else (float(entry_price) / p0 - 1.0)
+                trades.append(
+                    {
+                        "entry_time": str(entry_time),
+                        "exit_time": str(t),
+                        "side": side,
+                        "entry_price": float(entry_price),
+                        "exit_price": float(p0),
+                        "return": float(tr),
+                        "exit_reason": "max_hold",
+                    }
+                )
+            pos = 0.0
+            entry_time = None
+            entry_price = None
+            high_water = None
+            low_water = None
+            bars_in_trade = 0
+            cooldown_left = max(cooldown_left, max(0, int(cfg.cooldown_bars)))
+
         # Determine desired position magnitude (direction from desired, size from vol targeting).
         desired_dir = float(desired.iloc[i])
+        if cooldown_left > 0:
+            desired_dir = 0.0
+            cooldown_left -= 1
         desired_pos = desired_dir
         if target_bar is not None:
             lb = max(5, int(cfg.vol_lookback))
@@ -209,6 +281,7 @@ def simulate_ohlc(
             entry_price = float(p0)
             high_water = float(p0)
             low_water = float(p0)
+            bars_in_trade = 0
 
         # Apply rebalance cost immediately.
         pos = desired_pos
@@ -358,6 +431,8 @@ def simulate_ohlc(
                 entry_price = None
                 high_water = None
                 low_water = None
+                bars_in_trade = 0
+                cooldown_left = max(cooldown_left, max(0, int(cfg.cooldown_bars)))
                 exit_reason = stop_kind
             else:
                 # No stop: return is mark-to-mark
@@ -372,6 +447,8 @@ def simulate_ohlc(
                         high_water = float(max(float(high_water or entry_price), hi))
                     else:
                         low_water = float(min(float(low_water or entry_price), lo))
+
+                bars_in_trade += 1
 
         net_r = float(gross_r) - float(cost_rebal) - float(extra_cost)
         equity = equity * (1.0 + net_r)
@@ -499,6 +576,58 @@ def compute_equity_curve(
         scale = target_bar / realized.replace(0.0, np.nan)
         scale = scale.clip(lower=0.0, upper=float(cfg.max_leverage)).fillna(0.0)
         pos = (pos_dir * scale).astype(float)
+
+    max_hold = int(cfg.max_holding_bars) if cfg.max_holding_bars is not None else None
+    if max_hold is not None and max_hold <= 0:
+        max_hold = None
+    cooldown = max(0, int(cfg.cooldown_bars))
+
+    if max_hold is not None or cooldown > 0:
+        constrained: list[float] = []
+        current = 0.0
+        hold_len = 0
+        cool_left = 0
+        for desired_pos in pos.astype(float).tolist():
+            desired_sign = float(np.sign(desired_pos))
+            current_sign = float(np.sign(current))
+
+            if current != 0.0 and max_hold is not None and hold_len >= max_hold:
+                current = 0.0
+                current_sign = 0.0
+                hold_len = 0
+                cool_left = max(cool_left, cooldown)
+
+            if cool_left > 0:
+                current = 0.0
+                hold_len = 0
+                cool_left -= 1
+                constrained.append(0.0)
+                continue
+
+            if desired_sign == 0.0:
+                current = 0.0
+                hold_len = 0
+                constrained.append(0.0)
+                continue
+
+            if current_sign == 0.0:
+                current = desired_pos
+                hold_len = 1
+                constrained.append(float(current))
+                continue
+
+            if desired_sign != current_sign:
+                current = 0.0
+                hold_len = 0
+                cool_left = max(cool_left, cooldown)
+                constrained.append(0.0)
+                continue
+
+            current = desired_pos
+            hold_len += 1
+            constrained.append(float(current))
+
+        pos = pd.Series(constrained, index=df.index, dtype=float)
 
     df["position"] = pos
 

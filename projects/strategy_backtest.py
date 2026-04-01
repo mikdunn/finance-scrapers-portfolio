@@ -16,6 +16,7 @@ from __future__ import annotations
 import argparse
 import json
 from pathlib import Path
+import sys
 
 import numpy as np
 import pandas as pd
@@ -29,6 +30,40 @@ from utils.backtest import (
     simulate_ohlc,
 )
 from utils.ml_features import build_features
+
+
+def _arg_provided(raw_argv: list[str], name: str) -> bool:
+    return any(tok == name or tok.startswith(f"{name}=") for tok in raw_argv)
+
+
+def _apply_profile_defaults(args, raw_argv: list[str]) -> None:
+    profile = (getattr(args, "profile", "") or "").strip().lower()
+    if profile not in {"scalper", "scalp"}:
+        return
+
+    # Apply only when user did not explicitly pass the corresponding flag.
+    if not _arg_provided(raw_argv, "--price"):
+        args.price = "open"
+    if not _arg_provided(raw_argv, "--signal-source"):
+        args.signal_source = "proba"
+    if not _arg_provided(raw_argv, "--proba-enter"):
+        args.proba_enter = 0.58
+    if not _arg_provided(raw_argv, "--cost-bps"):
+        args.cost_bps = 2.0
+    if not _arg_provided(raw_argv, "--slippage-bps"):
+        args.slippage_bps = 2.0
+    if not _arg_provided(raw_argv, "--stop-loss"):
+        args.stop_loss = 0.004
+    if not _arg_provided(raw_argv, "--take-profit"):
+        args.take_profit = 0.006
+    if not _arg_provided(raw_argv, "--trailing-atr-mult"):
+        args.trailing_atr_mult = 1.2
+    if not _arg_provided(raw_argv, "--atr-window"):
+        args.atr_window = 14
+    if not _arg_provided(raw_argv, "--max-holding-bars"):
+        args.max_holding_bars = 18
+    if not _arg_provided(raw_argv, "--cooldown-bars"):
+        args.cooldown_bars = 2
 
 
 def _load_csv(path: Path) -> pd.DataFrame:
@@ -287,6 +322,7 @@ def main(argv: list[str] | None = None) -> int:
     p.add_argument("--out-dir", default="backtest_outputs", help="Where to write backtest artifacts")
 
     p.add_argument("--task", default="auto", help="auto | classification | regression")
+    p.add_argument("--profile", default="default", help="default | scalper")
     p.add_argument("--mode", default="long_short", help="long_short | long_only")
     p.add_argument("--threshold", type=float, default=0.003, help="Regression threshold for mapping predictions to signals")
     p.add_argument("--signal-source", default="predict", help="predict | proba (classification only)")
@@ -295,9 +331,9 @@ def main(argv: list[str] | None = None) -> int:
     p.add_argument("--price", default="close", help="Price used for returns: close | open")
 
     # Next realism step: explicit trade accounting with stops/TPs (uses OHLC)
-    p.add_argument("--stop-loss", type=float, default=None, help="Stop loss as a fraction (e.g., 0.03 = 3%).")
-    p.add_argument("--take-profit", type=float, default=None, help="Take profit as a fraction (e.g., 0.06 = 6%).")
-    p.add_argument("--trailing-stop", type=float, default=None, help="Trailing stop as a fraction (e.g., 0.03 = 3%).")
+    p.add_argument("--stop-loss", type=float, default=None, help="Stop loss as a fraction (e.g., 0.03 = 3%%).")
+    p.add_argument("--take-profit", type=float, default=None, help="Take profit as a fraction (e.g., 0.06 = 6%%).")
+    p.add_argument("--trailing-stop", type=float, default=None, help="Trailing stop as a fraction (e.g., 0.03 = 3%%).")
     p.add_argument("--trailing-atr-mult", type=float, default=None, help="ATR trailing stop multiple (e.g., 3.0).")
     p.add_argument("--atr-window", type=int, default=14, help="ATR window (bars) for --trailing-atr-mult.")
     p.add_argument(
@@ -313,13 +349,17 @@ def main(argv: list[str] | None = None) -> int:
     p.add_argument("--cost-bps", type=float, default=5.0, help="Round-trip transaction cost per 1x position change (bps)")
     p.add_argument("--slippage-bps", type=float, default=0.0, help="Extra slippage per 1x position change (bps)")
     p.add_argument("--delay", type=int, default=1, help="Execution delay in bars (default 1 bar)")
+    p.add_argument("--max-holding-bars", type=int, default=None, help="Force close a position after this many bars")
+    p.add_argument("--cooldown-bars", type=int, default=0, help="Bars to stay flat after an exit")
 
     p.add_argument("--max-assets", type=int, default=None, help="Limit number of assets when using --in-dir")
 
     p.add_argument("--portfolio-weighting", default="equal", help="Multi-asset portfolio weighting: equal | inverse_vol")
     p.add_argument("--weight-lookback", type=int, default=60, help="Lookback (bars) for inverse-vol portfolio weights")
 
+    raw_argv = list(argv) if argv is not None else sys.argv[1:]
     args = p.parse_args(argv)
+    _apply_profile_defaults(args, raw_argv)
 
     model_path = Path(args.model)
     if not model_path.exists():
@@ -347,6 +387,8 @@ def main(argv: list[str] | None = None) -> int:
         vol_target=(float(args.vol_target) if args.vol_target is not None else None),
         vol_lookback=int(args.vol_lookback),
         max_leverage=float(args.max_leverage),
+        max_holding_bars=(int(args.max_holding_bars) if args.max_holding_bars is not None else None),
+        cooldown_bars=int(args.cooldown_bars),
     )
 
     # Decide if model expects asset dummies: if any expected feature starts with asset_
@@ -416,6 +458,7 @@ def main(argv: list[str] | None = None) -> int:
         trade_metrics = compute_trade_metrics(trades)
 
         summary = {
+            "profile": str(args.profile),
             "mode": cfg.mode,
             "task": task,
             "signal_source": str(args.signal_source),
@@ -429,6 +472,8 @@ def main(argv: list[str] | None = None) -> int:
             "cost_bps": cfg.cost_bps,
             "slippage_bps": cfg.slippage_bps,
             "execution_delay": cfg.execution_delay,
+            "max_holding_bars": cfg.max_holding_bars,
+            "cooldown_bars": cfg.cooldown_bars,
             "vol_target": cfg.vol_target,
             "vol_lookback": cfg.vol_lookback,
             "max_leverage": cfg.max_leverage,
@@ -544,6 +589,7 @@ def main(argv: list[str] | None = None) -> int:
     pd.DataFrame(per_asset_metrics).to_csv(out_dir / "assets_metrics.csv", index=False)
 
     summary = {
+        "profile": str(args.profile),
         "mode": cfg.mode,
         "task": task,
         "signal_source": str(args.signal_source),
@@ -557,6 +603,8 @@ def main(argv: list[str] | None = None) -> int:
         "cost_bps": cfg.cost_bps,
         "slippage_bps": cfg.slippage_bps,
         "execution_delay": cfg.execution_delay,
+        "max_holding_bars": cfg.max_holding_bars,
+        "cooldown_bars": cfg.cooldown_bars,
         "vol_target": cfg.vol_target,
         "vol_lookback": cfg.vol_lookback,
         "max_leverage": cfg.max_leverage,

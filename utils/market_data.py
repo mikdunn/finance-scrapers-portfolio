@@ -17,6 +17,45 @@ import pandas as pd
 import requests
 
 
+def _sanitize_intraday_request(req: "OHLCVRequest") -> "OHLCVRequest":
+    """Clamp long periods for intraday requests to avoid provider-side empty payloads."""
+    interval = (req.interval or "").strip().lower()
+    limits = {
+        "1m": 7,
+        "2m": 60,
+        "5m": 60,
+        "15m": 60,
+        "30m": 60,
+        "60m": 730,
+        "90m": 730,
+        "1h": 730,
+    }
+    max_days = limits.get(interval)
+    if max_days is None:
+        return req
+
+    now = pd.Timestamp.utcnow()
+    start = _period_to_start_ts(req.period, now)
+    if start is None:
+        return OHLCVRequest(
+            symbol=req.symbol,
+            period=f"{max_days}d",
+            interval=req.interval,
+            auto_adjust=req.auto_adjust,
+        )
+
+    days = max(1, int((now.tz_localize(None) - start).days))
+    if days <= max_days:
+        return req
+
+    return OHLCVRequest(
+        symbol=req.symbol,
+        period=f"{max_days}d",
+        interval=req.interval,
+        auto_adjust=req.auto_adjust,
+    )
+
+
 def _period_to_start_ts(period: str, now: pd.Timestamp) -> pd.Timestamp | None:
     """Convert a yfinance-like period string into an approximate start timestamp.
 
@@ -66,6 +105,8 @@ def fetch_ohlcv(req: OHLCVRequest) -> pd.DataFrame:
     Returns a DataFrame with columns: Open, High, Low, Close, Volume
     and a DatetimeIndex.
     """
+    req = _sanitize_intraday_request(req)
+
     # Provider 1: Yahoo Finance via yfinance
     df = None
     try:

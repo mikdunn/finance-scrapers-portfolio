@@ -1,0 +1,33 @@
+{
+  "events_file": "artifacts/final_integration_test/events.jsonl",
+  "n_events": 14,
+  "counts": {
+    "runner_start": 1,
+    "data_health": 2,
+    "order_intent": 1,
+    "order_submit": 1,
+    "fill": 1,
+    "position_update": 1,
+    "reconcile": 2,
+    "signal": 2,
+    "loop_timing": 2,
+    "runner_stop": 1
+  },
+  "errors": 0,
+  "transitions": [],
+  "latency_ms": {
+    "loop_p50": 552.387547500075,
+    "loop_p95": 746.8868710499919,
+    "fetch_p95": 674.0260949000458,
+    "signal_p95": 52.6520404997882,
+    "order_p95": 0.029772050083920476
+  },
+  "latest_data_age_s": 0.241005,
+  "thresholds": {
+    "max_error_events": 0,
+    "max_loop_p95_ms": 2000.0,
+    "max_stale_seconds": 999999.0
+  },
+  "breaches": [],
+  "ok": true
+}

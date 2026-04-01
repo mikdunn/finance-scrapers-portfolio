@@ -1,0 +1,17 @@
+{
+  "symbol": "BTC-USD",
+  "mode": "dry_run_delayed",
+  "iterations": 3,
+  "submitted_order_intents": 1,
+  "final_position": -0.01,
+  "oms": {
+    "n_orders": 1,
+    "state_counts": {
+      "FILLED": 1
+    }
+  },
+  "final_state": {
+    "state": "RUNNING",
+    "reason": "startup"
+  }
+}

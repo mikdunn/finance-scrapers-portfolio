@@ -34,11 +34,16 @@ Outputs are written to the folder you pass (HTML charts, CSVs, plus a `summary.j
 	- `market_analyzer.py`: per-symbol chart + indicators + forecast + FFT cycles
 	- `ml_train.py`: supervised model training + walk-forward CV + feature importance
 	- `strategy_backtest.py`: strategy simulator that consumes ML model predictions and computes equity curves + costs
+	- `strategy_runner.py`: phase-1 live/paper runner scaffold with runtime states + event journal + risk gates
+	- `replay_events.py`: JSONL event replay summary for audit/determinism checks
+	- `live_monitor.py`: event-log monitor with threshold-based health checks
 	- `master_brain.py`: governance pass (finance/ML principle checks + folder cleanup planning)
 	- `data_hub_train.py`: multi-symbol dataset builder + optional charts + selection + spectral/DMD + allocation
 	- `main_sentiment.py`: RSS sentiment heatmap (VADER)
 	- `main_collector.py`: basic multi-source scraping skeleton
 - `utils/`: data fetchers + indicators + spectral/DMD/FFT + portfolio allocation
+	- `broker_gateway.py`: broker abstraction with `dry_run` + Alpaca adapter skeleton
+	- `oms.py`: minimal order state machine (`NEW/ACKED/PARTIAL/FILLED/...`)
 
 ## Entrypoint flow chart (`main.py`)
 
@@ -97,6 +102,62 @@ Notes:
 	- collector + sentiment use it directly
 	- market maps it to `--symbols` if `--symbols` wasn’t provided
 	- hub maps it to `--symbols` only if you didn’t already pass hub-native selector flags (like `--universe`)
+
+### 3c) Strategy runner (live/paper scaffold)
+
+`strategy_runner` is the first production foundation toward broker-grade scalping execution.
+
+Current scope:
+
+- explicit runtime state file (`RUNNING|PAUSED|RISK_LOCK|HALTED`)
+- JSONL event journal for replay/audit (`runner_start`, `signal`, `order_intent`, `state_transition`, ...)
+- pre-trade notional risk checks + global kill-switch checks
+- OMS-backed order lifecycle with position reconciliation
+- broker mode selection: `dry_run`, `dry_run_delayed`, or `alpaca` (paper/live keys required)
+- pending-order polling for broker updates (`order_update` events)
+- automatic flatten intent on `RISK_LOCK` / `HALTED`
+- stale market-data guard (`--max-stale-seconds`) with state lock + flatten
+- per-loop latency telemetry (`loop_timing` events + latency summary in runner metrics)
+
+Example:
+
+```bash
+python main.py --project runner --model ml_outputs_scalper/model.joblib --symbols BTC-USD \
+	--period 7d --interval 1m --out-dir artifacts/live \
+	--max-iterations 120 --poll-seconds 5 --start-state RUNNING --mode dry_run
+```
+
+Runtime artifacts:
+
+- `artifacts/live/runtime_state.json`
+- `artifacts/live/events.jsonl`
+- `artifacts/live/runner_metrics.json`
+
+Replay summary from event journal:
+
+```bash
+python main.py --project replay --events-file artifacts/live/events.jsonl --out-dir artifacts/live
+```
+
+Replay output:
+
+- `artifacts/live/replay_summary.json`
+
+Monitor the run and fail fast on threshold breaches:
+
+```bash
+python main.py --project monitor --events-file artifacts/live/events.jsonl --out-dir artifacts/live \
+	--max-error-events 0 --max-loop-p95-ms 1000 --max-stale-seconds 180
+```
+
+Monitor output:
+
+- `artifacts/live/monitor_report.json`
+
+Control behavior:
+
+- edit `runtime_state.json` while running to pause or halt the loop
+- risk violations automatically move state to `RISK_LOCK` or `HALTED`
 
 ## Configuration (API keys)
 
@@ -229,6 +290,25 @@ Inverse-vol portfolio weighting:
 python main.py --project backtest --model ml_outputs_multi/model.joblib --in-dir outputs_stocks \
 	--portfolio-weighting inverse_vol --weight-lookback 60 --cost-bps 5 --delay 1 --out-dir backtest_multi_invvol
 ```
+
+Scalper-oriented profile (intraday, tight risk controls, faster turnover discipline):
+
+```bash
+python main.py --project market --symbols "BTC-USD,ETH-USD" --period 7d --interval 1m --out-dir outputs_scalper_1m
+
+python main.py --project ml --in-dir outputs_scalper_1m --multi-asset --model hgb --task classification \
+	--horizon 2 --threshold 0.001 --cv walkforward --n-splits 6 --test-window 120 --out-dir ml_outputs_scalper
+
+python main.py --project backtest --model ml_outputs_scalper/model.joblib --in-dir outputs_scalper_1m \
+	--profile scalper --mode long_short --delay 1 --out-dir backtest_scalper
+```
+
+Notes on `--profile scalper`:
+
+- switches to open-mark execution and probability entry when not explicitly overridden
+- applies tighter stop/take-profit/trailing defaults for short holding periods
+- enables max hold time + cooldown defaults to reduce churn and overtrading
+- keeps explicit CLI flags as the source of truth (your manual settings override profile defaults)
 
 ### 4) Data hub (multi-symbol datasets + optional charts + advanced analysis)
 

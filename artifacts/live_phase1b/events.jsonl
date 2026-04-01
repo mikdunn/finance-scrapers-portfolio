@@ -1,0 +1,13 @@
+{"kind": "runner_start", "ts": "2026-04-01T17:43:44.644009+00:00", "payload": {"symbol": "BTC-USD", "mode": "dry_run_delayed", "interval": "1m"}}
+{"kind": "order_intent", "ts": "2026-04-01T17:43:47.899363+00:00", "payload": {"symbol": "BTC-USD", "side": "sell", "qty": 0.01, "price_ref": 68414.3, "mode": "dry_run_delayed", "reason": "signal_update"}}
+{"kind": "order_submit", "ts": "2026-04-01T17:43:47.900371+00:00", "payload": {"client_order_id": "abadccf6-cfa3-41bb-8dc5-131608cd0e5f", "broker_order_id": "dry-abadccf6-cfa3-41bb-8dc5-131608cd0e5f", "status": "accepted", "reason": "dry_run_delayed_fill"}}
+{"kind": "position_update", "ts": "2026-04-01T17:43:47.900906+00:00", "payload": {"symbol": "BTC-USD", "position": 0.0, "gross_notional": 0.0}}
+{"kind": "reconcile", "ts": "2026-04-01T17:43:47.901630+00:00", "payload": {"expected_qty": 0.0, "broker_qty": 0.0}}
+{"kind": "signal", "ts": "2026-04-01T17:43:47.901748+00:00", "payload": {"symbol": "BTC-USD", "signal": -1.0, "close": 68414.3, "state": "RUNNING"}}
+{"kind": "order_update", "ts": "2026-04-01T17:43:48.102267+00:00", "payload": {"client_order_id": "abadccf6-cfa3-41bb-8dc5-131608cd0e5f", "broker_order_id": "dry-abadccf6-cfa3-41bb-8dc5-131608cd0e5f", "status": "filled", "filled_qty": 0.01, "reason": "dry_run_delayed_fill_complete"}}
+{"kind": "fill", "ts": "2026-04-01T17:43:48.102660+00:00", "payload": {"client_order_id": "abadccf6-cfa3-41bb-8dc5-131608cd0e5f", "qty": 0.01, "price": 68414.3, "ts": "2026-04-01T17:43:48.102234+00:00", "source": "poll"}}
+{"kind": "reconcile", "ts": "2026-04-01T17:43:48.642823+00:00", "payload": {"expected_qty": -0.01, "broker_qty": -0.01}}
+{"kind": "signal", "ts": "2026-04-01T17:43:48.643293+00:00", "payload": {"symbol": "BTC-USD", "signal": -1.0, "close": 68411.8, "state": "RUNNING"}}
+{"kind": "reconcile", "ts": "2026-04-01T17:43:49.287391+00:00", "payload": {"expected_qty": -0.01, "broker_qty": -0.01}}
+{"kind": "signal", "ts": "2026-04-01T17:43:49.287652+00:00", "payload": {"symbol": "BTC-USD", "signal": -1.0, "close": 68411.8, "state": "RUNNING"}}
+{"kind": "runner_stop", "ts": "2026-04-01T17:43:49.488526+00:00", "payload": {"symbol": "BTC-USD", "mode": "dry_run_delayed", "iterations": 3, "submitted_order_intents": 1, "final_position": -0.01, "oms": {"n_orders": 1, "state_counts": {"FILLED": 1}}, "final_state": {"state": "RUNNING", "reason": "startup"}}}

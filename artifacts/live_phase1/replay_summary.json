@@ -1,0 +1,18 @@
+{
+  "events_file": "artifacts/live_phase1/events.jsonl",
+  "n_events": 10,
+  "event_counts": {
+    "runner_start": 1,
+    "order_intent": 1,
+    "order_submit": 1,
+    "fill": 1,
+    "position_update": 1,
+    "reconcile": 2,
+    "signal": 2,
+    "runner_stop": 1
+  },
+  "order_intents": 1,
+  "errors": 0,
+  "final_state": "RUNNING",
+  "final_reason": "startup"
+}

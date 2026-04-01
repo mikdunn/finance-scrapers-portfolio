@@ -6,7 +6,7 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument(
         '--project',
         default='collector',
-        help='Which project to run: collector | sentiment_heatmap | market | ml | hub | backtest | systemic | sweep | report | master_brain | all',
+        help='Which project to run: collector | sentiment_heatmap | market | ml | hub | backtest | systemic | sweep | report | master_brain | runner | replay | monitor | all',
     )
     parser.add_argument('--tickers', default=None, help='Comma-separated tickers (overrides per-project defaults)')
     parser.add_argument('--headless', action='store_true', help='Run browser automation headless (sentiment project)')
@@ -222,6 +222,40 @@ def main(argv: list[str] | None = None) -> int:
 
         return master_brain_main(mb_args + unknown)
 
+    if project in {'runner', 'strategy_runner', 'live', 'paper'}:
+        from projects.strategy_runner import main as runner_main
+
+        run_args: list[str] = []
+        if args.model:
+            run_args += ['--model', args.model]
+        if args.symbols and '--symbol' not in unknown:
+            # Allow --symbols at top level for convenience; runner is single-symbol for now.
+            run_args += ['--symbol', str(args.symbols).split(',')[0].strip()]
+        if args.period and '--period' not in unknown:
+            run_args += ['--period', args.period]
+        if args.interval and '--interval' not in unknown:
+            run_args += ['--interval', args.interval]
+        if args.out_dir and '--metrics-file' not in unknown:
+            run_args += ['--metrics-file', f"{args.out_dir.rstrip('/')}/runner_metrics.json"]
+
+        return runner_main(run_args + unknown)
+
+    if project in {'replay', 'replay_events', 'audit_replay'}:
+        from projects.replay_events import main as replay_main
+
+        rep_args: list[str] = []
+        if args.out_dir and '--out' not in unknown:
+            rep_args += ['--out', f"{args.out_dir.rstrip('/')}/replay_summary.json"]
+        return replay_main(rep_args + unknown)
+
+    if project in {'monitor', 'live_monitor', 'health'}:
+        from projects.live_monitor import main as monitor_main
+
+        mon_args: list[str] = []
+        if args.out_dir and '--out' not in unknown:
+            mon_args += ['--out', f"{args.out_dir.rstrip('/')}/monitor_report.json"]
+        return monitor_main(mon_args + unknown)
+
     if project == 'all':
         from projects.main_collector import main as collector_main
         from projects.main_sentiment import main as sentiment_main
@@ -243,7 +277,7 @@ def main(argv: list[str] | None = None) -> int:
         return rc1 or rc2
 
     raise SystemExit(
-        f"Unknown --project '{args.project}'. Try: collector | sentiment_heatmap | market | ml | hub | backtest | systemic | sweep | report | master_brain | all"
+        f"Unknown --project '{args.project}'. Try: collector | sentiment_heatmap | market | ml | hub | backtest | systemic | sweep | report | master_brain | runner | replay | monitor | all"
     )
 
 

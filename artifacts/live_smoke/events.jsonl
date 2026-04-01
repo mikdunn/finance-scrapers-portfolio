@@ -1,0 +1,5 @@
+{"kind": "runner_start", "ts": "2026-04-01T17:36:37.852913+00:00", "payload": {"symbol": "BTC-USD", "mode": "dry_run", "interval": "1m"}}
+{"kind": "order_intent", "ts": "2026-04-01T17:36:38.646132+00:00", "payload": {"symbol": "BTC-USD", "side": "sell", "qty": 0.01, "price_ref": 68348.6, "mode": "dry_run", "reason": "signal_update"}}
+{"kind": "position_update", "ts": "2026-04-01T17:36:38.652063+00:00", "payload": {"symbol": "BTC-USD", "position": -0.01, "gross_notional": 683.4860000000001}}
+{"kind": "signal", "ts": "2026-04-01T17:36:38.656075+00:00", "payload": {"symbol": "BTC-USD", "signal": -1.0, "close": 68348.6, "state": "RUNNING"}}
+{"kind": "runner_stop", "ts": "2026-04-01T17:36:38.861666+00:00", "payload": {"symbol": "BTC-USD", "mode": "dry_run", "iterations": 1, "submitted_order_intents": 1, "final_position": -0.01, "final_state": {"state": "RUNNING", "reason": "startup"}}}

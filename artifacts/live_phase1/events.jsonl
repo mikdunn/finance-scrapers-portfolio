@@ -1,0 +1,10 @@
+{"kind": "runner_start", "ts": "2026-04-01T17:40:34.881059+00:00", "payload": {"symbol": "BTC-USD", "mode": "dry_run", "interval": "1m"}}
+{"kind": "order_intent", "ts": "2026-04-01T17:40:35.732050+00:00", "payload": {"symbol": "BTC-USD", "side": "sell", "qty": 0.01, "price_ref": 68445.5, "mode": "dry_run", "reason": "signal_update"}}
+{"kind": "order_submit", "ts": "2026-04-01T17:40:35.733625+00:00", "payload": {"client_order_id": "f8c7ebcb-856c-4b50-bcea-fe8e94f13b5c", "broker_order_id": "dry-f8c7ebcb-856c-4b50-bcea-fe8e94f13b5c", "status": "filled", "reason": "dry_run_immediate_fill"}}
+{"kind": "fill", "ts": "2026-04-01T17:40:35.733753+00:00", "payload": {"client_order_id": "f8c7ebcb-856c-4b50-bcea-fe8e94f13b5c", "qty": 0.01, "price": 68445.5, "ts": "2026-04-01T17:40:35.733600+00:00"}}
+{"kind": "position_update", "ts": "2026-04-01T17:40:35.733846+00:00", "payload": {"symbol": "BTC-USD", "position": -0.01, "gross_notional": 684.455}}
+{"kind": "reconcile", "ts": "2026-04-01T17:40:35.733929+00:00", "payload": {"expected_qty": -0.01, "broker_qty": -0.01}}
+{"kind": "signal", "ts": "2026-04-01T17:40:35.734043+00:00", "payload": {"symbol": "BTC-USD", "signal": -1.0, "close": 68445.5, "state": "RUNNING"}}
+{"kind": "reconcile", "ts": "2026-04-01T17:40:36.277290+00:00", "payload": {"expected_qty": -0.01, "broker_qty": -0.01}}
+{"kind": "signal", "ts": "2026-04-01T17:40:36.279385+00:00", "payload": {"symbol": "BTC-USD", "signal": -1.0, "close": 68445.5, "state": "RUNNING"}}
+{"kind": "runner_stop", "ts": "2026-04-01T17:40:36.480790+00:00", "payload": {"symbol": "BTC-USD", "mode": "dry_run", "iterations": 2, "submitted_order_intents": 1, "final_position": -0.01, "oms": {"n_orders": 1, "state_counts": {"FILLED": 1}}, "final_state": {"state": "RUNNING", "reason": "startup"}}}

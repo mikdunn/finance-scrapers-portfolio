@@ -1,0 +1,36 @@
+{
+  "events_file": "artifacts/live_phase2/events.jsonl",
+  "n_events": 19,
+  "counts": {
+    "runner_start": 1,
+    "data_health": 3,
+    "order_intent": 1,
+    "order_submit": 1,
+    "position_update": 1,
+    "reconcile": 3,
+    "signal": 3,
+    "loop_timing": 3,
+    "order_update": 1,
+    "fill": 1,
+    "runner_stop": 1
+  },
+  "errors": 0,
+  "transitions": [],
+  "latency_ms": {
+    "loop_p50": 380.0536099997771,
+    "loop_p95": 1400.9326612999757,
+    "fetch_p95": 1260.2192496000498,
+    "signal_p95": 107.63604910016511,
+    "order_p95": 0.02719439971770043
+  },
+  "latest_data_age_s": 29.254912,
+  "thresholds": {
+    "max_error_events": 0,
+    "max_loop_p95_ms": 1000.0,
+    "max_stale_seconds": 999999.0
+  },
+  "breaches": [
+    "loop_p95_ms>1000.0"
+  ],
+  "ok": false
+}

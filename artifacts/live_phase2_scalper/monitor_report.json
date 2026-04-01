@@ -1,0 +1,35 @@
+{
+  "events_file": "artifacts/live_phase2_scalper/events.jsonl",
+  "n_events": 10,
+  "counts": {
+    "runner_start": 1,
+    "data_health": 1,
+    "order_intent": 1,
+    "order_submit": 1,
+    "fill": 1,
+    "position_update": 1,
+    "reconcile": 1,
+    "signal": 1,
+    "loop_timing": 1,
+    "runner_stop": 1
+  },
+  "errors": 0,
+  "transitions": [],
+  "latency_ms": {
+    "loop_p50": 4483.480879999661,
+    "loop_p95": 4483.480879999661,
+    "fetch_p95": 4196.710386999257,
+    "signal_p95": 199.76432800012844,
+    "order_p95": 0.040796000575937796
+  },
+  "latest_data_age_s": 12.317287,
+  "thresholds": {
+    "max_error_events": 0,
+    "max_loop_p95_ms": 2000.0,
+    "max_stale_seconds": 999999.0
+  },
+  "breaches": [
+    "loop_p95_ms>2000.0"
+  ],
+  "ok": false
+}
