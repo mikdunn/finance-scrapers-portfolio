@@ -33,7 +33,9 @@ from utils.oms import OMS, OrderState
 from utils.risk_controls import (
     RiskConfig, RiskState, 
     check_global_kill_switch, check_pretrade, check_in_trade, check_rejection_burst,
-    record_rejection, record_trade_result, detect_and_record_trade_close
+    record_rejection, record_trade_result, detect_and_record_trade_close,
+    check_and_enable_de_risk, apply_de_risk_haircut, on_consecutive_loss_reset,
+    check_rolling_drawdown_enforcement, check_volatility_spike
 )
 from utils.runtime_state import RunState, load_runtime_state, save_runtime_state
 
@@ -281,6 +283,17 @@ def main(argv: list[str] | None = None) -> int:
             _transition_state(state, args.state_file, journal, RunState.HALTED, reason_global)
             _flatten_position_if_needed(symbol=args.symbol, px=float(last_px), oms=oms, gateway=gateway, journal=journal)
             break
+        
+        # Phase 3f: Rolling drawdown enforcement
+        dd_ok, dd_reason = check_rolling_drawdown_enforcement(risk_cfg, risk_state)
+        if not dd_ok:
+            _transition_state(state, args.state_file, journal, RunState.RISK_LOCK, dd_reason)
+            _flatten_position_if_needed(symbol=args.symbol, px=float(last_px), oms=oms, gateway=gateway, journal=journal, execution_policy=execution_policy)
+            journal.append("kill_switch_rolling_drawdown", {
+                "rolling_drawdown_pct": float(risk_state.rolling_drawdown_pct()),
+                "threshold_pct": float(risk_cfg.rolling_drawdown_pct),
+            })
+            continue
 
         if not state.can_submit_orders():
             # Safety action: if we're locked/halted externally, attempt flatten.
@@ -337,6 +350,12 @@ def main(argv: list[str] | None = None) -> int:
 
             current_position = float(oms.net_position(args.symbol))
             desired_position = float(np.sign(signal) * abs(float(args.qty)))
+            
+            # Phase 3e: Apply de-risk haircut if in de-risk mode
+            if risk_state.in_de_risk_mode and desired_position != 0.0:
+                desired_position = apply_de_risk_haircut(abs(desired_position), risk_state, risk_cfg)
+                desired_position = float(np.sign(signal) * desired_position)
+            
             delta_qty = float(desired_position - current_position)
 
             if abs(delta_qty) > 0:
@@ -434,6 +453,24 @@ def main(argv: list[str] | None = None) -> int:
                         "pnl_bps": float(pnl_pct * 10000.0),
                         "closed_at": px,
                     })
+                    
+                    # Phase 3e: Check de-risk mode and update accordingly
+                    if pnl_pct < 0:  # On losing trades
+                        should_de_risk, de_risk_reason = check_and_enable_de_risk(risk_cfg, risk_state)
+                        if should_de_risk and not risk_state.in_de_risk_mode:
+                            risk_state.in_de_risk_mode = True
+                            journal.append("de_risk_enabled", {
+                                "reason": de_risk_reason,
+                                "consecutive_losses": risk_state.consecutive_losses,
+                                "position_haircut_pct": float(risk_cfg.de_risk_position_haircut_pct),
+                            })
+                    else:  # On winning trades
+                        if risk_state.consecutive_losses == 0:  # Just reset by record_trade_result
+                            if risk_state.in_de_risk_mode:
+                                on_consecutive_loss_reset(risk_state)
+                                journal.append("de_risk_disabled", {
+                                    "reason": "consecutive_loss_reset_to_zero",
+                                })
 
             expected_qty = float(oms.net_position(args.symbol))
             broker_qty = float(gateway.get_position_qty(args.symbol))
@@ -449,6 +486,19 @@ def main(argv: list[str] | None = None) -> int:
                 _flatten_position_if_needed(symbol=args.symbol, px=px, oms=oms, gateway=gateway, journal=journal)
             else:
                 journal.append("reconcile", {"expected_qty": expected_qty, "broker_qty": broker_qty})
+            
+            # Phase 3f: Update peak equity for rolling drawdown calculation
+            risk_state.update_peak_equity()
+            
+            # Phase 3f: Volatility spike detection (informational for now)
+            # In production, this would trigger position auto-reduction
+            if len(lat_loop_ms) > 20:
+                recent_latency_std = float(np.std(lat_loop_ms[-20:]) if len(lat_loop_ms) >= 20 else 0)
+                if recent_latency_std > 100.0:  # Spike in latency = potential market volatility jump
+                    journal.append("volatility_spike_detected", {
+                        "recent_latency_std": float(recent_latency_std),
+                        "threshold_ms": 100.0,
+                    })
 
             journal.append("signal", {"symbol": args.symbol, "signal": signal, "close": px, "state": state.state.value})
 

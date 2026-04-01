@@ -1,0 +1,11 @@
+{"kind": "test_start", "ts": "2026-04-01T18:24:00.049022+00:00", "payload": {"test": "phase3f_advanced_kill_switches", "rolling_drawdown_threshold": 5.0, "volatility_spike_threshold": 2.0}}
+{"kind": "drawdown_step", "ts": "2026-04-01T18:24:00.049407+00:00", "payload": {"equity": 1.0, "rolling_drawdown_pct": 0.0, "kill_switch_ok": true, "reason": "ok"}}
+{"kind": "drawdown_step", "ts": "2026-04-01T18:24:00.049552+00:00", "payload": {"equity": 0.99, "rolling_drawdown_pct": 1.0000000000000009, "kill_switch_ok": true, "reason": "ok"}}
+{"kind": "drawdown_step", "ts": "2026-04-01T18:24:00.049679+00:00", "payload": {"equity": 0.96, "rolling_drawdown_pct": 4.0000000000000036, "kill_switch_ok": true, "reason": "ok"}}
+{"kind": "drawdown_step", "ts": "2026-04-01T18:24:00.049798+00:00", "payload": {"equity": 0.94, "rolling_drawdown_pct": 6.000000000000005, "kill_switch_ok": false, "reason": "rolling_drawdown_6.00%_exceeds_5.00%"}}
+{"kind": "drawdown_step", "ts": "2026-04-01T18:24:00.049922+00:00", "payload": {"equity": 0.95, "rolling_drawdown_pct": 5.000000000000004, "kill_switch_ok": false, "reason": "rolling_drawdown_5.00%_exceeds_5.00%"}}
+{"kind": "vol_spike_step", "ts": "2026-04-01T18:24:00.050090+00:00", "payload": {"realized_vol": 0.15, "baseline_vol": 0.15, "vol_ratio": 1.0, "spike_detected": false, "reason": "ok"}}
+{"kind": "vol_spike_step", "ts": "2026-04-01T18:24:00.050210+00:00", "payload": {"realized_vol": 0.2, "baseline_vol": 0.15, "vol_ratio": 1.3333333333333335, "spike_detected": false, "reason": "ok"}}
+{"kind": "vol_spike_step", "ts": "2026-04-01T18:24:00.050329+00:00", "payload": {"realized_vol": 0.25, "baseline_vol": 0.15, "vol_ratio": 1.6666666666666667, "spike_detected": false, "reason": "ok"}}
+{"kind": "vol_spike_step", "ts": "2026-04-01T18:24:00.050447+00:00", "payload": {"realized_vol": 0.31, "baseline_vol": 0.15, "vol_ratio": 2.066666666666667, "spike_detected": true, "reason": "vol_spike_2.07x_baseline"}}
+{"kind": "vol_spike_step", "ts": "2026-04-01T18:24:00.050571+00:00", "payload": {"realized_vol": 0.18, "baseline_vol": 0.15, "vol_ratio": 1.2, "spike_detected": false, "reason": "ok"}}

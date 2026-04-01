@@ -1,0 +1,6 @@
+{"kind": "test_start", "ts": "2026-04-01T18:24:00.047639+00:00", "payload": {"test": "phase3e_de_risk_automation", "de_risk_trigger": 3, "de_risk_haircut": 0.5}}
+{"kind": "trade_step", "ts": "2026-04-01T18:24:00.047916+00:00", "payload": {"trade_num": 1, "description": "Loss 1", "pnl": -0.02, "consecutive_losses": 1, "de_risk_mode": false, "de_risk_reason": "none"}}
+{"kind": "trade_step", "ts": "2026-04-01T18:24:00.048128+00:00", "payload": {"trade_num": 2, "description": "Loss 2", "pnl": -0.015, "consecutive_losses": 2, "de_risk_mode": false, "de_risk_reason": "none"}}
+{"kind": "trade_step", "ts": "2026-04-01T18:24:00.048254+00:00", "payload": {"trade_num": 3, "description": "Loss 3", "pnl": -0.01, "consecutive_losses": 3, "de_risk_mode": true, "de_risk_reason": "consecutive_losses_3_exceeds_3"}}
+{"kind": "trade_step", "ts": "2026-04-01T18:24:00.048383+00:00", "payload": {"trade_num": 4, "description": "Win to reset", "pnl": 0.025, "consecutive_losses": 0, "de_risk_mode": false, "de_risk_reason": "none"}}
+{"kind": "trade_step", "ts": "2026-04-01T18:24:00.048529+00:00", "payload": {"trade_num": 5, "description": "Loss 4", "pnl": -0.008, "consecutive_losses": 1, "de_risk_mode": false, "de_risk_reason": "none"}}

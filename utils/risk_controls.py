@@ -287,3 +287,96 @@ def detect_and_record_trade_close(
     
     return was_closed, pnl_pct
 
+
+def check_and_enable_de_risk(risk_cfg: RiskConfig, risk_state: RiskState) -> tuple[bool, str]:
+    """Check if de-risk mode should be enabled based on consecutive losses.
+    
+    Phase 3e: Trigger de-risk when consecutive losses reach threshold - 1.
+    This allows recovery opportunity before hard kill-switch triggers.
+    
+    Returns:
+        (should_enable_de_risk: bool, reason: str)
+    """
+    trigger_threshold = int(risk_cfg.max_consecutive_losses) - 1
+    
+    if int(risk_state.consecutive_losses) >= trigger_threshold:
+        return True, f"consecutive_losses_{risk_state.consecutive_losses}_exceeds_{trigger_threshold}"
+    
+    return False, "ok"
+
+
+def apply_de_risk_haircut(qty: float, risk_state: RiskState, risk_cfg: RiskConfig) -> float:
+    """Apply position size haircut under de-risk mode.
+    
+    Phase 3e: Reduce position size by de_risk_position_haircut_pct.
+    Default: 0.5% reduction per trade while in de-risk mode.
+    
+    Args:
+        qty: Original position size (absolute value)
+        risk_state: Current risk state
+        risk_cfg: Risk configuration with haircut percentage
+    
+    Returns:
+        Adjusted position size with haircut applied
+    """
+    if not risk_state.in_de_risk_mode:
+        return float(qty)
+    
+    haircut_pct = float(risk_cfg.de_risk_position_haircut_pct) / 100.0
+    reduction = float(qty) * haircut_pct
+    adjusted_qty = float(qty) - reduction
+    
+    return max(0.0, adjusted_qty)
+
+
+def on_consecutive_loss_reset(risk_state: RiskState) -> None:
+    """Exit de-risk mode when a winning trade is recorded.
+    
+    Phase 3e: Called when consecutive_losses resets to 0 after a winning trade.
+    """
+    if risk_state.in_de_risk_mode:
+        risk_state.in_de_risk_mode = False
+
+
+def check_rolling_drawdown_enforcement(risk_cfg: RiskConfig, risk_state: RiskState) -> tuple[bool, str]:
+    """Enforce rolling drawdown kill-switch.
+    
+    Phase 3f: Implements rolling drawdown defense (peak-to-trough).
+    When rolling drawdown exceeds threshold, trigger RISK_LOCK and auto-flatten.
+    
+    Returns:
+        (allow_continue: bool, reason: str)
+    """
+    rolling_dd_pct = risk_state.rolling_drawdown_pct()
+    threshold_pct = float(risk_cfg.rolling_drawdown_pct)
+    
+    if rolling_dd_pct >= threshold_pct:
+        return False, f"rolling_drawdown_{rolling_dd_pct:.2f}%_exceeds_{threshold_pct:.2f}%"
+    
+    return True, "ok"
+
+
+def check_volatility_spike(realized_vol: float, baseline_vol: float, spike_threshold: float = 2.0) -> tuple[bool, str]:
+    """Detect volatility spikes for position auto-reduction.
+    
+    Phase 3f: Advanced kill-switch for market regime changes.
+    If realized_vol > spike_threshold * baseline_vol, recommend position reduction.
+    
+    Args:
+        realized_vol: Current realized volatility
+        baseline_vol: Historical baseline volatility
+        spike_threshold: Multiplier threshold (default 2.0 = 2x)
+    
+    Returns:
+        (spike_detected: bool, reason: str)
+    """
+    if baseline_vol <= 0:
+        return False, "no_baseline"
+    
+    vol_ratio = float(realized_vol) / float(baseline_vol)
+    
+    if vol_ratio >= float(spike_threshold):
+        return True, f"vol_spike_{vol_ratio:.2f}x_baseline"
+    
+    return False, "ok"
+
