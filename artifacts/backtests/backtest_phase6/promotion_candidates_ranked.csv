@@ -1,0 +1,6 @@
+rank,execution_profile,run_dir,passed_validation,total_trades,win_rate_pct,gross_pnl_pct,max_rolling_drawdown_pct,max_consecutive_losses_observed,p95_latency_ms,promotion_score
+1,unknown,artifacts/backtests/paper_smoke_multi,False,0,0.0,0.0,0.0,0,681.0803302999602,-3.405401651499801
+2,unknown,artifacts/backtests/paper_smoke_btc,False,0,0.0,0.0,0.0,0,687.8594711999085,-3.4392973559995426
+3,unknown,artifacts/backtests/backtest_phase5,False,0,0.0,0.0,0.0,0,746.8868710499919,-3.7344343552499595
+4,unknown,artifacts/backtests/backtest_phase5_mainroute,False,0,0.0,0.0,0.0,0,746.8868710499919,-3.7344343552499595
+5,unknown,artifacts/backtests/paper_smoke_eurusd,False,0,0.0,0.0,0.0,0,1526.9891970001481,-7.634945985000741

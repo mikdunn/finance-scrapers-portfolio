@@ -1,0 +1,115 @@
+
+    <html>
+    <head>
+        <title>Paper Trading Validation Report - papertrading_20260401_194126</title>
+        <style>
+            body { font-family: 'Segoe UI', sans-serif; background: #f5f5f5; padding: 20px; }
+            .header { background: #ff6600; color: white; padding: 20px; border-radius: 8px; }
+            .section { background: white; margin: 10px 0; padding: 15px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+            .metric { display: inline-block; background: #f0f0f0; padding: 10px; margin: 5px; border-radius: 4px; }
+            .good { background: #e8f5e9; color: #2e7d32; }
+            .warning { background: #fff3e0; color: #c67c06; }
+            .error { background: #ffebee; color: #c62828; }
+            table { width: 100%; border-collapse: collapse; }
+            th, td { padding: 10px; text-align: left; border-bottom: 1px solid #ddd; }
+            th { background: #f0f0f0; font-weight: bold; }
+        </style>
+    </head>
+    <body>
+        <div class="header">
+            <h1>Paper Trading Validation Report</h1>
+            <p><strong>Status: ⚠ REVIEW NEEDED</strong></p>
+            <p>Run ID: papertrading_20260401_194126</p>
+            <p>Duration: 0.0 hours (2026-04-01T19:41:24.039592+00:00 to 2026-04-01T19:41:26.204278+00:00)</p>
+        </div>
+        
+        <div class="section">
+            <h2>Trading Summary</h2>
+            <div class="metric">Total Trades: <strong>0</strong></div>
+            <div class="metric good">Wins: 0</div>
+            <div class="metric warning">Losses: 0</div>
+            <div class="metric">Win Rate: <strong>0.0%</strong></div>
+        </div>
+        
+        <div class="section">
+            <h2>Financial Results</h2>
+            <table>
+                <tr>
+                    <th>Metric</th>
+                    <th>Value</th>
+                </tr>
+                <tr>
+                    <td>Starting Capital</td>
+                    <td>$10000.00</td>
+                </tr>
+                <tr>
+                    <td>Final Capital</td>
+                    <td>$10000.00</td>
+                </tr>
+                <tr>
+                    <td>Gross PnL</td>
+                    <td>$0.00 (+0.00%)</td>
+                </tr>
+                <tr>
+                    <td>Best Trade</td>
+                    <td>+0.00%</td>
+                </tr>
+                <tr>
+                    <td>Worst Trade</td>
+                    <td>+0.00%</td>
+                </tr>
+            </table>
+        </div>
+        
+        <div class="section">
+            <h2>Risk Metrics</h2>
+            <table>
+                <tr>
+                    <th>Metric</th>
+                    <th>Value</th>
+                </tr>
+                <tr>
+                    <td>Peak Equity</td>
+                    <td>$10000.00</td>
+                </tr>
+                <tr>
+                    <td>Max Daily Loss</td>
+                    <td>0.00%</td>
+                </tr>
+                <tr>
+                    <td>Max Rolling Drawdown</td>
+                    <td>0.00%</td>
+                </tr>
+                <tr>
+                    <td>Kill Switch Triggers</td>
+                    <td>1</td>
+                </tr>
+                <tr>
+                    <td>De-risk Activations</td>
+                    <td>0</td>
+                </tr>
+                <tr>
+                    <td>Max Consecutive Losses Observed</td>
+                    <td>0</td>
+                </tr>
+            </table>
+        </div>
+        
+        <div class="section">
+            <h2>Latency Performance</h2>
+            <div class="metric">P95: 1527ms</div>
+            <div class="metric">P99: 1527ms</div>
+            <div class="metric">Average: 1527ms</div>
+        </div>
+    
+        <div class="section error">
+            <h2>⚠ Validation Issues</h2>
+            <ul>
+        <li>Insufficient trades: 0 < 1</li><li>Win rate too low: 0.0% < 50.0%</li></ul></div>
+        <div class="section">
+            <h2>Recommendations</h2>
+            <ul>
+        <li>Review signal generation model - may need retraining</li></ul></div>
+    </body>
+    </html>
+    

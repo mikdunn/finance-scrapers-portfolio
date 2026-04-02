@@ -1,0 +1,4 @@
+rank,execution_profile,run_dir,passed_validation,total_trades,win_rate_pct,gross_pnl_pct,max_rolling_drawdown_pct,max_consecutive_losses_observed,p95_latency_ms,promotion_score
+1,conservative,artifacts/backtests/backtest_phase6b/phase6b_profile_batch/conservative_eurusd,False,0,0.0,0.0,0.0,0,133.6745130001873,-0.6683725650009364
+2,moderate,artifacts/backtests/backtest_phase6b/phase6b_profile_batch/moderate_eurusd,False,0,0.0,0.0,0.0,0,138.60792000014044,-0.6930396000007022
+3,scalper,artifacts/backtests/backtest_phase6b/phase6b_profile_batch/scalper_eurusd,False,0,0.0,0.0,0.0,0,387.8352870001436,-1.939176435000718

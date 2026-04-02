@@ -19,5 +19,6 @@
     "hub_outputs*": true,
     "outputs*": true,
     "ml_outputs*": true
-  }
+  },
+  "python-envs.defaultEnvManager": "ms-python.python:system"
 }

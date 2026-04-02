@@ -29,12 +29,14 @@ Outputs are written to the folder you pass (HTML charts, CSVs, plus a `summary.j
 
 ## Repository layout
 
-- `main.py`: unified CLI router (`--project market|ml|hub|backtest|report|systemic|master_brain|sentiment_heatmap|collector`)
+- `main.py`: unified CLI router (`--project market|ml|hub|backtest|report|systemic|master_brain|runner|paper_trading|sentiment_heatmap|collector`)
 - `projects/`
 	- `market_analyzer.py`: per-symbol chart + indicators + forecast + FFT cycles
 	- `ml_train.py`: supervised model training + walk-forward CV + feature importance
 	- `strategy_backtest.py`: strategy simulator that consumes ML model predictions and computes equity curves + costs
 	- `strategy_runner.py`: phase-1 live/paper runner scaffold with runtime states + event journal + risk gates
+	- `paper_trading_rollout.py`: phase-5 runner for fresh smoke paper runs, validation, and gate calibration
+	- `phase6_tuning.py`: phase-6 tuning command with phase-6b profile-batch optimizer and ranked promotion candidates
 	- `replay_events.py`: JSONL event replay summary for audit/determinism checks
 	- `live_monitor.py`: event-log monitor with threshold-based health checks
 	- `master_brain.py`: governance pass (finance/ML principle checks + folder cleanup planning)

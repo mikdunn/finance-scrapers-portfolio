@@ -6,7 +6,7 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument(
         '--project',
         default='collector',
-        help='Which project to run: collector | sentiment_heatmap | market | ml | hub | backtest | systemic | sweep | report | master_brain | runner | replay | monitor | all',
+        help='Which project to run: collector | sentiment_heatmap | market | ml | hub | backtest | systemic | sweep | report | master_brain | runner | replay | monitor | paper_trading | phase6 | all',
     )
     parser.add_argument('--tickers', default=None, help='Comma-separated tickers (overrides per-project defaults)')
     parser.add_argument('--headless', action='store_true', help='Run browser automation headless (sentiment project)')
@@ -255,6 +255,33 @@ def main(argv: list[str] | None = None) -> int:
         if args.out_dir and '--out' not in unknown:
             mon_args += ['--out', f"{args.out_dir.rstrip('/')}/monitor_report.json"]
         return monitor_main(mon_args + unknown)
+
+    if project in {'paper_trading', 'paper', 'paper_rollout', 'paper_validation', 'rollout'}:
+        from projects.paper_trading_rollout import main as paper_rollout_main
+
+        paper_args: list[str] = []
+        if args.model and '--model' not in unknown:
+            paper_args += ['--model', args.model]
+        if args.symbols and '--symbol' not in unknown:
+            paper_args += ['--symbol', str(args.symbols).split(',')[0].strip()]
+        elif args.tickers and '--symbol' not in unknown:
+            paper_args += ['--symbol', str(args.tickers).split(',')[0].strip()]
+        if args.period and '--period' not in unknown:
+            paper_args += ['--period', args.period]
+        if args.interval and '--interval' not in unknown:
+            paper_args += ['--interval', args.interval]
+        if args.out_dir and '--out-dir' not in unknown:
+            paper_args += ['--out-dir', args.out_dir]
+
+        return paper_rollout_main(paper_args + unknown)
+
+    if project in {'phase6', 'tuning', 'performance_tuning', 'promotion_heuristics'}:
+        from projects.phase6_tuning import main as phase6_main
+
+        phase6_args: list[str] = []
+        if args.out_dir and '--out-dir' not in unknown:
+            phase6_args += ['--out-dir', args.out_dir]
+        return phase6_main(phase6_args + unknown)
 
     if project == 'all':
         from projects.main_collector import main as collector_main

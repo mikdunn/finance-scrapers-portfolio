@@ -1,0 +1,17 @@
+{
+  "num_reports": 3,
+  "profile_counts": {
+    "scalper": 3
+  },
+  "recommended_execution_profile": "scalper",
+  "recommended_poll_seconds": 0.216,
+  "recommended_max_iterations": 15,
+  "suggested_hard_daily_loss_pct": 2.0,
+  "suggested_rolling_drawdown_pct": 3.0,
+  "suggested_max_consecutive_losses": 4,
+  "priority_actions": [
+    "Tune poll interval to keep p95 loop latency stable under 1s.",
+    "Run side-by-side profile comparison for scalper/moderate/conservative.",
+    "Use calibrated promotion gates before enabling canary deployment."
+  ]
+}

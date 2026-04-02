@@ -1,0 +1,42 @@
+{
+  "symbol": "EURUSD=X",
+  "mode": "dry_run_delayed",
+  "iterations": 2,
+  "submitted_order_intents": 0,
+  "final_position": 0.0,
+  "oms": {
+    "n_orders": 0,
+    "state_counts": {}
+  },
+  "latency_ms": {
+    "fetch": {
+      "p50": NaN,
+      "p95": NaN,
+      "mean": NaN
+    },
+    "signal": {
+      "p50": NaN,
+      "p95": NaN,
+      "mean": NaN
+    },
+    "order_submit": {
+      "p50": NaN,
+      "p95": NaN,
+      "mean": NaN
+    },
+    "poll": {
+      "p50": 0.004442999852471985,
+      "p95": 0.006647999862252618,
+      "mean": 0.004442999852471985
+    },
+    "loop": {
+      "p50": 387.8352870001436,
+      "p95": 387.8352870001436,
+      "mean": 387.8352870001436
+    }
+  },
+  "final_state": {
+    "state": "RISK_LOCK",
+    "reason": "runner_exception"
+  }
+}

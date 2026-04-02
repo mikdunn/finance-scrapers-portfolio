@@ -192,32 +192,43 @@
 - [x] Integration verified
 - [x] Tests passing (all 5 scenarios)
 
+### Phase 5 Status: ✅ FOUNDATION COMPLETE
+- [x] Paper trading validation utility implemented
+- [x] Artifact-driven validation scoring implemented
+- [x] HTML validation report generation working
+- [x] Top-level paper trading CLI routed through `main.py`
+- [x] Phase 5 baseline test passing
+- [x] Fresh-run smoke path (`--run-smoke`) invoking strategy runner with smoke model
+- [x] Promotion gate calibration (`--calibrate-gates`) from multiple paper reports
+- [x] Multi-run smoke reports generated for calibration
+
+### Phase 6 Status: ✅ STARTED
+- [x] Performance tuning command implemented (`projects/phase6_tuning.py`)
+- [x] Promotion heuristics artifact generation implemented
+- [x] Baseline Phase 6 test passing
+- [x] Top-level routing via `main.py --project phase6`
+- [x] Phase 6b profile-batch optimizer implemented
+- [x] Ranked promotion candidates (`csv` + `md`) generated
+- [x] Baseline Phase 6b test passing
+
 ## Next Session Preparation
 
-### Phase 3 Continuation Tasks
-1. Phase 3d: Trade result recording (1-2 hours)
-2. Phase 3e: De-risk automation (2-3 hours)
-3. Phase 3f: Advanced kill-switches (2-3 hours)
-
-### Phase 4 Planning
-1. Observability layer (terminal dashboard)
-2. Structured logging integration
-3. CI tests for deterministic replay
-4. Runbooks for common failure modes
-
-### Phase 5 Planning
-1. Paper trading baseline (2-4 weeks)
-2. Tiny canary deployment
-3. Automated promotion gates
-4. Performance monitoring
+### Next Phase Targets
+1. Phase 6c: Latency and risk threshold auto-optimizer loop
+2. Phase 6d: Closed-trade enrichment in smoke fixtures for stronger calibration
+3. Phase 7: Controlled canary/live rollout
+4. Phase 8: Continuous retraining/promotion automation
 
 ## Sign-Off
 
 **All deliverables complete and verified as of April 1, 2026, 18:15 UTC**
 
 - Phase 2: ✅ **COMPLETE** (execution policies functional)
-- Phase 3: ✅ **INITIATED** (foundation complete, awaiting 3d-3f)
-- Testing: ✅ **PASSING** (0 errors, SLO within limits)
+- Phase 3: ✅ **COMPLETE**
+- Phase 4: ✅ **COMPLETE**
+- Phase 5: ✅ **FRESH-RUN + CALIBRATION READY**
+- Phase 6: ✅ **STARTED** (tuning + promotion heuristics)
+- Testing: ✅ **PASSING** (including Phase 5 smoke and Phase 6 baseline)
 - Documentation: ✅ **COMPLETE** (4 comprehensive reports)
 
 **System Status**: Ready for paper trading validation and Phase 3 continuation work.
