@@ -13,6 +13,8 @@ Python tools for **market analysis + artifact generation**:
 
 ## Quickstart
 
+### Desktop / Server Installation
+
 1) Create/activate a Python environment and install deps:
 
 ```bash
@@ -26,6 +28,14 @@ python main.py --project market --symbols "AAPL,MSFT" --period 6mo --interval 1d
 ```
 
 Outputs are written to the folder you pass (HTML charts, CSVs, plus a `summary.json` manifest).
+
+### Android Installation
+
+For running this toolkit on Android devices, see [INSTALL_ANDROID.md](INSTALL_ANDROID.md) for detailed instructions on:
+- Installing Python via Termux (recommended)
+- Installing dependencies and handling Android-specific issues
+- Alternative methods (Pydroid 3)
+- Performance considerations and recommended workflows
 
 ## Repository layout
 
